@@ -19,6 +19,9 @@
 #define INERTIA_ANGLE			(0.1f)									// 角度の慣性
 #define MINUS_OIL				(0.01f)									// 燃料の減り方
 #define BREAK_OIL				(15.0f)									// 壊せる燃料の量
+#define AUTO_SPEED				(1.0f)									// 自動で進むスピード
+#define HIGH_SPPED				(35.0f)									// スピードが速くなる
+#define LOW_SPPED				(70.0f)									// スピードが遅くなる
 #define PLAYER_FILE				"data\\MODEL\\rocket000.x"				// プレイヤーのファイル名
 
 //*****************************************************************************
@@ -41,7 +44,7 @@ void InitPlayer(void)
 	g_Player.move = FIRST_POS;
 	g_Player.rot = FIRST_POS;
 	g_Player.fAngleZ = 0.0f;
-	g_Player.fSpeedZ = MOVEMENT.z;
+	g_Player.Speed = FIRST_POS;
 	g_Player.state = PLAYERSTATE_APPEAR;
 	g_Player.nCounterState = 0;
 	g_Player.fOil = MAX_OIL * 0.5f;
@@ -138,8 +141,8 @@ void UpdatePlayer(void)
 		{// パッドの移動優先
 			g_Player.fAngleZ = atan2f((float)(-fValueH), (float)(fValueV));
 
-			g_Player.move.x += fValueH * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
-			g_Player.move.y += fValueV * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.y)));
+			g_Player.move.x += fValueH;
+			g_Player.move.y += fValueV;
 
 			//g_Player.move.z += cosf(fAngle + pCamera->rot.y) * MOVEMENT.z /** sinf((D3DX_PI * 0.5f) + pCamera->fAngle)*/;
 		}
@@ -147,24 +150,24 @@ void UpdatePlayer(void)
 		{// 上に移動
 			if (GetKeyboardPress(DIK_A) == true || GetJoypadPress(JOYKEY_LEFT) == true)
 			{// 左上に移動
-				g_Player.move.x += sinf(-D3DX_PI * 0.75f - pCamera->rot.y) * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
-				g_Player.move.y += cosf((D3DX_PI * 0.75f)) * -((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.y)));
+				g_Player.move.x += sinf(-D3DX_PI * 0.75f - pCamera->rot.y) * MOVEMENT.x;
+				g_Player.move.y += cosf((D3DX_PI * 0.75f)) * -MOVEMENT.y;
 				//g_Player.move.z += cosf(-D3DX_PI * 0.25f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = pCamera->rot.y + (D3DX_PI * 0.5f);
 			}
 			else if (GetKeyboardPress(DIK_D) == true || GetJoypadPress(JOYKEY_RIGHT) == true)
 			{// 右上に移動
-				g_Player.move.x += sinf(D3DX_PI * 0.75f - pCamera->rot.y) * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
-				g_Player.move.y += cosf((D3DX_PI * 0.75f)) * -((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.y)));
+				g_Player.move.x += sinf(D3DX_PI * 0.75f - pCamera->rot.y) * MOVEMENT.x;
+				g_Player.move.y += cosf((D3DX_PI * 0.75f)) * -MOVEMENT.y;
 				//g_Player.move.z += cosf(D3DX_PI * 0.25f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = pCamera->rot.y - (D3DX_PI * 0.5f);
 			}
 			else if (GetKeyboardPress(DIK_W) == true || GetJoypadPress(JOYKEY_UP) == true)
 			{// 上に移動
-				g_Player.move.x += sinf(D3DX_PI * 0.0f + pCamera->rot.y) * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
-				g_Player.move.y += cosf((D3DX_PI * 1.0f)) * -((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.y)));
+				g_Player.move.x += sinf(D3DX_PI * 0.0f + pCamera->rot.y) * MOVEMENT.x;
+				g_Player.move.y += cosf((D3DX_PI * 1.0f)) * -MOVEMENT.y;
 				//g_Player.move.z += cosf(D3DX_PI * 0.0f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = 0.0f;
@@ -174,24 +177,24 @@ void UpdatePlayer(void)
 		{// 下に移動
 			if (GetKeyboardPress(DIK_A) == true || GetJoypadPress(JOYKEY_LEFT) == true)
 			{// 左下に移動
-				g_Player.move.x += sinf(-D3DX_PI * 0.25f - pCamera->rot.y) * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
-				g_Player.move.y += cosf((D3DX_PI * 0.25f)) * -((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.y)));
+				g_Player.move.x += sinf(-D3DX_PI * 0.25f - pCamera->rot.y) * MOVEMENT.x;
+				g_Player.move.y += cosf((D3DX_PI * 0.25f)) * -MOVEMENT.y;
 				//g_Player.move.z += cosf(-D3DX_PI * 0.75f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = pCamera->rot.y + (D3DX_PI * 0.5f);
 			}
 			else if (GetKeyboardPress(DIK_D) == true || GetJoypadPress(JOYKEY_RIGHT) == true)
 			{// 右下に移動
-				g_Player.move.x += sinf(D3DX_PI * 0.25f - pCamera->rot.y) * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
-				g_Player.move.y += cosf((D3DX_PI * 0.25f)) * -((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.y)));
+				g_Player.move.x += sinf(D3DX_PI * 0.25f - pCamera->rot.y) * MOVEMENT.x;
+				g_Player.move.y += cosf((D3DX_PI * 0.25f)) * -MOVEMENT.y;
 				//g_Player.move.z += cosf(D3DX_PI * 0.75f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = pCamera->rot.y - (D3DX_PI * 0.5f);
 			}
 			else if (GetKeyboardPress(DIK_S) == true || GetJoypadPress(JOYKEY_DOWN) == true)
 			{// 下に移動
-				g_Player.move.x += sinf(D3DX_PI * 1.0f + pCamera->rot.y) * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
-				g_Player.move.y += cosf((D3DX_PI * 0.0f)) * -((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.y)));
+				g_Player.move.x += sinf(D3DX_PI * 1.0f + pCamera->rot.y) * MOVEMENT.x;
+				g_Player.move.y += cosf((D3DX_PI * 0.0f)) * -MOVEMENT.y;
 				//g_Player.move.z += cosf(D3DX_PI * 1.0f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = 0.0f;
@@ -199,13 +202,13 @@ void UpdatePlayer(void)
 		}
 		else if (GetKeyboardPress(DIK_A) == true || GetJoypadPress(JOYKEY_LEFT) == true)
 		{// 左に移動
-			g_Player.move.x += sinf(-D3DX_PI * 0.5f + pCamera->rot.y) * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
+			g_Player.move.x += sinf(-D3DX_PI * 0.5f + pCamera->rot.y) * MOVEMENT.x;
 
 			g_Player.fAngleZ = pCamera->rot.y + (D3DX_PI * 0.5f);
 		}
 		else if (GetKeyboardPress(DIK_D) == true || GetJoypadPress(JOYKEY_RIGHT) == true)
 		{// 右に移動
-			g_Player.move.x += sinf(D3DX_PI * 0.5f + pCamera->rot.y) * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
+			g_Player.move.x += sinf(D3DX_PI * 0.5f + pCamera->rot.y) * MOVEMENT.x;
 
 			g_Player.fAngleZ = pCamera->rot.y - (D3DX_PI * 0.5f);
 		}
@@ -215,8 +218,28 @@ void UpdatePlayer(void)
 		}
 	}
 
-	g_Player.fSpeedZ = (MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.z));		// 燃料50%で既定の速度くらい
-	g_Player.move.z += g_Player.fSpeedZ;
+	if (g_Player.fOil <= HIGH_SPPED)
+	{// 速い
+		g_Player.Speed.x = 1.5f;
+		g_Player.Speed.y = 1.5f;
+		g_Player.Speed.z = 1.5f;
+	}
+	else if (g_Player.fOil <= LOW_SPPED)
+	{// 普通
+		g_Player.Speed.x = 0.0f;
+		g_Player.Speed.y = 0.0f;
+		g_Player.Speed.z = 0.0f;
+	}
+	else
+	{// 遅い
+		g_Player.Speed.x = -1.5f;
+		g_Player.Speed.y = -1.5f;
+		g_Player.Speed.z = -1.5f;
+	}
+
+	//g_Player.move.x += g_Player.Speed.x;
+	//g_Player.move.y += g_Player.Speed.y;
+	g_Player.move.z += AUTO_SPEED + g_Player.Speed.z;
 
 	// 慣性
 	g_Player.pos += g_Player.move;
@@ -335,7 +358,7 @@ void SetPlayer(D3DXVECTOR3 pos)
 	g_Player.move = FIRST_POS;
 	g_Player.rot = FIRST_POS;
 	g_Player.fAngleZ = 0.0f;
-	g_Player.fSpeedZ = MOVEMENT.z;
+	g_Player.Speed = FIRST_POS;
 	g_Player.state = PLAYERSTATE_APPEAR;
 	g_Player.nCounterState = 30;
 	g_Player.fOil = MAX_OIL * 0.5f;

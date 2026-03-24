@@ -45,10 +45,10 @@ typedef struct
 {
 	D3DXVECTOR3 pos;			// 位置
 	D3DXVECTOR3 move;			// 移動量
+	D3DXVECTOR3 Speed;			// スピード
 	D3DXVECTOR3 rot;			// 向き
 	D3DXMATRIX mtxWorld;		// ワールドマトリックス
 	float fAngleZ;				// 目的の向き
-	float fSpeedZ;				// Z軸のスピード
 	PLAYERSTATE state;			// 状態
 	int nCounterState;			// 状態カウンター
 	float fOil;					// 燃料
