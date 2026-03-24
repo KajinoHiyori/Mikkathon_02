@@ -9,28 +9,78 @@
 
 #include "file.h"
 
-bool g_bLoadStage = false;	// ステージを読み込んだ
+// マクロ定義 ==================================================
+
+#define MAX_NUM_STAGEMODEL		(128)	// ステージのモデル数の最大
+
+// グローバル宣言 ==============================================
+
+StageModelInfo g_aStageModelInfo[MAX_NUM_STAGEMODEL];		// ステージモデルの情報
+
+bool g_bLoadStage = false;	// ステージを読み込んだか
 
 //========================================================================
 // ステージの初期化処理
 //========================================================================
-void InitStage()
+void InitStage(void)
 {
-	
+	if (g_bLoadStage == false)
+	{// まだステージを読み込んでない
+
+		// ステージモデルの情報を初期化
+		for (int nCntStageModel = 0; nCntStageModel < MAX_NUM_STAGEMODEL; nCntStageModel++)
+		{
+			memset(&g_aStageModelInfo[nCntStageModel].apTexture[0], NULL, sizeof g_aStageModelInfo[nCntStageModel].apTexture);	// マテリアルテクスチャを初期化
+			g_aStageModelInfo[nCntStageModel].pMesh = NULL;																		// メッシュの中身を空にする
+			g_aStageModelInfo[nCntStageModel].pBuffMat = NULL;																	// マテリアルの中身を空にする
+			g_aStageModelInfo[nCntStageModel].dwNumMat = 0;																		// マテリアル数を初期化
+
+			g_aStageModelInfo[nCntStageModel].bUse = false;																		// 使用していない状態に設定
+		}
+	}
 }
 
 //========================================================================
 // ステージの終了処理
 //========================================================================
-void UninitStage()
+void UninitStage(void)
 {
+	for (int nCntStageModel = 0; nCntStageModel < MAX_NUM_STAGEMODEL; nCntStageModel++)
+	{
+		// テクスチャの破棄
+		for (int nCntTexture = 0; nCntTexture < MAX_TEX_STAGEMODEL; nCntTexture++)
+		{// テクスチャの数分繰り返す
 
+			if (g_aStageModelInfo[nCntStageModel].apTexture[nCntTexture] != NULL)
+			{// 中身がある
+
+				g_aStageModelInfo[nCntStageModel].apTexture[nCntTexture]->Release();
+				g_aStageModelInfo[nCntStageModel].apTexture[nCntTexture] = NULL;
+			}
+		}
+
+		// メッシュの破棄
+		if (g_aStageModelInfo[nCntStageModel].pMesh != NULL)
+		{// 中身がある
+
+			g_aStageModelInfo[nCntStageModel].pMesh->Release();
+			g_aStageModelInfo[nCntStageModel].pMesh = NULL;
+		}
+
+		// マテリアルの破棄
+		if (g_aStageModelInfo[nCntStageModel].pBuffMat != NULL)
+		{// 中身がある
+
+			g_aStageModelInfo[nCntStageModel].pBuffMat->Release();
+			g_aStageModelInfo[nCntStageModel].pBuffMat = NULL;
+		}
+	}
 }
 
 //========================================================================
 // ステージの更新処理
 //========================================================================
-void UpdateStage()
+void UpdateStage(void)
 {
 
 }
@@ -38,7 +88,7 @@ void UpdateStage()
 //========================================================================
 // ステージの描画処理
 //========================================================================
-void DrawStage()
+void DrawStage(void)
 {
 
 }
@@ -110,7 +160,11 @@ bool SetLoadStage(const char* pStageFilename)
 			if (nCntModel < nNumModel)
 			{// 読み取れる上限に達していない場合
 				
+				fscanf(pFile, "%[ =\t\n]", &aBlankText[0]);		// 余分な情報を読み取る
+				fscanf(pFile, "%s", &aReadText[0]);				//読み込むモデルファイルを読み取る
 
+				// ステージモデルの読み込み
+				SetLoadStageModelInfo(&aReadText[0]);
 
 				nCntModel++;	// 読み込んだモデルをインクリメント
 			}
@@ -207,4 +261,93 @@ bool SetLoadStage(const char* pStageFilename)
 	fclose(pFile);
 
 	return true;		// 読み取りに成功したことを返す
+}
+
+//========================================================================
+// ステージのモデルの読み込み処理
+//========================================================================
+int SetLoadStageModelInfo(const char* pModelFilename)
+{
+	// 変数宣言 ======================================
+
+	// デバイスの獲得
+	LPDIRECT3DDEVICE9 pDevice = GetDevice();
+	HRESULT hr;									// 出力結果
+
+	char aErrorText[256] = {};					// エラーテキスト
+
+	// ===============================================
+
+	// 惑星モデルの読み込み
+	for (int nCntModel = 0; nCntModel < MAX_NUM_STAGEMODEL; nCntModel++)
+	{
+		// Xファイルの読み込み
+		hr = D3DXLoadMeshFromX(pModelFilename,
+							   D3DXMESH_SYSTEMMEM,
+							   pDevice,
+							   NULL,
+							   &g_aStageModelInfo[nCntModel].pBuffMat,
+							   NULL,
+							   &g_aStageModelInfo[nCntModel].dwNumMat,
+							   &g_aStageModelInfo[nCntModel].pMesh);
+
+		if (FAILED(hr))
+		{// Xファイルの読み込みに失敗した場合
+
+			sprintf(&aErrorText[0], "惑星の.xファイルの読み込みに失敗しました\nFILENAME %s\nHRESULT  0x%x", pModelFilename, hr);
+
+			// 警告ウィンドウの作成
+			MessageBox(NULL, &aErrorText[0], "ErrerMessage", MB_OK);
+		}
+		else
+		{// Xファイルの読み込みに成功した場合
+
+			// マテリアルデータへのポインタを所得
+			D3DXMATERIAL* pMat = (D3DXMATERIAL*)g_aStageModelInfo[nCntModel].pBuffMat->GetBufferPointer();
+
+			for (int nCntMat = 0; nCntMat < (int)g_aStageModelInfo[nCntModel].dwNumMat; nCntMat++)
+			{// マテリアルの数分繰り返す
+
+				if (pMat[nCntMat].pTextureFilename != NULL)
+				{// テクスチャファイルがある
+
+					// テクスチャの読み込み
+					hr = D3DXCreateTextureFromFile(pDevice,												// Direct3Dデバイスへのポインタ
+												   pMat[nCntMat].pTextureFilename,						// 読み込むテクスチャ
+												   &g_aStageModelInfo[nCntModel].apTexture[nCntMat]);	// テクスチャへのポインタ
+
+					if (FAILED(hr))
+					{// 画像ファイルの読み込みに失敗した場合
+
+						sprintf(&aErrorText[0], "惑星の画像ファイルの読み込みに失敗しました\nFILENAME %s\nHRESULT  0x%x", pMat[nCntMat].pTextureFilename, hr);
+
+						// 警告ウィンドウの作成
+						MessageBox(NULL, &aErrorText[0], "ErrerMessage", MB_OK);
+					}
+				}
+			}
+
+			g_aStageModelInfo[nCntModel].bUse = true;	// 使用している状態に設定
+
+			return nCntModel;	// 設定した場所のインデックスを返す
+		}
+	}
+
+	return -1;
+}
+
+//========================================================================
+// ステージの読み込みが終わっているか返す処理
+//========================================================================
+bool GetLoadStage(void)
+{
+	return g_bLoadStage;
+}
+
+//========================================================================
+// ステージモデルの情報返す処理
+//========================================================================
+StageModelInfo* GetStageModelInfo(int nIdx)
+{
+	return &g_aStageModelInfo[nIdx];
 }
