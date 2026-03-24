@@ -419,6 +419,9 @@ void Draw(void)
 	// 描画開始
 	if (SUCCEEDED(g_pD3DDevice->BeginScene()))
 	{ // 描画が成功した場合
+
+		SetCamera(0);
+
 		switch (g_mode)
 		{
 		case MODE_TITLE:	// タイトル画面

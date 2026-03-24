@@ -10,6 +10,7 @@
 #include "fade.h"
 #include "color.h"
 #include "player.h"
+#include "camera.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -35,6 +36,9 @@ void InitGame(void)
 
 	// プレイヤーの設定
 	SetPlayer(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	// カメラの設定
+	SetCameraPos(0, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CAMERATYPE_PLAYER);
 }
 
 //=======================================================
