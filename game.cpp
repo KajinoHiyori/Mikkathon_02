@@ -14,6 +14,7 @@
 
 #include "stage.h"
 #include "planet.h"
+#include "asteroid.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -43,7 +44,11 @@ void InitGame(void)
 	// カメラの設定
 	SetCameraPos(0, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CAMERATYPE_PLAYER);
 
+	// 惑星の初期化
 	InitPlanet();
+
+	// 小惑星の初期化
+	InitAsteroid();
 }
 
 //=======================================================
@@ -63,6 +68,9 @@ void UpdateGame(void)
 
 	// プレイヤーの更新処理
 	UpdatePlayer();
+
+	// 小惑星の更新処理
+	UpdateAsteroid();
 
 	if (GetKeyboardTrigger(DIK_SPACE) == true)
 	{
@@ -93,6 +101,9 @@ void DrawGame(void)
 
 	// 惑星の更新
 	DrawPlanet();
+
+	// 小惑星の描画処理
+	DrawAsteroid();
 }
 
 //=======================================================

@@ -20,6 +20,7 @@
 #include "oil.h"
 #include "stage.h"
 #include "planet.h"
+#include "asteroid.h"
 
 // マクロ定義
 #define CLASS_NAME	"WindowClass"	// ウィンドウクラスの名前
@@ -322,6 +323,9 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	// 燃料の初期化処理
 	InitOil();
 
+	// 小惑星の初期化処理
+	InitAsteroid();
+
 	// フェードの初期化
 	InitFade(MODE_TITLE, COLOR_BLACK);
 
@@ -341,6 +345,9 @@ void Uninit(void)
 
 	// 燃料の終了処理
 	UninitOil();
+
+	// 小惑星の終了処理
+	UninitAsteroid();
 
 	// プレイヤーの終了処理
 	UninitPlayer();
