@@ -16,5 +16,6 @@ void InitOil(void);
 void UninitOil(void);
 void UpdateOil(void);
 void DrawOil(void);
+void SetOilDisp(bool bDisp);
 
 #endif

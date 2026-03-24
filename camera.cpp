@@ -21,8 +21,8 @@
 #define AUTO_ROT				(D3DXVECTOR3(0.005f, 0.005f, 0.005f))	// 自動回転移動量
 #define DEFAULT_VIEW_ANGLE		(45.0f)									// 規定の視野角
 #define INERTIA_VIEW_ANGLE		(0.05f)									// 視野角の慣性
-#define INERTIA_POSR			(0.6f)									// 注視点の慣性
-#define INERTIA_POSV			(0.6f)									// 視点の慣性
+#define INERTIA_POSR			(0.8f)									// 注視点の慣性
+#define INERTIA_POSV			(0.8f)									// 視点の慣性
 #define MAX_Y					(300.0f)								// 上の制限
 #define MIN_Y					(-300.0f)								// 下の制限
 
@@ -61,12 +61,12 @@ void InitCamera(void)
 	g_aCamera[0].viewport.MinZ = 0.0f;
 	g_aCamera[0].viewport.MaxZ = 1.0f;
 
-	g_aCamera[1].viewport.X = SCREEN_WIDTH / 2;
-	g_aCamera[1].viewport.Y = 0;
-	g_aCamera[1].viewport.Width = SCREEN_WIDTH / 2;
-	g_aCamera[1].viewport.Height = SCREEN_HEIGHT;
-	g_aCamera[1].viewport.MinZ = 0.0f;
-	g_aCamera[1].viewport.MaxZ = 1.0f;
+	//g_aCamera[1].viewport.X = SCREEN_WIDTH / 2;
+	//g_aCamera[1].viewport.Y = 0;
+	//g_aCamera[1].viewport.Width = SCREEN_WIDTH / 2;
+	//g_aCamera[1].viewport.Height = SCREEN_HEIGHT;
+	//g_aCamera[1].viewport.MinZ = 0.0f;
+	//g_aCamera[1].viewport.MaxZ = 1.0f;
 }
 
 //=============================================================================
