@@ -9,6 +9,7 @@
 #include "input.h"
 #include "color.h"
 #include "debugproc.h"
+#include "player.h"
 
 // マクロ定義
 #define MAX_ASTEROIDTEXTURE	(16)	// 小惑星のテクスチャ数
@@ -16,6 +17,8 @@
 #define ASTEROID_KEY		(120)	// キー数
 #define FLOATING			(0.5f)	// 移動間隔
 #define ROTATE				(0.05f)	// 回転速度
+#define ASTEROID_HEIGHT		(50.0f)	// 小惑星の高さ
+#define ASTEROID_SIZE		(50.0f)	// 小惑星の大きさ
 
 // 小惑星のモデル情報
 typedef struct
@@ -368,6 +371,8 @@ Asteroid* GetAllAsteroid(void)
 //=======================================================
 bool CollisionAsteroid(D3DXVECTOR3 pos, bool bBreak)
 {
+	Player* pPlayer = GetPlayer();
+
 	for (int nCntAsteroid = 0; nCntAsteroid < MAX_ASTEROID; nCntAsteroid++)
 	{
 		if (g_aAsteroid[nCntAsteroid].bUse == false)
@@ -376,9 +381,29 @@ bool CollisionAsteroid(D3DXVECTOR3 pos, bool bBreak)
 		}
 
 		float fDistance = 0.0f;	// 距離を格納
+		bool bHeight = false;	// 高度内にいるかを判定
 		// 2点間の距離を求める
 		fDistance = sqrtf(((pos.x - g_aAsteroid[nCntAsteroid].pos.x) * (pos.x - g_aAsteroid[nCntAsteroid].pos.x)) + ((pos.z - g_aAsteroid[nCntAsteroid].pos.z) * (pos.z - g_aAsteroid[nCntAsteroid].pos.z))) * 0.5f;
 		PrintDebugProc("2点間の距離 %f\n", fDistance);
+		// 高度の判定を行う
+		if (pos.y <= g_aAsteroid[nCntAsteroid].pos.y + ASTEROID_HEIGHT && pos.y >= g_aAsteroid[nCntAsteroid].pos.y - ASTEROID_HEIGHT)
+		{ // 一定高度に収まっている場合フラグを立てる
+			bHeight = true;
+		}
+
+		if (bHeight == true && fDistance <= ASTEROID_SIZE)
+		{
+			if (bBreak == true)
+			{ // 破壊フラグが立っている
+				g_aAsteroid[nCntAsteroid].bUse = false;
+			}
+			else if (bBreak == false)
+			{ // 破壊フラグが立っていない
+				pPlayer->bUse = false;
+			}
+			PrintDebugProc("当たっている\n");
+			return true;
+		}
 	}
-	return true;
+	return false;
 }
