@@ -129,15 +129,18 @@ void UpdatePlayer(void)
 
 	if (g_Player.state != PLAYERSTATE_APPEAR)
 	{// 出現状態のときは移動できない
-		int nValueH, nValueV;
+		float fValueH, fValueV;
 
 		// パッド移動
-		if (GetJoypadLeftStickValue(&nValueH, &nValueV) == true)
+		if (GetJoypadLeftStickValue(&fValueH, &fValueV) == true)
 		{// パッドの移動優先
-			g_Player.fAngleZ = atan2f((float)(-nValueH), (float)(nValueV));
+			//g_Player.fAngleZ = atan2f((float)(-nValueH), (float)(nValueV));
+			PrintDebugProc("X : %f, Y : %f\n", fValueH, fValueV);
 
-			g_Player.move.x += nValueH/* * sinf((D3DX_PI * 0.5f) + pCamera->fAngle)*/;
-			g_Player.move.y += nValueV;
+			g_Player.move.x += fValueH/* * sinf((D3DX_PI * 0.5f) + pCamera->fAngle)*/;
+			g_Player.move.y += fValueV;
+			PrintDebugProc("プレイヤーのmove : ( %f %f %f )\n", g_Player.move.x, g_Player.move.y, g_Player.move.z);
+
 			//g_Player.move.z += cosf(fAngle + pCamera->rot.y) * MOVEMENT.z /** sinf((D3DX_PI * 0.5f) + pCamera->fAngle)*/;
 		}
 		else if (GetKeyboardPress(DIK_W) == true || GetJoypadPress(JOYKEY_UP) == true)		// キーボード移動
@@ -214,7 +217,7 @@ void UpdatePlayer(void)
 		}
 	}
 
-	g_Player.fSpeedZ = (MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * MOVEMENT.z);		// 燃料50%で既定の速度くらい
+	//g_Player.fSpeedZ = (MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * MOVEMENT.z);		// 燃料50%で既定の速度くらい
 	g_Player.move.z += g_Player.fSpeedZ;
 
 	// 慣性
@@ -224,6 +227,7 @@ void UpdatePlayer(void)
 	g_Player.move.z += (0.0f - g_Player.move.z) * INERTIA_MOVE;
 
 	PrintDebugProc("プレイヤーのpos : ( %f %f %f )\n", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
+	PrintDebugProc("プレイヤーのmove : ( %f %f %f )\n", g_Player.move.x, g_Player.move.y, g_Player.move.z);
 
 	if (g_Player.fAngleZ > D3DX_PI * 0.25f)
 	{// 角度の最大

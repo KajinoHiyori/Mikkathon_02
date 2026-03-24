@@ -11,6 +11,7 @@
 #define NUM_KEY_MAX			(256)	// キーの最大数
 #define REPEAT_INTERVAL		(20)	// リピートに入るまでのの間隔
 #define TRIGGER_INTERVAL	(-15)	// トリガーからの間隔
+#define STICK_DEADZONE		(1000)	// デッドゾーン
 
 // グローバル変数
 LPDIRECTINPUT8			g_pInput = NULL;		// DirectInputオブジェクトへのポインタ
@@ -282,19 +283,19 @@ bool GetJoypadLeftStick(JOYKEY key)
 {
 	if (key == JOYKEY_LSTICK_UP)	// 上
 	{
-		return (g_joyKeyState.Gamepad.sThumbLY >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) ? true : false;
+		return (g_joyKeyState.Gamepad.sThumbLY >= STICK_DEADZONE) ? true : false;
 	}
 	else if (key == JOYKEY_LSTICK_DOWN)	// 下
 	{
-		return (g_joyKeyState.Gamepad.sThumbLY <= -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) ? true : false;
+		return (g_joyKeyState.Gamepad.sThumbLY <= -STICK_DEADZONE) ? true : false;
 	}
 	if (key == JOYKEY_LSTICK_LEFT)	// 左
 	{
-		return (g_joyKeyState.Gamepad.sThumbLX <= -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) ? true : false;
+		return (g_joyKeyState.Gamepad.sThumbLX <= -STICK_DEADZONE) ? true : false;
 	}
 	else if (key == JOYKEY_LSTICK_RIGHT)	// 右
 	{
-		return (g_joyKeyState.Gamepad.sThumbLX >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) ? true : false;
+		return (g_joyKeyState.Gamepad.sThumbLX >= STICK_DEADZONE) ? true : false;
 	}
 	else
 	{
@@ -305,27 +306,22 @@ bool GetJoypadLeftStick(JOYKEY key)
 //======================================================================================
 // ジョイパッドの左スティックの情報を数値ごと取得
 //======================================================================================
-bool GetJoypadLeftStickValue(int* pValueH, int* pValueV)
+bool GetJoypadLeftStickValue(float* pValueH, float* pValueV)
 {
 	float fValueH = 0.0f;
 	float fValueV = 0.0f;
 
-	if (pValueH != NULL)
-	{ // 水平方向の設定
-		fValueH = g_joyKeyState.Gamepad.sThumbLX;
-	}
-	if (pValueV != NULL)
-	{ // 水平方向の設定
-		fValueV = g_joyKeyState.Gamepad.sThumbLY;
-	}
-	if ((sqrtf(fValueH * fValueH + fValueV * fValueV)) * 0.5f > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+	fValueH = g_joyKeyState.Gamepad.sThumbLX;
+	fValueV = g_joyKeyState.Gamepad.sThumbLY;
+
+	if ((sqrtf(fValueH * fValueH + fValueV * fValueV)) * 0.5f > STICK_DEADZONE)
 	{
-		fValueH = (fValueH) / (JOYSTICKVALUE_MAX - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
-		fValueV = (fValueV) / (JOYSTICKVALUE_MAX - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+		fValueH = (fValueH) / (JOYSTICKVALUE_MAX - STICK_DEADZONE);
+		fValueV = (fValueV) / (JOYSTICKVALUE_MAX - STICK_DEADZONE);
 
 		// 値を渡す
-		*pValueH = (int)fValueH;
-		*pValueV = (int)fValueV;
+		*pValueH = fValueH;
+		*pValueV = fValueV;
 		return true;
 	}
 	else
@@ -341,19 +337,19 @@ bool GetJoypadRightStick(JOYKEY key)
 {
 	if (key == JOYKEY_RSTICK_UP)	// 上
 	{
-		return (g_joyKeyState.Gamepad.sThumbRY >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) ? true : false;
+		return (g_joyKeyState.Gamepad.sThumbRY >= STICK_DEADZONE) ? true : false;
 	}
 	else if (key == JOYKEY_RSTICK_DOWN)	// 下
 	{
-		return (g_joyKeyState.Gamepad.sThumbRY <= -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) ? true : false;
+		return (g_joyKeyState.Gamepad.sThumbRY <= -STICK_DEADZONE) ? true : false;
 	}
 	if (key == JOYKEY_RSTICK_LEFT)	// 左
 	{
-		return (g_joyKeyState.Gamepad.sThumbRX <= -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) ? true : false;
+		return (g_joyKeyState.Gamepad.sThumbRX <= -STICK_DEADZONE) ? true : false;
 	}
 	else if (key == JOYKEY_RSTICK_RIGHT)	// 右
 	{
-		return (g_joyKeyState.Gamepad.sThumbRX >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) ? true : false;
+		return (g_joyKeyState.Gamepad.sThumbRX >= STICK_DEADZONE) ? true : false;
 	}
 	else
 	{
@@ -367,26 +363,26 @@ bool GetJoypadRightStick(JOYKEY key)
 bool GetJoypadLeftStickTrigger(JOYKEY key)
 {
 	// 前回の入力情報を保存
-	bool bLStickLeft = (g_joyKeyStateOld.Gamepad.sThumbLX <= -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) ? true : false;
-	bool bLStickRight = (g_joyKeyStateOld.Gamepad.sThumbLX >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) ? true : false;
-	bool bLStickUp = (g_joyKeyStateOld.Gamepad.sThumbLY >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) ? true : false;
-	bool bLStickDown		= (g_joyKeyStateOld.Gamepad.sThumbLY <= -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) ? true : false;
+	bool bLStickLeft = (g_joyKeyStateOld.Gamepad.sThumbLX <= -STICK_DEADZONE) ? true : false;
+	bool bLStickRight = (g_joyKeyStateOld.Gamepad.sThumbLX >= STICK_DEADZONE) ? true : false;
+	bool bLStickUp = (g_joyKeyStateOld.Gamepad.sThumbLY >= STICK_DEADZONE) ? true : false;
+	bool bLStickDown		= (g_joyKeyStateOld.Gamepad.sThumbLY <= -STICK_DEADZONE) ? true : false;
 
 	if (bLStickLeft == false && (key == JOYKEY_LSTICK_LEFT))
 	{ // 前回入力されていない && 左が入力された && deadzoneを越えている
-		return (g_joyKeyState.Gamepad.sThumbLX <= -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) ? true : false;
+		return (g_joyKeyState.Gamepad.sThumbLX <= -STICK_DEADZONE) ? true : false;
 	}
 	if (bLStickRight == false && (key == JOYKEY_LSTICK_RIGHT))
 	{ // 前回入力されていない && 右が入力された && deadzoneを越えている
-		return (g_joyKeyState.Gamepad.sThumbLX >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) ? true : false;
+		return (g_joyKeyState.Gamepad.sThumbLX >= STICK_DEADZONE) ? true : false;
 	}
 	if (bLStickUp == false && (key == JOYKEY_LSTICK_UP))
 	{ // 前回入力されていない && 上が入力された && deadzoneを越えている
-		return (g_joyKeyState.Gamepad.sThumbLY >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) ? true : false;
+		return (g_joyKeyState.Gamepad.sThumbLY >= STICK_DEADZONE) ? true : false;
 	}
 	if (bLStickDown == false && (key == JOYKEY_LSTICK_DOWN))
 	{ // 前回入力されていない && 下が入力された && deadzoneを越えている
-		return (g_joyKeyState.Gamepad.sThumbLY <= -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) ? true : false;
+		return (g_joyKeyState.Gamepad.sThumbLY <= -STICK_DEADZONE) ? true : false;
 	}
 	return false;
 }
@@ -397,26 +393,26 @@ bool GetJoypadLeftStickTrigger(JOYKEY key)
 bool GetJoypadRightStickTrigger(JOYKEY key)
 {
 	// 前回の入力情報を保存
-	bool bRStickLeft = (g_joyKeyStateOld.Gamepad.sThumbRX <= -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) ? true : false;
-	bool bRStickRight = (g_joyKeyStateOld.Gamepad.sThumbRX >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) ? true : false;
-	bool bRStickUp = (g_joyKeyStateOld.Gamepad.sThumbRY >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) ? true : false;
-	bool bRStickDown = (g_joyKeyStateOld.Gamepad.sThumbRY <= -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) ? true : false;
+	bool bRStickLeft = (g_joyKeyStateOld.Gamepad.sThumbRX <= -STICK_DEADZONE) ? true : false;
+	bool bRStickRight = (g_joyKeyStateOld.Gamepad.sThumbRX >= STICK_DEADZONE) ? true : false;
+	bool bRStickUp = (g_joyKeyStateOld.Gamepad.sThumbRY >= STICK_DEADZONE) ? true : false;
+	bool bRStickDown = (g_joyKeyStateOld.Gamepad.sThumbRY <= -STICK_DEADZONE) ? true : false;
 
 	if (bRStickLeft == false && (key == JOYKEY_RSTICK_LEFT))
 	{ // 前回入力されていない && 左が入力された && deadzoneを越えている
-		return (g_joyKeyState.Gamepad.sThumbRX <= -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) ? true : false;
+		return (g_joyKeyState.Gamepad.sThumbRX <= -STICK_DEADZONE) ? true : false;
 	}
 	if (bRStickRight == false && (key == JOYKEY_RSTICK_RIGHT))
 	{ // 前回入力されていない && 右が入力された && deadzoneを越えている
-		return (g_joyKeyState.Gamepad.sThumbRX >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) ? true : false;
+		return (g_joyKeyState.Gamepad.sThumbRX >= STICK_DEADZONE) ? true : false;
 	}
 	if (bRStickUp == false && (key == JOYKEY_RSTICK_UP))
 	{ // 前回入力されていない && 上が入力された && deadzoneを越えている
-		return (g_joyKeyState.Gamepad.sThumbRY >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) ? true : false;
+		return (g_joyKeyState.Gamepad.sThumbRY >= STICK_DEADZONE) ? true : false;
 	}
 	if (bRStickDown == false && (key == JOYKEY_RSTICK_DOWN))
 	{ // 前回入力されていない && 下が入力された && deadzoneを越えている
-		return (g_joyKeyState.Gamepad.sThumbRY <= -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) ? true : false;
+		return (g_joyKeyState.Gamepad.sThumbRY <= -STICK_DEADZONE) ? true : false;
 	}
 	return false;
 
