@@ -172,7 +172,6 @@ void UpdateAsteroid(void)
 			}
 			break;
 		}
-
 		// Y軸方向の浮遊感
 		switch (g_aAsteroid[nCntAsteroid].floatingY)
 		{
@@ -196,7 +195,6 @@ void UpdateAsteroid(void)
 			}
 			break;
 		}
-
 		// Z軸方向の浮遊感
 		switch (g_aAsteroid[nCntAsteroid].floatingZ)
 		{
@@ -331,13 +329,14 @@ void SetSarellite(D3DXVECTOR3 posParent, D3DXVECTOR3 move, float fRadius, float 
 		// 各種情報を格納
 		g_aAsteroid[nCntAsteroid].type = ASTEROIDTYPE_SARELLITE;		// 小惑星の種類
 		g_aAsteroid[nCntAsteroid].posParent = posParent;				// 親の位置
-		g_aAsteroid[nCntAsteroid].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 位置
 		g_aAsteroid[nCntAsteroid].move = move;							// 移動量
 		g_aAsteroid[nCntAsteroid].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 回転方向
-		g_aAsteroid[nCntAsteroid].fRadius = 0.0f;	// 親惑星との距離
-		g_aAsteroid[nCntAsteroid].fMove = 0.0f;		// 移動方向
+		g_aAsteroid[nCntAsteroid].fRadius = fRadius;	// 親惑星との距離
+		g_aAsteroid[nCntAsteroid].fMove = fMove;		// 移動方向
 		g_aAsteroid[nCntAsteroid].nIdx = nCntAsteroid;	// インデックス
 		g_aAsteroid[nCntAsteroid].bUse = true;			// 使用状態
+		g_aAsteroid[nCntAsteroid].pos = D3DXVECTOR3(sinf(g_aAsteroid[nCntAsteroid].fMove) * g_aAsteroid[nCntAsteroid].fRadius, 0.0f, cosf(g_aAsteroid[nCntAsteroid].fMove) * g_aAsteroid[nCntAsteroid].fRadius);	// 位置
+
 		// 演出面
 		g_aAsteroid[nCntAsteroid].floatingX = (FLOATINGX)(rand() % 2);	// 浮遊状態[X]
 		g_aAsteroid[nCntAsteroid].floatingY = (FLOATINGY)(rand() % 2);	// 浮遊状態[Y]
