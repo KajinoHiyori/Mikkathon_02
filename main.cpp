@@ -301,6 +301,12 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	// サウンドの初期化処理
 	//InitSound(hWnd);
 
+	// カメラの初期化処理
+	InitCamera();
+
+	// プレイヤーの更新処理
+	InitPlayer();
+
 	// フェードの初期化
 	InitFade(MODE_TITLE, COLOR_BLACK);
 
@@ -315,6 +321,12 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 //======================================================================================
 void Uninit(void)
 {
+	// カメラの終了処理
+	UninitCamera();
+
+	// プレイヤーの終了処理
+	UninitPlayer();
+
 	// タイトル画面の終了処理
 	UninitTitle();
 
@@ -366,6 +378,9 @@ void Update(void)
 	UpdateKeyboard();
 	// ジョイパッドの更新処理
 	UpdateJoypad();
+
+	// カメラの更新処理
+	UpdateCamera();
 
 	PrintDebugProc("FPS : %d\n", g_nCountFPS);
 

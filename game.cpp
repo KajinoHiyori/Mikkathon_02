@@ -9,6 +9,7 @@
 #include "input.h"
 #include "fade.h"
 #include "color.h"
+#include "player.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -25,9 +26,15 @@ GAMESTATE g_gameState = GAMESTATE_NONE;	// ゲームの状態を取得
 //=======================================================
 void InitGame(void)
 {
+	// プレイヤーの初期化処理
+	InitPlayer();
+
 	// 変数の初期化
 	g_gameState = GAMESTATE_EXPLANTATION;
 	g_nCounterGameState = 0;
+
+	// プレイヤーの設定
+	SetPlayer(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 }
 
 //=======================================================
@@ -44,6 +51,9 @@ void UninitGame(void)
 void UpdateGame(void)
 {
 	FADE fade = GetFade();
+
+	// プレイヤーの更新処理
+	UpdatePlayer();
 
 	if (GetKeyboardTrigger(DIK_SPACE) == true)
 	{
@@ -69,7 +79,8 @@ void UpdateGame(void)
 //=======================================================
 void DrawGame(void)
 {
-
+	// プレイヤーの描画処理
+	DrawPlayer();
 }
 
 //=======================================================
