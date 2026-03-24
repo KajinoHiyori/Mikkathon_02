@@ -44,26 +44,23 @@ typedef enum
 HRESULT InitKeyboard(HINSTANCE hInstance, HWND hWnd);
 void UninitKeyboard(void);
 void UpdateKeyboard(void);
-bool GetKeyboardPress(int nKey);
-bool GetKeyboardTrigger(int nKey);
-bool GetKeyboardRelease(int nKey);
-bool GetKeyboardRepeat(int nKey);
+bool GetKeyboardPress(int nKey);	// キーボード[Press]
+bool GetKeyboardTrigger(int nKey);	// キーボード[Trigger]
+bool GetKeyboardRelease(int nKey);	// キーボード[Release]
+bool GetKeyboardRepeat(int nKey);	// キーボード[Repeat]
 HRESULT InitJoypad(void);
 void UninitJoypad(void);
 void UpdateJoypad(void);
-bool GetJoypadPress(JOYKEY key);
-bool GetJoypadTrigger(JOYKEY key);
-bool GetJoypadRelease(JOYKEY key);
-bool GetJoypadRepeat(JOYKEY key);
-
-bool GetJoypadLeftStick(JOYKEY key);
-bool GetJoypadRightStick(JOYKEY key);
-
-bool GetJoypadLeftStickValue(int *pValueH, int *pValueV);
-
-bool GetJoypadLeftStickTrigger(JOYKEY key);
-bool GetJoypadRightStickTrigger(JOYKEY key);
-bool GetJoypadLeftStickRelease(JOYKEY key);
+bool GetJoypadPress(JOYKEY key);	// ジョイパッド[Press]
+bool GetJoypadTrigger(JOYKEY key);	// ジョイパッド[Trigger]
+bool GetJoypadRelease(JOYKEY key);	// ジョイパッド[Release]
+bool GetJoypadRepeat(JOYKEY key);	// ジョイパッド[Repeat]
+bool GetJoypadLeftStick(JOYKEY key);	// Lstick[Press]
+bool GetJoypadRightStick(JOYKEY key);	// Rstick[Press]
+bool GetJoypadLeftStickValue(int *pValueH, int *pValueV);	// Lstick[0.0f ~ 1.0fの範囲で入力値取得]
+bool GetJoypadLeftStickTrigger(JOYKEY key);		// Lstick[Trigger]
+bool GetJoypadRightStickTrigger(JOYKEY key);	// Rstick[Trigger]
+bool GetJoypadLeftStickRelease(JOYKEY key);		// Lstick[Release]
 void SetVibration(int left, int right, int time);
 void StopVibration(void);
 XINPUT_STATE GetJoypadState(void);
