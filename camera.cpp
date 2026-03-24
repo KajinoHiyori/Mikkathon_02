@@ -8,8 +8,7 @@
 //#include "debugproc.h"
 //#include "player.h"
 #include "input.h"
-//#include "game.h"
-//#include "tutorialtxt.h"
+#include "game.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -112,18 +111,24 @@ void UpdateCamera(void)
 			pCamera->posVDest.y = pCamera->posRDest.y + cosf((D3DX_PI * 0.5f) - pCamera->fAngle) * pCamera->fDistance;
 			pCamera->posVDest.z = pCamera->posRDest.z + cosf(D3DX_PI + pCamera->rot.y) * pCamera->fDistance * sinf((D3DX_PI * 0.5f) - pCamera->fAngle);
 
-			if ((nCntCamera == 0 ? GetKeyboardPress(DIK_J) == true : GetKeyboardPress(DIK_NUMPAD4) == true)|| GetJoypadStick(nCntCamera, JOYKEY_RIGHTSTICK_LEFT, &nValueH, &nValueV) == true)
+			// カメラ向きを調整
+			CorrectAngle(&pCamera->rot.y, pCamera->rot.y);
+
+			// 注視点の補正
+			pCamera->posR += (pCamera->posRDest - pCamera->posR) * INERTIA_POSR;
+
+			// 視点の補正
+			pCamera->posV += (pCamera->posVDest - pCamera->posV) * INERTIA_POSV;
+
+
+#if 0
+			if ((nCntCamera == 0 ? GetKeyboardPress(DIK_J) == true : GetKeyboardPress(DIK_NUMPAD4) == true) || GetJoypadStick(nCntCamera, JOYKEY_RIGHTSTICK_LEFT, &nValueH, &nValueV) == true)
 			{// 右に旋回
 				pCamera->rot.y += -ROT.y;
 
 				pCamera->posVDest.x = pCamera->posRDest.x + sinf(D3DX_PI + pCamera->rot.y) * pCamera->fDistance * sinf((D3DX_PI * 0.5f) - pCamera->fAngle);
 				pCamera->posVDest.y = pCamera->posRDest.y + cosf((D3DX_PI * 0.5f) - pCamera->fAngle) * pCamera->fDistance;
 				pCamera->posVDest.z = pCamera->posRDest.z + cosf(D3DX_PI + pCamera->rot.y) * pCamera->fDistance * sinf((D3DX_PI * 0.5f) - pCamera->fAngle);
-			
-				if (pPlayer->mode == PLAYERMODE_TUTORIAL)
-				{// チュートリアルモード
-					SetTutorialTxtState(TUTTXTTYPE_CAMERA, TUTTXTSTATE_CLEAR);
-				}
 			}
 			else if ((nCntCamera == 0 ? GetKeyboardPress(DIK_L) == true : GetKeyboardPress(DIK_NUMPAD6) == true) || GetJoypadStick(nCntCamera, JOYKEY_RIGHTSTICK_RIGHT, &nValueH, &nValueV) == true)
 			{// 左に旋回
@@ -132,11 +137,6 @@ void UpdateCamera(void)
 				pCamera->posVDest.x = pCamera->posRDest.x + sinf(D3DX_PI + pCamera->rot.y) * pCamera->fDistance * sinf((D3DX_PI * 0.5f) - pCamera->fAngle);
 				pCamera->posVDest.y = pCamera->posRDest.y + cosf((D3DX_PI * 0.5f) - pCamera->fAngle) * pCamera->fDistance;
 				pCamera->posVDest.z = pCamera->posRDest.z + cosf(D3DX_PI + pCamera->rot.y) * pCamera->fDistance * sinf((D3DX_PI * 0.5f) - pCamera->fAngle);
-			
-				if (pPlayer->mode == PLAYERMODE_TUTORIAL)
-				{// チュートリアルモード
-					SetTutorialTxtState(TUTTXTTYPE_CAMERA, TUTTXTSTATE_CLEAR);
-				}
 			}
 
 			// 視点移動
@@ -154,11 +154,6 @@ void UpdateCamera(void)
 				pCamera->posVDest.x = pCamera->posRDest.x + sinf(D3DX_PI + pCamera->rot.y) * pCamera->fDistance * sinf((D3DX_PI * 0.5f) - pCamera->fAngle);
 				pCamera->posVDest.y = pCamera->posRDest.y + cosf((D3DX_PI * 0.5f) - pCamera->fAngle) * pCamera->fDistance;
 				pCamera->posVDest.z = pCamera->posRDest.z + cosf(D3DX_PI + pCamera->rot.y) * pCamera->fDistance * sinf((D3DX_PI * 0.5f) - pCamera->fAngle);
-			
-				if (pPlayer->mode == PLAYERMODE_TUTORIAL)
-				{// チュートリアルモード
-					SetTutorialTxtState(TUTTXTTYPE_CAMERA, TUTTXTSTATE_CLEAR);
-				}
 			}
 			else if ((nCntCamera == 0 ? GetKeyboardPress(DIK_I) == true : GetKeyboardPress(DIK_NUMPAD8) == true) || GetJoypadStick(nCntCamera, JOYKEY_RIGHTSTICK_UP, &nValueH, &nValueV) == true)
 			{// 下に移動
@@ -174,24 +169,8 @@ void UpdateCamera(void)
 				pCamera->posVDest.x = pCamera->posRDest.x + sinf(D3DX_PI + pCamera->rot.y) * pCamera->fDistance * sinf((D3DX_PI * 0.5f) - pCamera->fAngle);
 				pCamera->posVDest.y = pCamera->posRDest.y + cosf((D3DX_PI * 0.5f) - pCamera->fAngle) * pCamera->fDistance;
 				pCamera->posVDest.z = pCamera->posRDest.z + cosf(D3DX_PI + pCamera->rot.y) * pCamera->fDistance * sinf((D3DX_PI * 0.5f) - pCamera->fAngle);
-			
-				if (pPlayer->mode == PLAYERMODE_TUTORIAL)
-				{// チュートリアルモード
-					SetTutorialTxtState(TUTTXTTYPE_CAMERA, TUTTXTSTATE_CLEAR);
-				}
 			}
 
-			// カメラ向きを調整
-			CorrectAngle(&pCamera->rot.y, pCamera->rot.y);
-
-			// 注視点の補正
-			pCamera->posR += (pCamera->posRDest - pCamera->posR) * INERTIA_POSR;
-
-			// 視点の補正
-			pCamera->posV += (pCamera->posVDest - pCamera->posV) * INERTIA_POSV;
-
-
-#if 0
 			// 並行移動
 			if (GetKeyboardPress(DIK_W) == true)
 			{// 奥に移動
