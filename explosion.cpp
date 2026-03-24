@@ -13,8 +13,10 @@
 //*****************************************************************************
 #define MAX_EXPLOSION			(256)									// 爆発の数
 #define SIZE_EXPLOSION			(5.0f)									// 爆発のサイズ半径
-#define TEXTURE_WIDTH			(0.125f)								// テクスチャパターンの幅
-#define TEXTURE_NUM				(8)										// テクスチャパターンの列数
+#define MAX_PATTERN				(8)										// 最大パターン数
+#define TEXTURE_WIDTH			(0.25f)									// テクスチャパターンの幅
+#define TEXTURE_HEIGHT			(0.5f)									// テクスチャパターンの高さ
+#define TEXTURE_NUM				(4)										// テクスチャパターンの列数
 #define MAX_TIME				(4)										// テクスチャ切り替えのカウント
 #define MAX_SIZE				(2.0f)									// 大きさ補正
 #define START_ALPHA				(2)										// 透明度補正を始めるパターン数
@@ -50,9 +52,7 @@ D3DXMATRIX g_mtxWorldExplosion;								// ワールドマトリックス
 //*****************************************************************************
 const char* c_apFilernamaExplosion[EXPLOSIONTYPE_MAX] =
 {
-	"data\\TEXTURE\\explosion000.png",
-	"data\\TEXTURE\\explosion001.png",
-	"data\\TEXTURE\\explosion002.png",
+	"data\\TEXTURE\\explosion.png",
 };
 
 //=============================================================================
@@ -116,10 +116,10 @@ void InitExplosion(void)
 		pVtx[3].col = g_aExplosion[nCntExplosion].col;
 
 		// テクスチャ座標の設定
-		pVtx[0].tex = D3DXVECTOR2(g_aExplosion[nCntExplosion].nPatternAnim * TEXTURE_WIDTH, 0.0f);
-		pVtx[1].tex = D3DXVECTOR2((g_aExplosion[nCntExplosion].nPatternAnim + 1) * TEXTURE_WIDTH, 0.0f);
-		pVtx[2].tex = D3DXVECTOR2(g_aExplosion[nCntExplosion].nPatternAnim * TEXTURE_WIDTH, 1.0f);
-		pVtx[3].tex = D3DXVECTOR2((g_aExplosion[nCntExplosion].nPatternAnim + 1) * TEXTURE_WIDTH, 1.0f);
+		pVtx[0].tex = D3DXVECTOR2(g_aExplosion[nCntExplosion].nPatternAnim * TEXTURE_WIDTH, (g_aExplosion[nCntExplosion].nPatternAnim / TEXTURE_NUM) * TEXTURE_HEIGHT);
+		pVtx[1].tex = D3DXVECTOR2((g_aExplosion[nCntExplosion].nPatternAnim + 1) * TEXTURE_WIDTH, (g_aExplosion[nCntExplosion].nPatternAnim / TEXTURE_NUM) * TEXTURE_HEIGHT);
+		pVtx[2].tex = D3DXVECTOR2(g_aExplosion[nCntExplosion].nPatternAnim * TEXTURE_WIDTH, ((g_aExplosion[nCntExplosion].nPatternAnim / TEXTURE_NUM) + 1) * TEXTURE_HEIGHT);
+		pVtx[3].tex = D3DXVECTOR2((g_aExplosion[nCntExplosion].nPatternAnim + 1) * TEXTURE_WIDTH, ((g_aExplosion[nCntExplosion].nPatternAnim / TEXTURE_NUM) + 1) * TEXTURE_HEIGHT);
 
 		pVtx += 4;
 	}
@@ -195,13 +195,13 @@ void UpdateExplosion(void)
 				pVtx[3].col = g_aExplosion[nCntExplosion].col;
 
 				// テクスチャ座標の更新
-				pVtx[0].tex = D3DXVECTOR2(g_aExplosion[nCntExplosion].nPatternAnim * TEXTURE_WIDTH, 0.0f);
-				pVtx[1].tex = D3DXVECTOR2((g_aExplosion[nCntExplosion].nPatternAnim + 1) * TEXTURE_WIDTH, 0.0f);
-				pVtx[2].tex = D3DXVECTOR2(g_aExplosion[nCntExplosion].nPatternAnim * TEXTURE_WIDTH, 1.0f);
-				pVtx[3].tex = D3DXVECTOR2((g_aExplosion[nCntExplosion].nPatternAnim + 1) * TEXTURE_WIDTH, 1.0f);
+				pVtx[0].tex = D3DXVECTOR2(g_aExplosion[nCntExplosion].nPatternAnim * TEXTURE_WIDTH, (g_aExplosion[nCntExplosion].nPatternAnim / TEXTURE_NUM) * TEXTURE_HEIGHT);
+				pVtx[1].tex = D3DXVECTOR2((g_aExplosion[nCntExplosion].nPatternAnim + 1) * TEXTURE_WIDTH, (g_aExplosion[nCntExplosion].nPatternAnim / TEXTURE_NUM) * TEXTURE_HEIGHT);
+				pVtx[2].tex = D3DXVECTOR2(g_aExplosion[nCntExplosion].nPatternAnim * TEXTURE_WIDTH, ((g_aExplosion[nCntExplosion].nPatternAnim / TEXTURE_NUM) + 1) * TEXTURE_HEIGHT);
+				pVtx[3].tex = D3DXVECTOR2((g_aExplosion[nCntExplosion].nPatternAnim + 1) * TEXTURE_WIDTH, ((g_aExplosion[nCntExplosion].nPatternAnim / TEXTURE_NUM) + 1) * TEXTURE_HEIGHT);
 			}
 
-			if (g_aExplosion[nCntExplosion].nPatternAnim >= TEXTURE_NUM)
+			if (g_aExplosion[nCntExplosion].nPatternAnim >= MAX_PATTERN)
 			{// 総パターン数を超えた
 				g_aExplosion[nCntExplosion].bUse = false;		// 使用していない状態にする
 			}
@@ -325,10 +325,10 @@ void SetExplosion(D3DXVECTOR3 pos, D3DXVECTOR3 move, float length, EXPLOSIONTYPE
 			pVtx[3].col = g_aExplosion[nCntExplosion].col;
 
 			// テクスチャ座標の設定
-			pVtx[0].tex = D3DXVECTOR2(g_aExplosion[nCntExplosion].nPatternAnim * TEXTURE_WIDTH, 0.0f);
-			pVtx[1].tex = D3DXVECTOR2((g_aExplosion[nCntExplosion].nPatternAnim + 1) * TEXTURE_WIDTH, 0.0f);
-			pVtx[2].tex = D3DXVECTOR2(g_aExplosion[nCntExplosion].nPatternAnim * TEXTURE_WIDTH, 1.0f);
-			pVtx[3].tex = D3DXVECTOR2((g_aExplosion[nCntExplosion].nPatternAnim + 1) * TEXTURE_WIDTH, 1.0f);
+			pVtx[0].tex = D3DXVECTOR2(g_aExplosion[nCntExplosion].nPatternAnim * TEXTURE_WIDTH, (g_aExplosion[nCntExplosion].nPatternAnim / TEXTURE_NUM) * TEXTURE_HEIGHT);
+			pVtx[1].tex = D3DXVECTOR2((g_aExplosion[nCntExplosion].nPatternAnim + 1) * TEXTURE_WIDTH, (g_aExplosion[nCntExplosion].nPatternAnim / TEXTURE_NUM) * TEXTURE_HEIGHT);
+			pVtx[2].tex = D3DXVECTOR2(g_aExplosion[nCntExplosion].nPatternAnim * TEXTURE_WIDTH, ((g_aExplosion[nCntExplosion].nPatternAnim / TEXTURE_NUM) + 1) * TEXTURE_HEIGHT);
+			pVtx[3].tex = D3DXVECTOR2((g_aExplosion[nCntExplosion].nPatternAnim + 1) * TEXTURE_WIDTH, ((g_aExplosion[nCntExplosion].nPatternAnim / TEXTURE_NUM) + 1) * TEXTURE_HEIGHT);
 
 			g_aExplosion[nCntExplosion].bUse = true;			// 使用している状態にする
 

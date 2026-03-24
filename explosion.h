@@ -15,8 +15,6 @@
 typedef enum
 {
 	EXPLOSIONTYPE_0 = 0,			// タイプ0
-	EXPLOSIONTYPE_1,				// タイプ1
-	EXPLOSIONTYPE_2,				// タイプ2
 	EXPLOSIONTYPE_MAX
 }EXPLOSIONTYPE;
 
