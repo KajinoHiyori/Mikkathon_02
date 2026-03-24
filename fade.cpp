@@ -11,12 +11,6 @@
 #define	FADE_SPEED	(0.025f)	// フェードの移り変わりの速さ
 
 // グローバル変数
-LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffFade = NULL; // 頂点バッファへのポインタ
-FADE g_fade;			// フェードの状態
-MODE g_modeNext;		// 次の画面(モード)
-D3DXCOLOR g_colorFade;	// ポリゴン(フェード)の色
-
-// グローバル変数
 LPDIRECT3DTEXTURE9    g_pTextureFade = NULL;        // テクスチャへのポインタ
 LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffFade = NULL;    // 頂点バッファへのポインタ
 FADE g_fade;
@@ -24,7 +18,7 @@ MODE g_modeNext;
 D3DXCOLOR g_colorFade = COLOR_BLACK;
 
 //=======================================================
-// プレイヤーの初期化処理
+// フェードの初期化処理
 //=======================================================
 void InitFade(MODE modeNext, D3DXCOLOR col)
 {
@@ -78,8 +72,9 @@ void InitFade(MODE modeNext, D3DXCOLOR col)
     // 頂点バッファをアンロック
     g_pVtxBuffFade->Unlock();
 }
+
 //=======================================================
-// プレイヤーの終了処理
+// フェードの終了処理
 //=======================================================
 void UninitFade(void)
 {
@@ -99,7 +94,7 @@ void UninitFade(void)
 }
 
 //=======================================================
-// プレイヤーの更新処理
+// フェードの更新処理
 //=======================================================
 void UpdateFade(void)
 {
@@ -110,7 +105,7 @@ void UpdateFade(void)
     {
         if (g_fade == FADE_IN)
         {
-            g_colorFade.a -= 0.03;
+            g_colorFade.a -= 0.03f;
 
             if (g_colorFade.a <= 0.0f)
             {
@@ -120,7 +115,7 @@ void UpdateFade(void)
         }
         else if (g_fade == FADE_OUT)
         {
-            g_colorFade.a += 0.03;
+            g_colorFade.a += 0.03f;
 
             if (g_colorFade.a >= 1.0f)
             {
@@ -147,7 +142,7 @@ void UpdateFade(void)
 }
 
 //=======================================================
-// プレイヤーの描画処理
+// フェードの描画処理
 //=======================================================
 void DrawFade(void)
 {
@@ -169,6 +164,9 @@ void DrawFade(void)
     pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 }
 
+//=======================================================
+// フェードの設定
+//=======================================================
 void SetFade(MODE modeNext, D3DXCOLOR col)
 {
     g_fade = FADE_OUT;
@@ -177,6 +175,9 @@ void SetFade(MODE modeNext, D3DXCOLOR col)
     g_colorFade.a = 0.0f;
 }
 
+//=======================================================
+// フェードの状態を取得
+//=======================================================
 FADE GetFade(void)
 {
     return g_fade;
