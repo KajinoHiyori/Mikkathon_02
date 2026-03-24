@@ -7,6 +7,7 @@
 #include "player.h"
 #include "camera.h"
 #include "input.h"
+#include "debugproc.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -16,7 +17,7 @@
 #define INERTIA_MOVE			(0.4f)									// 移動の慣性
 #define INERTIA_ANGLE			(0.1f)									// 角度の慣性
 #define MAX_OIL					(100.0f)								// 最大燃料
-#define MINUS_OIL				(0.5f)									// 燃料の減り方
+#define MINUS_OIL				(0.001f)								// 燃料の減り方
 #define PLAYER_FILE				"data\\MODEL\\rocket000.x"				// プレイヤーのファイル名
 
 //*****************************************************************************
@@ -108,10 +109,28 @@ void UninitPlayer(void)
 void UpdatePlayer(void)
 {
 	Camera* pCamera = GetCamera();
-	int nValueH, nValueV;
+
+	switch (g_Player.state)
+	{
+	case PLAYERSTATE_APPEAR:
+		g_Player.nCounterState--;
+
+		if (g_Player.nCounterState < 0)
+		{// 動けるようになる
+			g_Player.state = PLAYERSTATE_WAIT;
+			g_Player.nCounterState = 0;
+		}
+
+		break;
+
+	case PLAYERSTATE_WAIT:
+		break;
+	}
 
 	if (g_Player.state != PLAYERSTATE_APPEAR)
 	{// 出現状態のときは移動できない
+		int nValueH, nValueV;
+
 		// パッド移動
 		if (GetJoypadLeftStickValue(&nValueH, &nValueV) == true)
 		{// パッドの移動優先
@@ -122,23 +141,23 @@ void UpdatePlayer(void)
 			//g_Player.move.z += cosf(fAngle + pCamera->rot.y) * MOVEMENT.z /** sinf((D3DX_PI * 0.5f) + pCamera->fAngle)*/;
 		}
 		else if (GetKeyboardPress(DIK_W) == true || GetJoypadPress(JOYKEY_UP) == true)		// キーボード移動
-		{// 奥に移動
+		{// 上に移動
 			if (GetKeyboardPress(DIK_A) == true || GetJoypadPress(JOYKEY_LEFT) == true)
 			{// 左上に移動
 				g_Player.move.x += sinf(-D3DX_PI * 0.75f - pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf(((D3DX_PI * 0.5f) + pCamera->fAngle)) * MOVEMENT.y;
+				g_Player.move.y += cosf((D3DX_PI * 0.75f)) * -MOVEMENT.y;
 				//g_Player.move.z += cosf(-D3DX_PI * 0.25f + pCamera->rot.y) * MOVEMENT.z;
 			}
 			else if (GetKeyboardPress(DIK_D) == true || GetJoypadPress(JOYKEY_RIGHT) == true)
 			{// 右上に移動
 				g_Player.move.x += sinf(D3DX_PI * 0.75f - pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf(((D3DX_PI * 0.5f) + pCamera->fAngle)) * MOVEMENT.y;
+				g_Player.move.y += cosf((D3DX_PI * 0.75f)) * -MOVEMENT.y;
 				//g_Player.move.z += cosf(D3DX_PI * 0.25f + pCamera->rot.y) * MOVEMENT.z;
 			}
 			else if (GetKeyboardPress(DIK_W) == true || GetJoypadPress(JOYKEY_UP) == true)
 			{// 上に移動
 				g_Player.move.x += sinf(D3DX_PI * 0.0f + pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf(((D3DX_PI * 0.5f) + pCamera->fAngle)) * MOVEMENT.y;
+				g_Player.move.y += cosf((D3DX_PI * 1.0f)) * -MOVEMENT.y;
 				//g_Player.move.z += cosf(D3DX_PI * 0.0f + pCamera->rot.y) * MOVEMENT.z;
 			}
 		}
@@ -147,19 +166,19 @@ void UpdatePlayer(void)
 			if (GetKeyboardPress(DIK_A) == true || GetJoypadPress(JOYKEY_LEFT) == true)
 			{// 左下に移動
 				g_Player.move.x += sinf(-D3DX_PI * 0.25f - pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf(((D3DX_PI * 0.5f) + pCamera->fAngle)) * -MOVEMENT.y;
+				g_Player.move.y += cosf((D3DX_PI * 0.25f)) * -MOVEMENT.y;
 				//g_Player.move.z += cosf(-D3DX_PI * 0.75f + pCamera->rot.y) * MOVEMENT.z;
 			}
 			else if (GetKeyboardPress(DIK_D) == true || GetJoypadPress(JOYKEY_RIGHT) == true)
 			{// 右下に移動
 				g_Player.move.x += sinf(D3DX_PI * 0.25f - pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf(((D3DX_PI * 0.5f) + pCamera->fAngle)) * -MOVEMENT.y;
+				g_Player.move.y += cosf((D3DX_PI * 0.25f)) * -MOVEMENT.y;
 				//g_Player.move.z += cosf(D3DX_PI * 0.75f + pCamera->rot.y) * MOVEMENT.z;
 			}
 			else if (GetKeyboardPress(DIK_S) == true || GetJoypadPress(JOYKEY_DOWN) == true)
 			{// 下に移動
 				g_Player.move.x += sinf(D3DX_PI * 1.0f + pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf(((D3DX_PI * 0.5f) + pCamera->fAngle)) * -MOVEMENT.y;
+				g_Player.move.y += cosf((D3DX_PI * 0.0f)) * -MOVEMENT.y;
 				//g_Player.move.z += cosf(D3DX_PI * 1.0f + pCamera->rot.y) * MOVEMENT.z;
 			}
 		}
@@ -188,6 +207,17 @@ void UpdatePlayer(void)
 	g_Player.move.y += (0.0f - g_Player.move.y) * INERTIA_MOVE;
 	g_Player.move.z += (0.0f - g_Player.move.z) * INERTIA_MOVE;
 
+	PrintDebugProc("プレイヤーのpos : ( %f %f %f )\n", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
+
+	if (g_Player.fAngleZ > D3DX_PI * 0.25f)
+	{// 角度の最大
+		g_Player.fAngleZ = D3DX_PI * 0.25f;
+	}
+	else if (g_Player.fAngleZ < D3DX_PI * -0.25f)
+	{// 角度の最小
+		g_Player.fAngleZ = D3DX_PI * -0.25f;
+	}
+
 	// 向きを調整
 	CorrectAngle(&g_Player.fAngleZ, g_Player.fAngleZ - g_Player.rot.z);
 
@@ -199,7 +229,9 @@ void UpdatePlayer(void)
 		CorrectAngle(&g_Player.rot.z, g_Player.rot.z);
 	}
 
+#ifndef _DEBUG
 	g_Player.fOil -= MINUS_OIL;
+#endif
 
 	if (g_Player.fOil > MAX_OIL)
 	{// 燃料の最大
@@ -275,7 +307,7 @@ void SetPlayer(D3DXVECTOR3 pos)
 	g_Player.fAngleZ = 0.0f;
 	g_Player.fSpeedZ = MOVEMENT.z;
 	g_Player.state = PLAYERSTATE_APPEAR;
-	g_Player.nCounterState = 0;
+	g_Player.nCounterState = 180;
 	g_Player.fOil = MAX_OIL * 0.5f;
 	g_Player.bUse = true;
 }

@@ -97,18 +97,15 @@ void UpdateCamera(void)
 		case CAMERATYPE_PLAYER:
 			//int nValueH, nValueV;
 
-			// プレイヤー向きを調整
-			CorrectAngle(&pPlayer->rot.y, ((pPlayer->rot.y - D3DX_PI) - pCamera->rot.y));
-
 			// 目的の注視点を設定
-			pCamera->posRDest.x = pPlayer->pos.x + sinf(D3DX_PI + pPlayer->rot.y) * pCamera->fRDistance;
-			pCamera->posRDest.y = pPlayer->pos.y + HEIGHT;
-			pCamera->posRDest.z = pPlayer->pos.z + cosf(D3DX_PI + pPlayer->rot.y) * pCamera->fRDistance;
+			pCamera->posRDest.x = pPlayer->pos.x;
+			pCamera->posRDest.y = pPlayer->pos.y;
+			pCamera->posRDest.z = pPlayer->pos.z;
 
 			// 目的の視点を設定
-			pCamera->posVDest.x = pCamera->posRDest.x + sinf(D3DX_PI + pCamera->rot.y) * pCamera->fDistance * sinf((D3DX_PI * 0.5f) - pCamera->fAngle);
-			pCamera->posVDest.y = pCamera->posRDest.y + cosf((D3DX_PI * 0.5f) - pCamera->fAngle) * pCamera->fDistance;
-			pCamera->posVDest.z = pCamera->posRDest.z + cosf(D3DX_PI + pCamera->rot.y) * pCamera->fDistance * sinf((D3DX_PI * 0.5f) - pCamera->fAngle);
+			pCamera->posVDest.x = pCamera->posRDest.x ;
+			pCamera->posVDest.y = pCamera->posRDest.y + HEIGHT;
+			pCamera->posVDest.z = pCamera->posRDest.z + cosf(D3DX_PI + pCamera->rot.y) * pCamera->fDistance;
 
 			// カメラ向きを調整
 			CorrectAngle(&pCamera->rot.y, pCamera->rot.y);
@@ -118,7 +115,6 @@ void UpdateCamera(void)
 
 			// 視点の補正
 			pCamera->posV += (pCamera->posVDest - pCamera->posV) * INERTIA_POSV;
-
 
 #if 0
 			if ((nCntCamera == 0 ? GetKeyboardPress(DIK_J) == true : GetKeyboardPress(DIK_NUMPAD4) == true) || GetJoypadStick(nCntCamera, JOYKEY_RIGHTSTICK_LEFT, &nValueH, &nValueV) == true)

@@ -304,6 +304,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	// カメラの初期化処理
 	InitCamera();
+	SetNumCamera(1);
 
 	// プレイヤーの初期化処理
 	InitPlayer();
