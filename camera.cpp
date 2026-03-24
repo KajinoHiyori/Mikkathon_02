@@ -101,9 +101,9 @@ void UpdateCamera(void)
 			CorrectAngle(&pPlayer->rot.y, ((pPlayer->rot.y - D3DX_PI) - pCamera->rot.y));
 
 			// 目的の注視点を設定
-			pCamera->posRDest.x = pPlayer->pos.x + sinf(D3DX_PI + pPlayer->fAngleY) * pCamera->fRDistance;
+			pCamera->posRDest.x = pPlayer->pos.x + sinf(D3DX_PI + pPlayer->rot.y) * pCamera->fRDistance;
 			pCamera->posRDest.y = pPlayer->pos.y + HEIGHT;
-			pCamera->posRDest.z = pPlayer->pos.z + cosf(D3DX_PI + pPlayer->fAngleY) * pCamera->fRDistance;
+			pCamera->posRDest.z = pPlayer->pos.z + cosf(D3DX_PI + pPlayer->rot.y) * pCamera->fRDistance;
 
 			// 目的の視点を設定
 			pCamera->posVDest.x = pCamera->posRDest.x + sinf(D3DX_PI + pCamera->rot.y) * pCamera->fDistance * sinf((D3DX_PI * 0.5f) - pCamera->fAngle);

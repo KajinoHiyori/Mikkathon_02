@@ -14,6 +14,8 @@
 #define MOVEMENT				(D3DXVECTOR3(1.0f, 1.0f, 1.0f))			// 移動量
 #define ROT						(D3DXVECTOR3(0.05f, 0.05f, 0.05f))		// 向き移動量
 #define INERTIA_MOVE			(0.4f)									// 移動の慣性
+#define MAX_OIL					(100.0f)								// 最大燃料
+#define MINUS_OIL				(0.5f)									// 燃料の減り方
 #define PLAYER_FILE				"data\\MODEL\\rocket001.x"				// プレイヤーのファイル名
 
 //*****************************************************************************
@@ -35,6 +37,12 @@ void InitPlayer(void)
 	g_Player.pos = FIRST_POS;
 	g_Player.move = FIRST_POS;
 	g_Player.rot = FIRST_POS;
+	g_Player.fAngleZ = 0.0f;
+	g_Player.fSpeedZ = MOVEMENT.z;
+	g_Player.state = PLAYERSTATE_APPEAR;
+	g_Player.nCounterState = 0;
+	g_Player.fOil = MAX_OIL * 0.5f;
+	g_Player.bUse = false;
 
 	if (g_PlayerModel.pMesh == NULL)
 	{// Xファイルの読み込み
@@ -98,6 +106,98 @@ void UninitPlayer(void)
 //=============================================================================
 void UpdatePlayer(void)
 {
+	Camera* pCamera = GetCamera();
+	int nValueH, nValueV;
+
+	if (g_Player.state != PLAYERSTATE_APPEAR)
+	{// 出現状態のときは移動できない
+		// パッド移動
+		if (GetJoypadLeftStickValue(&nValueH, &nValueV) == true)
+		{// パッドの移動優先
+			g_Player.fAngleZ = atan2f((float)(nValueH), (float)(nValueV));
+
+			g_Player.move.x += sinf(pCamera->rot.y) * MOVEMENT.x/* * sinf((D3DX_PI * 0.5f) + pCamera->fAngle)*/;
+			g_Player.move.y += cosf(pCamera->rot.y) * MOVEMENT.y;
+			//g_Player.move.z += cosf(fAngle + pCamera->rot.y) * MOVEMENT.z /** sinf((D3DX_PI * 0.5f) + pCamera->fAngle)*/;
+		}
+		else if (GetKeyboardPress(DIK_W) == true || GetJoypadPress(JOYKEY_UP) == true)		// キーボード移動
+		{// 奥に移動
+			if (GetKeyboardPress(DIK_A) == true || GetJoypadPress(JOYKEY_LEFT) == true)
+			{// 左上に移動
+				g_Player.move.x += sinf(-D3DX_PI * 0.75f - pCamera->rot.y) * MOVEMENT.x;
+				g_Player.move.y += cosf(((D3DX_PI * 0.5f) + pCamera->fAngle)) * MOVEMENT.y;
+				//g_Player.move.z += cosf(-D3DX_PI * 0.25f + pCamera->rot.y) * MOVEMENT.z;
+			}
+			else if (GetKeyboardPress(DIK_D) == true || GetJoypadPress(JOYKEY_RIGHT) == true)
+			{// 右上に移動
+				g_Player.move.x += sinf(D3DX_PI * 0.75f - pCamera->rot.y) * MOVEMENT.x;
+				g_Player.move.y += cosf(((D3DX_PI * 0.5f) + pCamera->fAngle)) * MOVEMENT.y;
+				//g_Player.move.z += cosf(D3DX_PI * 0.25f + pCamera->rot.y) * MOVEMENT.z;
+			}
+			else if (GetKeyboardPress(DIK_W) == true || GetJoypadPress(JOYKEY_UP) == true)
+			{// 上に移動
+				g_Player.move.x += sinf(D3DX_PI * 0.0f + pCamera->rot.y) * MOVEMENT.x;
+				g_Player.move.y += cosf(((D3DX_PI * 0.5f) + pCamera->fAngle)) * MOVEMENT.y;
+				//g_Player.move.z += cosf(D3DX_PI * 0.0f + pCamera->rot.y) * MOVEMENT.z;
+			}
+		}
+		else if (GetKeyboardPress(DIK_S) == true || GetJoypadPress(JOYKEY_DOWN) == true)
+		{// 下に移動
+			if (GetKeyboardPress(DIK_A) == true || GetJoypadPress(JOYKEY_LEFT) == true)
+			{// 左下に移動
+				g_Player.move.x += sinf(-D3DX_PI * 0.25f - pCamera->rot.y) * MOVEMENT.x;
+				g_Player.move.y += cosf(((D3DX_PI * 0.5f) + pCamera->fAngle)) * -MOVEMENT.y;
+				//g_Player.move.z += cosf(-D3DX_PI * 0.75f + pCamera->rot.y) * MOVEMENT.z;
+			}
+			else if (GetKeyboardPress(DIK_D) == true || GetJoypadPress(JOYKEY_RIGHT) == true)
+			{// 右下に移動
+				g_Player.move.x += sinf(D3DX_PI * 0.25f - pCamera->rot.y) * MOVEMENT.x;
+				g_Player.move.y += cosf(((D3DX_PI * 0.5f) + pCamera->fAngle)) * -MOVEMENT.y;
+				//g_Player.move.z += cosf(D3DX_PI * 0.75f + pCamera->rot.y) * MOVEMENT.z;
+			}
+			else if (GetKeyboardPress(DIK_S) == true || GetJoypadPress(JOYKEY_DOWN) == true)
+			{// 下に移動
+				g_Player.move.x += sinf(D3DX_PI * 1.0f + pCamera->rot.y) * MOVEMENT.x;
+				g_Player.move.y += cosf(((D3DX_PI * 0.5f) + pCamera->fAngle)) * -MOVEMENT.y;
+				//g_Player.move.z += cosf(D3DX_PI * 1.0f + pCamera->rot.y) * MOVEMENT.z;
+			}
+		}
+		else if (GetKeyboardPress(DIK_A) == true || GetJoypadPress(JOYKEY_LEFT) == true)
+		{// 左に移動
+			g_Player.move.x += sinf(-D3DX_PI * 0.5f + pCamera->rot.y) * MOVEMENT.x;
+			g_Player.move.z += cosf(-D3DX_PI * 0.5f + pCamera->rot.y) * MOVEMENT.z;
+
+			g_Player.fAngleZ = pCamera->rot.y + (D3DX_PI * 0.5f);
+		}
+		else if (GetKeyboardPress(DIK_D) == true || GetJoypadPress(JOYKEY_RIGHT) == true)
+		{// 右に移動
+			g_Player.move.x += sinf(D3DX_PI * 0.5f + pCamera->rot.y) * MOVEMENT.x;
+			g_Player.move.z += cosf(D3DX_PI * 0.5f + pCamera->rot.y) * MOVEMENT.z;
+
+			g_Player.fAngleZ = pCamera->rot.y - (D3DX_PI * 0.5f);
+		}
+	}
+
+	g_Player.fSpeedZ = (MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * MOVEMENT.z);		// 燃料50%で既定の速度くらい
+	g_Player.move.z += g_Player.fSpeedZ;
+
+	// 慣性
+	g_Player.pos += g_Player.move;
+	g_Player.move.x += (0.0f - g_Player.move.x) * INERTIA_MOVE;
+	g_Player.move.y += (0.0f - g_Player.move.y) * INERTIA_MOVE;
+	g_Player.move.z += (0.0f - g_Player.move.z) * INERTIA_MOVE;
+
+	g_Player.fOil -= MINUS_OIL;
+
+	if (g_Player.fOil > MAX_OIL)
+	{// 燃料の最大
+		g_Player.fOil = MAX_OIL;
+	}
+	else if (g_Player.fOil < 0.0f)
+	{// 燃料の最小(ゲームオーバー)
+		g_Player.fOil = 0.0f;
+		g_Player.bUse = false;
+	}
 }
 
 //=============================================================================
@@ -105,6 +205,11 @@ void UpdatePlayer(void)
 //=============================================================================
 void DrawPlayer(void)
 {
+	if (g_Player.bUse == false)
+	{// 使ってない場合スキップ
+		return;
+	}
+
 	// ローカル変数宣言
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();			// デバイスへのポインタ
 	D3DXMATRIX mtxRot, mtxTrans;		// 計算用マトリックス
@@ -153,6 +258,14 @@ void DrawPlayer(void)
 void SetPlayer(D3DXVECTOR3 pos)
 {
 	g_Player.pos = pos;
+	g_Player.move = FIRST_POS;
+	g_Player.rot = FIRST_POS;
+	g_Player.fAngleZ = 0.0f;
+	g_Player.fSpeedZ = MOVEMENT.z;
+	g_Player.state = PLAYERSTATE_APPEAR;
+	g_Player.nCounterState = 0;
+	g_Player.fOil = MAX_OIL * 0.5f;
+	g_Player.bUse = true;
 }
 
 //=============================================================================
