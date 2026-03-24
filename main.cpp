@@ -12,6 +12,7 @@
 #include "title.h"
 #include "game.h"
 #include "result.h"
+#include "light.h"
 
 // 全体で初期化を行う処理
 #include "player.h"
@@ -304,8 +305,11 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	// カメラの初期化処理
 	InitCamera();
 
-	// プレイヤーの更新処理
+	// プレイヤーの初期化処理
 	InitPlayer();
+
+	// ライトの初期化処理
+	InitLight();
 
 	// フェードの初期化
 	InitFade(MODE_TITLE, COLOR_BLACK);
@@ -338,6 +342,9 @@ void Uninit(void)
 
 	// デバッグ情報の終了処理
 	UninitDebugProc();
+
+	// ライトの終了処理
+	UninitLight();
 
 	// BGMの停止
 	//StopSound();
@@ -382,6 +389,9 @@ void Update(void)
 	// カメラの更新処理
 	UpdateCamera();
 
+	// ライトの更新処理
+	UpdateLight();
+
 	PrintDebugProc("FPS : %d\n", g_nCountFPS);
 
 	switch (g_mode)
@@ -420,6 +430,7 @@ void Draw(void)
 	if (SUCCEEDED(g_pD3DDevice->BeginScene()))
 	{ // 描画が成功した場合
 
+		// カメラの設定
 		SetCamera(0);
 
 		switch (g_mode)
