@@ -14,9 +14,10 @@
 #define MOVEMENT				(D3DXVECTOR3(1.0f, 1.0f, 1.0f))			// 移動量
 #define ROT						(D3DXVECTOR3(0.05f, 0.05f, 0.05f))		// 向き移動量
 #define INERTIA_MOVE			(0.4f)									// 移動の慣性
+#define INERTIA_ANGLE			(0.1f)									// 角度の慣性
 #define MAX_OIL					(100.0f)								// 最大燃料
 #define MINUS_OIL				(0.5f)									// 燃料の減り方
-#define PLAYER_FILE				"data\\MODEL\\rocket001.x"				// プレイヤーのファイル名
+#define PLAYER_FILE				"data\\MODEL\\rocket000.x"				// プレイヤーのファイル名
 
 //*****************************************************************************
 // グローバル変数
@@ -186,6 +187,17 @@ void UpdatePlayer(void)
 	g_Player.move.x += (0.0f - g_Player.move.x) * INERTIA_MOVE;
 	g_Player.move.y += (0.0f - g_Player.move.y) * INERTIA_MOVE;
 	g_Player.move.z += (0.0f - g_Player.move.z) * INERTIA_MOVE;
+
+	// 向きを調整
+	CorrectAngle(&g_Player.fAngleZ, g_Player.fAngleZ - g_Player.rot.z);
+
+	if (g_Player.rot.z != g_Player.fAngleZ)
+	{// 目標地点につくまで慣性で角度を足す
+		g_Player.rot.z += (g_Player.fAngleZ - g_Player.rot.z) * INERTIA_ANGLE;
+
+		// 向きを調整
+		CorrectAngle(&g_Player.rot.z, g_Player.rot.z);
+	}
 
 	g_Player.fOil -= MINUS_OIL;
 
