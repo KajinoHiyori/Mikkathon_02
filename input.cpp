@@ -1,6 +1,7 @@
 //======================================================================================
 // 
-// 3Dアクションゲーム_MASTER KEY[input.cpp]
+// ケプラーMk3 [input.cpp]
+// Author : Kajino Hiyori
 //
 //======================================================================================
 #include "main.h"
@@ -306,19 +307,24 @@ bool GetJoypadLeftStick(JOYKEY key)
 //======================================================================================
 bool GetJoypadLeftStickValue(int* pValueH, int* pValueV)
 {
+	float fValueH, fValueV = { 0.0f };
+
 	if (pValueH != NULL)
 	{ // 水平方向の設定
-		*pValueH = g_joyKeyState.Gamepad.sThumbLX;
+		fValueH = g_joyKeyState.Gamepad.sThumbLX;
 	}
 	if (pValueV != NULL)
 	{ // 水平方向の設定
-		*pValueV = g_joyKeyState.Gamepad.sThumbLY;
+		fValueV = g_joyKeyState.Gamepad.sThumbLY;
 	}
-	if (g_joyKeyState.Gamepad.sThumbLX >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE ||		// 水平方向のデッドゾーンを越えた
-		g_joyKeyState.Gamepad.sThumbLX <= -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE ||
-		g_joyKeyState.Gamepad.sThumbLY >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE ||		// 垂直方向のデッドゾーンを越えた
-		g_joyKeyState.Gamepad.sThumbLY <= -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+	if ((sqrtf(fValueH * fValueH + fValueV * fValueV)) * 0.5f > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
 	{
+		fValueH = (fValueH) / (JOYSTICKVALUE_MAX - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+		fValueV = (fValueV) / (JOYSTICKVALUE_MAX - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+
+		// 値を渡す
+		*pValueH = (int)fValueH;
+		*pValueV = (int)fValueV;
 		return true;
 	}
 	else

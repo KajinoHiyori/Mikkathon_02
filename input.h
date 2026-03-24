@@ -7,6 +7,10 @@
 #define	_INPUT_H_
 #include "main.h"
 
+// マクロ定義
+#define JOYSTICKVALUE_MAX	(32767)				// スティックの値の最大
+#define JOYSTICKVALUE_MIN	(-32768)			// スティックの値の最小
+
 // ジョイパッドのキーの種類
 typedef enum
 {
