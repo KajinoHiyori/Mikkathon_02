@@ -307,7 +307,8 @@ bool GetJoypadLeftStick(JOYKEY key)
 //======================================================================================
 bool GetJoypadLeftStickValue(int* pValueH, int* pValueV)
 {
-	float fValueH, fValueV = { 0.0f };
+	float fValueH = 0.0f;
+	float fValueV = 0.0f;
 
 	if (pValueH != NULL)
 	{ // …•½•ûŒü‚Ìİ’è
