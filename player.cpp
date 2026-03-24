@@ -16,8 +16,7 @@
 #define ROT						(D3DXVECTOR3(0.05f, 0.05f, 0.05f))		// 向き移動量
 #define INERTIA_MOVE			(0.4f)									// 移動の慣性
 #define INERTIA_ANGLE			(0.1f)									// 角度の慣性
-#define MAX_OIL					(100.0f)								// 最大燃料
-#define MINUS_OIL				(0.001f)								// 燃料の減り方
+#define MINUS_OIL				(0.01f)									// 燃料の減り方
 #define PLAYER_FILE				"data\\MODEL\\rocket000.x"				// プレイヤーのファイル名
 
 //*****************************************************************************
@@ -134,12 +133,10 @@ void UpdatePlayer(void)
 		// パッド移動
 		if (GetJoypadLeftStickValue(&fValueH, &fValueV) == true)
 		{// パッドの移動優先
-			//g_Player.fAngleZ = atan2f((float)(-nValueH), (float)(nValueV));
-			PrintDebugProc("X : %f, Y : %f\n", fValueH, fValueV);
+			g_Player.fAngleZ = atan2f((float)(-fValueH), (float)(fValueV));
 
-			g_Player.move.x += fValueH/* * sinf((D3DX_PI * 0.5f) + pCamera->fAngle)*/;
-			g_Player.move.y += fValueV;
-			PrintDebugProc("プレイヤーのmove : ( %f %f %f )\n", g_Player.move.x, g_Player.move.y, g_Player.move.z);
+			g_Player.move.x += fValueH * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
+			g_Player.move.y += fValueV * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.y)));
 
 			//g_Player.move.z += cosf(fAngle + pCamera->rot.y) * MOVEMENT.z /** sinf((D3DX_PI * 0.5f) + pCamera->fAngle)*/;
 		}
@@ -147,24 +144,24 @@ void UpdatePlayer(void)
 		{// 上に移動
 			if (GetKeyboardPress(DIK_A) == true || GetJoypadPress(JOYKEY_LEFT) == true)
 			{// 左上に移動
-				g_Player.move.x += sinf(-D3DX_PI * 0.75f - pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf((D3DX_PI * 0.75f)) * -MOVEMENT.y;
+				g_Player.move.x += sinf(-D3DX_PI * 0.75f - pCamera->rot.y) * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
+				g_Player.move.y += cosf((D3DX_PI * 0.75f)) * -((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.y)));
 				//g_Player.move.z += cosf(-D3DX_PI * 0.25f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = pCamera->rot.y + (D3DX_PI * 0.5f);
 			}
 			else if (GetKeyboardPress(DIK_D) == true || GetJoypadPress(JOYKEY_RIGHT) == true)
 			{// 右上に移動
-				g_Player.move.x += sinf(D3DX_PI * 0.75f - pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf((D3DX_PI * 0.75f)) * -MOVEMENT.y;
+				g_Player.move.x += sinf(D3DX_PI * 0.75f - pCamera->rot.y) * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
+				g_Player.move.y += cosf((D3DX_PI * 0.75f)) * -((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.y)));
 				//g_Player.move.z += cosf(D3DX_PI * 0.25f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = pCamera->rot.y - (D3DX_PI * 0.5f);
 			}
 			else if (GetKeyboardPress(DIK_W) == true || GetJoypadPress(JOYKEY_UP) == true)
 			{// 上に移動
-				g_Player.move.x += sinf(D3DX_PI * 0.0f + pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf((D3DX_PI * 1.0f)) * -MOVEMENT.y;
+				g_Player.move.x += sinf(D3DX_PI * 0.0f + pCamera->rot.y) * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
+				g_Player.move.y += cosf((D3DX_PI * 1.0f)) * -((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.y)));
 				//g_Player.move.z += cosf(D3DX_PI * 0.0f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = 0.0f;
@@ -174,24 +171,24 @@ void UpdatePlayer(void)
 		{// 下に移動
 			if (GetKeyboardPress(DIK_A) == true || GetJoypadPress(JOYKEY_LEFT) == true)
 			{// 左下に移動
-				g_Player.move.x += sinf(-D3DX_PI * 0.25f - pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf((D3DX_PI * 0.25f)) * -MOVEMENT.y;
+				g_Player.move.x += sinf(-D3DX_PI * 0.25f - pCamera->rot.y) * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
+				g_Player.move.y += cosf((D3DX_PI * 0.25f)) * -((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.y)));
 				//g_Player.move.z += cosf(-D3DX_PI * 0.75f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = pCamera->rot.y + (D3DX_PI * 0.5f);
 			}
 			else if (GetKeyboardPress(DIK_D) == true || GetJoypadPress(JOYKEY_RIGHT) == true)
 			{// 右下に移動
-				g_Player.move.x += sinf(D3DX_PI * 0.25f - pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf((D3DX_PI * 0.25f)) * -MOVEMENT.y;
+				g_Player.move.x += sinf(D3DX_PI * 0.25f - pCamera->rot.y) * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
+				g_Player.move.y += cosf((D3DX_PI * 0.25f)) * -((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.y)));
 				//g_Player.move.z += cosf(D3DX_PI * 0.75f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = pCamera->rot.y - (D3DX_PI * 0.5f);
 			}
 			else if (GetKeyboardPress(DIK_S) == true || GetJoypadPress(JOYKEY_DOWN) == true)
 			{// 下に移動
-				g_Player.move.x += sinf(D3DX_PI * 1.0f + pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf((D3DX_PI * 0.0f)) * -MOVEMENT.y;
+				g_Player.move.x += sinf(D3DX_PI * 1.0f + pCamera->rot.y) * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
+				g_Player.move.y += cosf((D3DX_PI * 0.0f)) * -((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.y)));
 				//g_Player.move.z += cosf(D3DX_PI * 1.0f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = 0.0f;
@@ -199,15 +196,13 @@ void UpdatePlayer(void)
 		}
 		else if (GetKeyboardPress(DIK_A) == true || GetJoypadPress(JOYKEY_LEFT) == true)
 		{// 左に移動
-			g_Player.move.x += sinf(-D3DX_PI * 0.5f + pCamera->rot.y) * MOVEMENT.x;
-			g_Player.move.z += cosf(-D3DX_PI * 0.5f + pCamera->rot.y) * MOVEMENT.z;
+			g_Player.move.x += sinf(-D3DX_PI * 0.5f + pCamera->rot.y) * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
 
 			g_Player.fAngleZ = pCamera->rot.y + (D3DX_PI * 0.5f);
 		}
 		else if (GetKeyboardPress(DIK_D) == true || GetJoypadPress(JOYKEY_RIGHT) == true)
 		{// 右に移動
-			g_Player.move.x += sinf(D3DX_PI * 0.5f + pCamera->rot.y) * MOVEMENT.x;
-			g_Player.move.z += cosf(D3DX_PI * 0.5f + pCamera->rot.y) * MOVEMENT.z;
+			g_Player.move.x += sinf(D3DX_PI * 0.5f + pCamera->rot.y) * ((MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.x)));
 
 			g_Player.fAngleZ = pCamera->rot.y - (D3DX_PI * 0.5f);
 		}
@@ -217,7 +212,7 @@ void UpdatePlayer(void)
 		}
 	}
 
-	//g_Player.fSpeedZ = (MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * MOVEMENT.z);		// 燃料50%で既定の速度くらい
+	g_Player.fSpeedZ = (MAX_OIL - g_Player.fOil) / (MAX_OIL * 0.5f * (MOVEMENT.z));		// 燃料50%で既定の速度くらい
 	g_Player.move.z += g_Player.fSpeedZ;
 
 	// 慣性
@@ -249,7 +244,7 @@ void UpdatePlayer(void)
 		CorrectAngle(&g_Player.rot.z, g_Player.rot.z);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 	g_Player.fOil -= MINUS_OIL;
 #endif
 

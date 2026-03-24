@@ -17,6 +17,7 @@
 // 全体で初期化を行う処理
 #include "player.h"
 #include "camera.h"
+#include "oil.h"
 
 // マクロ定義
 #define CLASS_NAME	"WindowClass"	// ウィンドウクラスの名前
@@ -312,6 +313,9 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	// ライトの初期化処理
 	InitLight();
 
+	// 燃料の初期化処理
+	InitOil();
+
 	// フェードの初期化
 	InitFade(MODE_TITLE, COLOR_BLACK);
 
@@ -328,6 +332,9 @@ void Uninit(void)
 {
 	// カメラの終了処理
 	UninitCamera();
+
+	// 燃料の終了処理
+	UninitOil();
 
 	// プレイヤーの終了処理
 	UninitPlayer();
@@ -403,13 +410,15 @@ void Update(void)
 
 	case MODE_GAME:		// ゲーム画面
 		UpdateGame();
+
+		// 燃料の更新処理
+		UpdateOil();
 		break;
 
 	case MODE_RESULT:	// リザルト画面
 		UpdateResult();
 		break;
 	}
-
 	// デバッグ情報の更新処理
 	UpdateDebugProc();
 
@@ -442,6 +451,9 @@ void Draw(void)
 
 		case MODE_GAME:		// ゲーム画面
 			DrawGame();
+
+			// 燃料の描画処理
+			DrawOil();
 			break;
 
 		case MODE_RESULT:	// リザルト画面
