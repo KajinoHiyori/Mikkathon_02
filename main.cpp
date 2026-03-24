@@ -549,3 +549,19 @@ int GetFPS(void)
 {
 	return g_nCountFPS;
 }
+
+//======================================================================================
+// Šp“x‚Ì³‹K‰»
+//======================================================================================
+float AngleNormalization(float fAngle)
+{
+	if (fAngle > D3DX_PI)
+	{
+		fAngle -= D3DX_PI * 2;
+	}
+	if (fAngle < -D3DX_PI)
+	{
+		fAngle += D3DX_PI * 2;
+	}
+	return fAngle;
+}

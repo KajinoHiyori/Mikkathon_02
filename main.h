@@ -69,4 +69,5 @@ LPDIRECT3DDEVICE9 GetDevice(void);
 void SetMode(MODE mode);
 MODE GetMode();
 int GetFPS(void);
+float AngleNormalization(float fAngle);
 #endif

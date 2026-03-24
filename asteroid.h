@@ -50,7 +50,8 @@ typedef struct
 	D3DXVECTOR3		move;		// 移動量
 	D3DXVECTOR3		rot;		// 回転
 	float			fRadius;	// 親惑星との距離
-	float			fMove;		// 回転速度及び方向
+	float			fMove;		// 回転速度[増加量]
+	float			fAngle;		// 回転度数
 	int				nIdx;		// インデックス
 	bool			bUse;		// 使用状態
 	// 演出面
