@@ -5,8 +5,8 @@
 // 
 //=============================================================================
 #include "camera.h"
-//#include "debugproc.h"
-//#include "player.h"
+#include "debugproc.h"
+#include "player.h"
 #include "input.h"
 #include "game.h"
 
@@ -32,7 +32,6 @@
 Camera g_aCamera[MAX_CAMERA];			// カメラの情報
 int g_nNumCamera = 1;					// カメラの数
 
-#if 0
 //=============================================================================
 // カメラの初期化処理
 //=============================================================================
@@ -85,10 +84,10 @@ void UpdateCamera(void)
 	Camera* pCamera = &g_aCamera[0];
 	Player* pPlayer = GetPlayer();
 
-	if (GetPause() == true)
-	{// ポーズ中
-		return;
-	}
+	//if (GetPause() == true)
+	//{// ポーズ中
+	//	return;
+	//}
 
 	// それぞれのカメラの処理
 	for (int nCntCamera = 0; nCntCamera < g_nNumCamera; nCntCamera++, pCamera++, pPlayer++)
@@ -96,7 +95,7 @@ void UpdateCamera(void)
 		switch (pCamera->type)
 		{
 		case CAMERATYPE_PLAYER:
-			int nValueH, nValueV;
+			//int nValueH, nValueV;
 
 			// プレイヤー向きを調整
 			CorrectAngle(&pPlayer->rot.y, ((pPlayer->rot.y - D3DX_PI) - pCamera->rot.y));
@@ -451,4 +450,3 @@ int GetNumCamera(void)
 {
 	return g_nNumCamera;
 }
-#endif

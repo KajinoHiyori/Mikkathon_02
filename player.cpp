@@ -1,6 +1,6 @@
 //=============================================================================
 // 
-// モデル [model.cpp]
+// プレイヤー [player.cpp]
 // Author : 中澤優奈
 // 
 //=============================================================================
@@ -11,243 +11,99 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define MAX_TEXTURE				(16)									// 最大テクスチャ数
-#define MAX_VERTEX				(4)										// 最大頂点数
-#define MAX_POLYGON				(2)										// 最大ポリゴン数
 #define MOVEMENT				(D3DXVECTOR3(1.0f, 1.0f, 1.0f))			// 移動量
 #define ROT						(D3DXVECTOR3(0.05f, 0.05f, 0.05f))		// 向き移動量
-#define CENTER					(D3DXVECTOR3(640.0f, 360.0f, 0.0f))		// 中心座標
-#define FIRST_POS				(D3DXVECTOR3(0.0f, 0.0f, 0.0f))			// 初期座標
 #define INERTIA_MOVE			(0.4f)									// 移動の慣性
-#define WHITE_VTX				(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f))		// 頂点カラーが白
-#define MODEL_FILE				"data\\MODEL\\car000.x"					// モデルのファイル名
+#define PLAYER_FILE				"data\\MODEL\\rocket001.x"				// プレイヤーのファイル名
 
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
-LPD3DXMESH g_pMeshModel = NULL;							// メッシュ(頂点情報)へのポインタ
-LPD3DXBUFFER g_pBuffMatModel = NULL;					// マテリアルへのポインタ
-LPDIRECT3DTEXTURE9 g_apTextureModel[MAX_TEXTURE] = {};	// テクスチャへのポインタ
-DWORD g_dwNumMatModel = 0;								// マテリアルの数
-D3DXVECTOR3 g_VtxMaxModel, g_VtxMinModel;				// モデルの最大値・最小値
-Model g_model;											// モデルの情報
+Player g_Player;				// プレイヤーの情報
+Player_Model g_PlayerModel;		// プレイヤーのモデル		
 
 //=============================================================================
-// モデルの初期化処理
+// プレイヤーの初期化処理
 //=============================================================================
-void InitModel(void)
+void InitPlayer(void)
 {
 	// ローカル変数宣言
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();			// デバイスへのポインタ
 	D3DXMATERIAL* pMat;
-	int nNumVtx;			// 頂点数
-	DWORD dwSizeFVF;		// 頂点フォーマットのサイズ
-	BYTE* pVtxBuff;			// 頂点バッファへのポインタ
 
-	// モデルの情報の初期化
-	g_model.pos = FIRST_POS;
-	g_model.move = FIRST_POS;
-	g_model.rot = FIRST_POS;
+	// プレイヤーの情報の初期化
+	g_Player.pos = FIRST_POS;
+	g_Player.move = FIRST_POS;
+	g_Player.rot = FIRST_POS;
 
-	// 最大値最小値の初期化
-	g_VtxMaxModel = D3DXVECTOR3(-10000.0f, -10000.0f, -10000.0f);
-	g_VtxMinModel = D3DXVECTOR3(10000.0f, 10000.0f, 10000.0f);
+	if (g_PlayerModel.pMesh == NULL)
+	{// Xファイルの読み込み
+		if (FAILED(D3DXLoadMeshFromX(PLAYER_FILE,
+			D3DXMESH_SYSTEMMEM,
+			pDevice,
+			NULL,
+			&g_PlayerModel.pBuffMat,
+			NULL,
+			&g_PlayerModel.dwNumMat,
+			&g_PlayerModel.pMesh)))
+		{// NULLチェック
+			return;
+		}
 
-	// Xファイルの読み込み
-	D3DXLoadMeshFromX(MODEL_FILE,
-		D3DXMESH_SYSTEMMEM,
-		pDevice,
-		NULL,
-		&g_pBuffMatModel,
-		NULL,
-		&g_dwNumMatModel,
-		&g_pMeshModel);
+		// マテリアルデータへのポインタを取得
+		pMat = (D3DXMATERIAL*)g_PlayerModel.pBuffMat->GetBufferPointer();
 
-	// マテリアルデータへのポインタを取得
-	pMat = (D3DXMATERIAL*)g_pBuffMatModel->GetBufferPointer();
-
-	for (int nCntMat = 0; nCntMat < (int)g_dwNumMatModel; nCntMat++)
-	{
-		if (pMat[nCntMat].pTextureFilename != NULL)
-		{// テクスチャファイルが存在する
-			D3DXCreateTextureFromFile(pDevice, pMat[nCntMat].pTextureFilename, &g_apTextureModel[nCntMat]);
+		for (int nCntMat = 0; nCntMat < (int)g_PlayerModel.dwNumMat; nCntMat++)
+		{
+			if (pMat[nCntMat].pTextureFilename != NULL)
+			{// テクスチャファイルが存在する
+				D3DXCreateTextureFromFile(pDevice, pMat[nCntMat].pTextureFilename, &g_PlayerModel.apTexture[nCntMat]);
+			}
 		}
 	}
-
-	// 頂点数を取得
-	nNumVtx = g_pMeshModel->GetNumVertices();
-
-	// 頂点フォーマットのサイズを取得
-	dwSizeFVF = D3DXGetFVFVertexSize(g_pMeshModel->GetFVF());
-
-	// 頂点バッファをロック
-	g_pMeshModel->LockVertexBuffer(D3DLOCK_READONLY, (void**)&pVtxBuff);
-
-	for (int nCntVtx = 0; nCntVtx < nNumVtx; nCntVtx++)
-	{
-		D3DXVECTOR3 vtx = *(D3DXVECTOR3*)pVtxBuff;		// 頂点座標の代入
-
-		if (vtx.x > g_VtxMaxModel.x)
-		{// Xの最大値
-			g_VtxMaxModel.x = vtx.x;
-		}
-
-		if (vtx.x < g_VtxMinModel.x)
-		{// Xの最小値
-			g_VtxMinModel.x = vtx.x;
-		}
-
-		if (vtx.y > g_VtxMaxModel.y)
-		{// Yの最大値
-			g_VtxMaxModel.y = vtx.y;
-		}
-
-		if (vtx.y < g_VtxMinModel.y)
-		{// Yの最小値
-			g_VtxMinModel.y = vtx.y;
-		}
-
-		if (vtx.z > g_VtxMaxModel.z)
-		{// Zの最大値
-			g_VtxMaxModel.z = vtx.z;
-		}
-
-		if (vtx.z < g_VtxMinModel.z)
-		{// Zの最小値
-			g_VtxMinModel.z = vtx.z;
-		}
-
-		pVtxBuff += dwSizeFVF;		// 頂点バッファのサイズ分ポインタを進める
-	}
-
-	// 頂点バッファをアンロック
-	g_pMeshModel->UnlockVertexBuffer();
 }
 
 //=============================================================================
-// モデルの終了処理
+// プレイヤーの終了処理
 //=============================================================================
-void UninitModel(void)
+void UninitPlayer(void)
 {
 	// メッシュの破棄
-	if (g_pMeshModel != NULL)
+	if (g_PlayerModel.pMesh != NULL)
 	{
-		g_pMeshModel->Release();
-		g_pMeshModel = NULL;
+		g_PlayerModel.pMesh->Release();
+		g_PlayerModel.pMesh = NULL;
 	}
 
 	// マテリアルの破棄
-	if (g_pBuffMatModel != NULL)
+	if (g_PlayerModel.pBuffMat != NULL)
 	{
-		g_pBuffMatModel->Release();
-		g_pBuffMatModel = NULL;
+		g_PlayerModel.pBuffMat->Release();
+		g_PlayerModel.pBuffMat = NULL;
 	}
 
 	// テクスチャの破棄
-	for (int nCntModel = 0; nCntModel < (int)g_dwNumMatModel; nCntModel++)
+	for (int nCntPlayer = 0; nCntPlayer < MAX_TEXTURE; nCntPlayer++)
 	{
-		if (g_apTextureModel[nCntModel] != NULL)
+		if (g_PlayerModel.apTexture[nCntPlayer] != NULL)
 		{
-			g_apTextureModel[nCntModel]->Release();
-			g_apTextureModel[nCntModel] = NULL;
+			g_PlayerModel.apTexture[nCntPlayer]->Release();
+			g_PlayerModel.apTexture[nCntPlayer] = NULL;
 		}
 	}
 }
 
 //=============================================================================
-// モデルの更新処理
+// プレイヤーの更新処理
 //=============================================================================
-void UpdateModel(void)
+void UpdatePlayer(void)
 {
-	Camera* pCamera = GetCamera();
-
-	// 移動
-	if (GetKeyboardPress(DIK_UP) == true)
-	{// 奥に移動
-		g_model.move.x += sinf(D3DX_PI * 0.0f + pCamera[1].rot.y) * MOVEMENT.x;
-		g_model.move.z += cosf(D3DX_PI * 0.0f + pCamera[1].rot.y) * MOVEMENT.z;
-
-		g_model.rot.y = pCamera[1].rot.y - D3DX_PI;
-	}
-	else if (GetKeyboardPress(DIK_DOWN) == true)
-	{// 手前に移動
-		g_model.move.x += sinf(D3DX_PI * 1.0f + pCamera[1].rot.y) * MOVEMENT.x;
-		g_model.move.z += cosf(D3DX_PI * 1.0f + pCamera[1].rot.y) * MOVEMENT.z;
-
-		g_model.rot.y = pCamera[1].rot.y;
-	}
-
-	if (GetKeyboardPress(DIK_LEFT) == true)
-	{// 左に移動
-		g_model.move.x += sinf(-D3DX_PI * 0.5f + pCamera[1].rot.y) * MOVEMENT.x;
-		g_model.move.z += cosf(-D3DX_PI * 0.5f + pCamera[1].rot.y) * MOVEMENT.z;
-
-		g_model.rot.y = pCamera[1].rot.y + (D3DX_PI * 0.5f);
-	}
-	else if (GetKeyboardPress(DIK_RIGHT) == true)
-	{// 右に移動
-		g_model.move.x += sinf(D3DX_PI * 0.5f + pCamera[1].rot.y) * MOVEMENT.x;
-		g_model.move.z += cosf(D3DX_PI * 0.5f + pCamera[1].rot.y) * MOVEMENT.z;
-
-		g_model.rot.y = pCamera[1].rot.y - (D3DX_PI * 0.5f);
-	}
-
-	// 慣性
-	g_model.pos += g_model.move;
-	g_model.move.x += (0.0f - g_model.move.x) * INERTIA_MOVE;
-	g_model.move.z += (0.0f - g_model.move.z) * INERTIA_MOVE;
-
-	if (GetKeyboardPress(DIK_LSHIFT) == true)
-	{// Y軸回転
-		g_model.rot.y += -ROT.y;
-	}
-	else if (GetKeyboardPress(DIK_RSHIFT) == true)
-	{// Y軸回転
-		g_model.rot.y += ROT.y;
-	}
-
-	// 位置回転リセット
-	if (GetKeyboardPress(DIK_RETURN) == true)
-	{// Y軸回転
-		g_model.pos = FIRST_POS;
-		g_model.rot = FIRST_POS;
-	}
-#if 0
-	if (GetKeyboardPress(DIK_I) == true)
-	{// 上に移動
-		g_moveModel.y += MOVEMENT.y;
-	}
-	else if (GetKeyboardPress(DIK_K) == true)
-	{// 下に移動
-		g_moveModel.y += -MOVEMENT.y;
-	}
-
-	// 回転
-	if (GetKeyboardPress(DIK_UP) == true)
-	{// X軸回転
-		g_rotModel.x += ROT.x;
-	}
-	else if (GetKeyboardPress(DIK_DOWN) == true)
-	{// X軸回転
-		g_rotModel.x += -ROT.x;
-	}
-
-	if (GetKeyboardPress(DIK_LEFT) == true)
-	{// Z軸回転
-		g_rotModel.z += ROT.z;
-	}
-	else if (GetKeyboardPress(DIK_RIGHT) == true)
-	{// Z軸回転
-		g_rotModel.z += -ROT.z;
-	}
-
-#endif
 }
 
 //=============================================================================
-// モデルの描画処理
+// プレイヤーの描画処理
 //=============================================================================
-void DrawModel(void)
+void DrawPlayer(void)
 {
 	// ローカル変数宣言
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();			// デバイスへのポインタ
@@ -256,35 +112,35 @@ void DrawModel(void)
 	D3DXMATERIAL* pMat;					// マテリアルデータへのポインタ
 
 	// ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&g_model.mtxWorld);
+	D3DXMatrixIdentity(&g_Player.mtxWorld);
 
 	// 向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, g_model.rot.y, g_model.rot.x, g_model.rot.z);
-	D3DXMatrixMultiply(&g_model.mtxWorld, &g_model.mtxWorld, &mtxRot);
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, g_Player.rot.y, g_Player.rot.x, g_Player.rot.z);
+	D3DXMatrixMultiply(&g_Player.mtxWorld, &g_Player.mtxWorld, &mtxRot);
 
 	// 位置を反映
-	D3DXMatrixTranslation(&mtxTrans, g_model.pos.x, g_model.pos.y, g_model.pos.z);
-	D3DXMatrixMultiply(&g_model.mtxWorld, &g_model.mtxWorld, &mtxTrans);
+	D3DXMatrixTranslation(&mtxTrans, g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
+	D3DXMatrixMultiply(&g_Player.mtxWorld, &g_Player.mtxWorld, &mtxTrans);
 
 	// ワールドマトリックスの設定
-	pDevice->SetTransform(D3DTS_WORLD, &g_model.mtxWorld);
+	pDevice->SetTransform(D3DTS_WORLD, &g_Player.mtxWorld);
 
 	// 現在のマテリアルを取得
 	pDevice->GetMaterial(&matDef);
 
 	// マテリアルデータへのポインタを取得
-	pMat = (D3DXMATERIAL*)g_pBuffMatModel->GetBufferPointer();
+	pMat = (D3DXMATERIAL*)g_PlayerModel.pBuffMat->GetBufferPointer();
 
-	for (int nCntMat = 0; nCntMat < (int)g_dwNumMatModel; nCntMat++)
+	for (int nCntMat = 0; nCntMat < (int)g_PlayerModel.dwNumMat; nCntMat++)
 	{
 		// マテリアルの設定
 		pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 
 		// テクスチャの設定
-		pDevice->SetTexture(0, g_apTextureModel[nCntMat]);
+		pDevice->SetTexture(0, g_PlayerModel.apTexture[nCntMat]);
 
 		// モデルパーツの描画
-		g_pMeshModel->DrawSubset(nCntMat);
+		g_PlayerModel.pMesh->DrawSubset(nCntMat);
 	}
 
 	// 保存していたマテリアルを戻す
@@ -292,46 +148,32 @@ void DrawModel(void)
 }
 
 //=============================================================================
-// モデルの当たり判定
+// プレイヤーの設定
 //=============================================================================
-void CollisionModel(D3DXVECTOR3* pPos, D3DXVECTOR3* pPosOld, D3DXVECTOR3* pMove, float fWidth, float fDepth)
+void SetPlayer(D3DXVECTOR3 pos)
 {
-#if 0
-	if ((pPos->x + fWidth > g_posModel.x + g_VtxMinModel.x) &&
-		(pPos->x - fWidth < g_posModel.x + g_VtxMaxModel.x) &&
-		(g_posModel.z + g_VtxMinModel.z <= pPos->z) &&
-		(g_posModel.z + g_VtxMaxModel.z + fDepth >= pPos->z))
-	{// 現在の位置がブロックの範囲内
-		if (((g_posModel.z + g_VtxMaxModel.z <= pPosOld->z) &&
-			(g_posModel.z + g_VtxMaxModel.z >= pPos->z)))
-		{// 奥からの当たり判定
-			pPos->z = g_posModel.z + g_VtxMaxModel.z;
-		}
-		else if (((g_posModel.z + g_VtxMinModel.z + fDepth >= pPosOld->z) &&
-			(g_posModel.z + g_VtxMinModel.z + fDepth <= pPos->z)))
-		{// 手前からの当たり判定
-			pPos->z = g_posModel.z + g_VtxMinModel.z + fDepth;
-		}
-		else if ((g_posModel.x + g_VtxMinModel.x - fWidth >= pPosOld->x) &&
-			(g_posModel.x + g_VtxMinModel.x - fWidth <= pPos->x))
-		{// 左からの当たり判定
-			pPos->x = g_posModel.x + g_VtxMinModel.x - fWidth;
-			pMove->x = 0.0f;							// 移動量を0にする
-		}
-		else if ((g_posModel.x + g_VtxMaxModel.x + fWidth <= pPosOld->x) &&
-			(g_posModel.x + g_VtxMaxModel.x + fWidth >= pPos->x))
-		{// 右からの当たり判定
-			pPos->x = g_posModel.x + g_VtxMaxModel.x + fWidth;
-			pMove->x = 0.0f;							// 移動量を0にする
-		}
-	}
-#endif
+	g_Player.pos = pos;
 }
 
 //=============================================================================
-// モデルの取得
+// プレイヤーの取得
 //=============================================================================
-Model* GetModel(void)
+Player* GetPlayer(void)
 {
-	return &g_model;
+	return &g_Player;
+}
+
+//=============================================================================
+// 角度を調整
+//=============================================================================
+void CorrectAngle(float* fAngle, float fAngleCmp)
+{
+	if (fAngleCmp > D3DX_PI)
+	{
+		*fAngle -= D3DX_PI * 2;
+	}
+	else if (fAngleCmp < -D3DX_PI)
+	{
+		*fAngle += D3DX_PI * 2;
+	}
 }
