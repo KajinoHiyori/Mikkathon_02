@@ -12,7 +12,7 @@ SCRIPT 		# 読み取り開始
 
 NUM_MODEL = 1	# 読み込むモデルの数
 
-MODEL_FILENAME = data/Model/.x		[0]惑星モデル1
+MODEL_FILENAME = data/Model/asteroid000.x		[0]惑星モデル1
 
 #===========================================================
 # 惑星の情報
@@ -34,7 +34,12 @@ SET_LAYOUT_STAGE
 		TYPE = 0			# 種類
 		POS = 0.0 5.0 0.0   # 位置
 	END_PLANET
-
+	
+	SET_PLANET	# 惑星
+		TYPE = 0			# 種類
+		POS = 0.0 5.0 1000.0   # 位置
+	END_PLANET
+	
 END_LAYOUT_STAGE
 
 END_SCRIPT # 読み取り終了

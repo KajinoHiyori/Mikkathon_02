@@ -35,15 +35,15 @@ void InitPlanet(void)
 			g_aPlanetModelInfo[nCntPlanetInfo].fRadius = 0.0f;		// 半径を初期化
 			g_aPlanetModelInfo[nCntPlanetInfo].bUse = false;		// 使用していない状態に設定
 		}
-	}
 
-	// 惑星の情報の初期化
-	for (int nCntPlanet = 0; nCntPlanet < MAX_NUM_PLANET; nCntPlanet)
-	{
-		g_aPlanet[nCntPlanet].type = PLANETTYPE_NONE;
-		g_aPlanet[nCntPlanet].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		g_aPlanet[nCntPlanet].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		g_aPlanet[nCntPlanet].bUse = false;
+		// 惑星の情報の初期化
+		for (int nCntPlanet = 0; nCntPlanet < MAX_NUM_PLANET; nCntPlanet++)
+		{
+			g_aPlanet[nCntPlanet].type = PLANETTYPE_NONE;
+			g_aPlanet[nCntPlanet].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			g_aPlanet[nCntPlanet].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			g_aPlanet[nCntPlanet].bUse = false;
+		}
 	}
 }
 
@@ -81,7 +81,7 @@ void DrawPlanet(void)
 
 	// =========================================================
 
-	for (int nCntPlanet = 0; nCntPlanet < MAX_NUM_PLANET; nCntPlanet)
+	for (int nCntPlanet = 0; nCntPlanet < MAX_NUM_PLANET; nCntPlanet++)
 	{
 		if (g_aPlanet[nCntPlanet].bUse == true)
 		{// 使用している場合
@@ -146,6 +146,7 @@ void SetLoadPlanetInfo(int nIdxStage, float fRadius)
 	{
 		if (g_aPlanetModelInfo[nCntModel].bUse == false)
 		{
+			g_aPlanetModelInfo[nCntModel].nIdxStageModel = nIdxStage;
 			g_aPlanetModelInfo[nCntModel].fRadius = fRadius;
 			g_aPlanetModelInfo[nCntModel].bUse = true;
 
@@ -159,7 +160,7 @@ void SetLoadPlanetInfo(int nIdxStage, float fRadius)
 //========================================================================
 void SetPlanet(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 {
-	for (int nCntPlanet = 0; nCntPlanet < MAX_NUM_PLANET; nCntPlanet)
+	for (int nCntPlanet = 0; nCntPlanet < MAX_NUM_PLANET; nCntPlanet++)
 	{
 		if (g_aPlanet[nCntPlanet].bUse == false)
 		{// 使用していない場合

@@ -17,6 +17,9 @@
 // 全体で初期化を行う処理
 #include "player.h"
 #include "camera.h"
+#include "stage.h"
+#include "planet.h"
+
 
 // マクロ定義
 #define CLASS_NAME	"WindowClass"	// ウィンドウクラスの名前
@@ -309,6 +312,10 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	// プレイヤーの初期化処理
 	InitPlayer();
 
+	InitPlanet();
+
+	InitStage();
+
 	// ライトの初期化処理
 	InitLight();
 
@@ -331,6 +338,9 @@ void Uninit(void)
 
 	// プレイヤーの終了処理
 	UninitPlayer();
+
+	// ステージの終了
+	UninitStage();
 
 	// タイトル画面の終了処理
 	UninitTitle();
@@ -365,8 +375,13 @@ void Uninit(void)
 	// Direct3Dデバイスの破棄
 	if (g_pD3DDevice != NULL)
 	{
-		g_pD3DDevice->Release();
+		UINT uiCnt = g_pD3DDevice->Release();
 		g_pD3DDevice = NULL;
+
+		if (uiCnt != 0)
+		{
+			MessageBox(NULL, "未破棄のリソースがあります", "error", MB_OK);
+		}
 	}
 
 	// Direct3Dオブジェクトの破棄

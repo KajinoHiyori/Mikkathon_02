@@ -7,6 +7,8 @@
 #include "main.h"
 #include "stage.h"
 
+#include "planet.h"
+
 #include "file.h"
 
 // マクロ定義 ==================================================
@@ -37,6 +39,9 @@ void InitStage(void)
 
 			g_aStageModelInfo[nCntStageModel].bUse = false;																		// 使用していない状態に設定
 		}
+
+		// ステージの読み込み
+		SetLoadStage("data/FILE/StageSet.txt");
 	}
 }
 
@@ -118,6 +123,10 @@ bool SetLoadStage(const char* pStageFilename)
 	int nNumPlanetType = 0;	// 読み込む惑星の種類数
 	int nCntPlanetType = 0;	// 読み込んだ惑星の種類数
 
+	// 設定情報
+	PlanetModelInfo tmpPlanetModelInfo;
+	Planet tmpPlanet;
+
 	// ===============================================
 
 	// ▼ファイルを開く
@@ -141,21 +150,21 @@ bool SetLoadStage(const char* pStageFilename)
 
 	while (FileExtractText(pFile, &aReadText[0]))
 	{
-		if (strcmp(&aReadText[0], "END_SCRIPT"))
+		if (strcmp(&aReadText[0], "END_SCRIPT") == false)
 		{
 			break;	// while文を抜ける
 		}
 	// -----------------------------------
 	// モデル情報
 	// -----------------------------------
-		else if (strcmp(&aReadText[0], "NUM_MODEL"))
+		else if (strcmp(&aReadText[0], "NUM_MODEL") == false)
 		{
 			fscanf(pFile, "%[ =\t\n]", &aBlankText[0]);		// 余分な情報を読み取る
 			fscanf(pFile, "%d", &nNumModel);				//読み込むモデル数を読み取る
 
 			continue;
 		}
-		else if (strcmp(&aReadText[0], "MODEL_FILENAME"))
+		else if (strcmp(&aReadText[0], "MODEL_FILENAME") == false)
 		{
 			if (nCntModel < nNumModel)
 			{// 読み取れる上限に達していない場合
@@ -174,35 +183,44 @@ bool SetLoadStage(const char* pStageFilename)
 	// -----------------------------------
 	// 惑星の情報
 	// -----------------------------------
-		else if (strcmp(&aReadText[0], "NUM_PLANETTYPE"))
+		else if (strcmp(&aReadText[0], "NUM_PLANETTYPE") == false)
 		{
 			fscanf(pFile, "%[ =\t\n]", &aBlankText[0]);		// 余分な情報を読み取る
 			fscanf(pFile, "%d", &nNumPlanetType);			//読み込むモデル数を読み取る
 
 			continue;
 		}
-		else if (strcmp(&aReadText[0], "SET_PLANETTYPE"))
+		else if (strcmp(&aReadText[0], "SET_PLANETTYPE") == false)
 		{
 			if (nCntPlanetType < nNumPlanetType)
 			{// 読み取れる上限に達していない場合
 
+				// 設定情報の初期化
+				tmpPlanetModelInfo.nIdxStageModel = -1;
+				tmpPlanetModelInfo.fRadius = 0.0f;
+
 				while (FileExtractText(pFile, &aReadText[0]))
 				{
-					if (strcmp(&aReadText[0], "END_PLANETTYPE"))
+					if (strcmp(&aReadText[0], "END_PLANETTYPE") == false)
 					{
+						// 惑星の情報の設定
+						SetLoadPlanetInfo(tmpPlanetModelInfo.nIdxStageModel, tmpPlanetModelInfo.fRadius);
+
 						nCntPlanetType++;	// 設定した惑星の種類をインクリメント
 
 						break;	// while文を抜ける
 					}
-					else if (strcmp(&aReadText[0], "MODELIDX"))
+					else if (strcmp(&aReadText[0], "MODELIDX") == false)
 					{
-
+						fscanf(pFile, "%[ =\t\n]", &aBlankText[0]);					// 余分な情報を読み取る
+						fscanf(pFile, "%d", &tmpPlanetModelInfo.nIdxStageModel);	// モデルインデックスを読み取る
 
 						continue;
 					}
-					else if (strcmp(&aReadText[0], "RADIUS"))
+					else if (strcmp(&aReadText[0], "RADIUS") == false)
 					{
-
+						fscanf(pFile, "%[ =\t\n]", &aBlankText[0]);			// 余分な情報を読み取る
+						fscanf(pFile, "%f", &tmpPlanetModelInfo.fRadius);	// モデルインデックスを読み取る
 
 						continue;
 					}
@@ -214,34 +232,46 @@ bool SetLoadStage(const char* pStageFilename)
 	// -----------------------------------
 	// ステージの配置情報
 	// -----------------------------------
-		else if (strcmp(&aReadText[0], "SET_LAYOUT_STAGE"))
+		else if (strcmp(&aReadText[0], "SET_LAYOUT_STAGE") == false)
 		{
 			while (FileExtractText(pFile, &aReadText[0]))
 			{
-				if (strcmp(&aReadText[0], "END_LAYOUT_STAGE"))
+				if (strcmp(&aReadText[0], "END_LAYOUT_STAGE") == false)
 				{
 					break;	// while文を抜ける
 				}
 			// -----------------------------------
 			// 惑星情報
 			// -----------------------------------
-				else if (strcmp(&aReadText[0], "SET_PLANET"))
+				else if (strcmp(&aReadText[0], "SET_PLANET") == false)
 				{
+					// 設定情報の初期化
+					tmpPlanet.type = PLANETTYPE_NONE;
+					tmpPlanet.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+					tmpPlanet.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
 					while (FileExtractText(pFile, &aReadText[0]))
 					{
-						if (strcmp(&aReadText[0], "END_PLANET"))
+						if (strcmp(&aReadText[0], "END_PLANET") == false)
 						{
+							// 惑星の設定
+							SetPlanet(tmpPlanet.type, tmpPlanet.pos, tmpPlanet.rot);
+
 							break;	// while文を抜ける
 						}
-						else if (strcmp(&aReadText[0], "TYPE"))
+						else if (strcmp(&aReadText[0], "TYPE") == false)
 						{
-
+							fscanf(pFile, "%[ =\t\n]", &aBlankText[0]);		// 余分な情報を読み取る
+							fscanf(pFile, "%d", &tmpPlanet.type);			// 種類を読み取る
 
 							continue;
 						}
-						else if (strcmp(&aReadText[0], "POS"))
+						else if (strcmp(&aReadText[0], "POS") == false)
 						{
-
+							fscanf(pFile, "%[ =\t\n]", &aBlankText[0]);		// 余分な情報を読み取る
+							fscanf(pFile, "%f %f %f", &tmpPlanet.pos.x, 
+													  &tmpPlanet.pos.y,
+													  &tmpPlanet.pos.z);			// 位置を読み取る
 
 							continue;
 						}
