@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="asteroid.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="debugproc.cpp" />
     <ClCompile Include="fade.cpp" />
@@ -157,9 +158,11 @@
     <ClCompile Include="planet.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="result.cpp" />
+    <ClCompile Include="stage.cpp" />
     <ClCompile Include="title.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="asteroid.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="debugproc.h" />
@@ -171,6 +174,7 @@
     <ClInclude Include="planet.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="result.h" />
+    <ClInclude Include="stage.h" />
     <ClInclude Include="title.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

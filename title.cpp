@@ -5,6 +5,10 @@
 //
 //======================================================================================
 #include "title.h"
+#include "fade.h"
+#include "main.h"
+#include "input.h"
+#include "color.h"
 
 //=======================================================
 // É^ÉCÉgÉãÇÃèâä˙âªèàóù
@@ -27,7 +31,11 @@ void UninitTitle(void)
 //=======================================================
 void UpdateTitle(void)
 {
-
+	FADE fade = GetFade();
+	if (fade == FADE_NONE && ((GetKeyboardTrigger(DIK_RETURN) == true) || GetJoypadTrigger(JOYKEY_A) == true || GetJoypadTrigger(JOYKEY_START) == true))
+	{
+		SetFade(MODE_GAME, COLOR_WHITE);
+	}
 }
 
 //=======================================================
