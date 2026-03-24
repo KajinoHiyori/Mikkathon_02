@@ -134,10 +134,10 @@ void UpdatePlayer(void)
 		// パッド移動
 		if (GetJoypadLeftStickValue(&nValueH, &nValueV) == true)
 		{// パッドの移動優先
-			g_Player.fAngleZ = atan2f((float)(nValueH), (float)(nValueV));
+			g_Player.fAngleZ = atan2f((float)(-nValueH), (float)(nValueV));
 
-			g_Player.move.x += sinf(pCamera->rot.y) * MOVEMENT.x/* * sinf((D3DX_PI * 0.5f) + pCamera->fAngle)*/;
-			g_Player.move.y += cosf(pCamera->rot.y) * MOVEMENT.y;
+			g_Player.move.x += nValueH/* * sinf((D3DX_PI * 0.5f) + pCamera->fAngle)*/;
+			g_Player.move.y += nValueV;
 			//g_Player.move.z += cosf(fAngle + pCamera->rot.y) * MOVEMENT.z /** sinf((D3DX_PI * 0.5f) + pCamera->fAngle)*/;
 		}
 		else if (GetKeyboardPress(DIK_W) == true || GetJoypadPress(JOYKEY_UP) == true)		// キーボード移動
