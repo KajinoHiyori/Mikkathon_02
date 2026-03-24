@@ -8,6 +8,7 @@
 #include "camera.h"
 #include "input.h"
 #include "debugproc.h"
+#include "asteroid.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -222,6 +223,9 @@ void UpdatePlayer(void)
 	g_Player.move.x += (0.0f - g_Player.move.x) * INERTIA_MOVE;
 	g_Player.move.y += (0.0f - g_Player.move.y) * INERTIA_MOVE;
 	g_Player.move.z += (0.0f - g_Player.move.z) * INERTIA_MOVE;
+
+	// 小惑星との当たり判定
+	CollisionAsteroid(g_Player.pos, g_Player.bBreak);
 
 	PrintDebugProc("プレイヤーのpos : ( %f %f %f )\n", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
 	PrintDebugProc("プレイヤーのmove : ( %f %f %f )\n", g_Player.move.x, g_Player.move.y, g_Player.move.z);

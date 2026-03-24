@@ -362,3 +362,23 @@ Asteroid* GetAllAsteroid(void)
 {
 	return &g_aAsteroid[0];
 }
+
+//=======================================================
+// 小惑星とプレイヤーとの当たり判定
+//=======================================================
+bool CollisionAsteroid(D3DXVECTOR3 pos, bool bBreak)
+{
+	for (int nCntAsteroid = 0; nCntAsteroid < MAX_ASTEROID; nCntAsteroid++)
+	{
+		if (g_aAsteroid[nCntAsteroid].bUse == false)
+		{
+			continue;
+		}
+
+		float fDistance = 0.0f;	// 距離を格納
+		// 2点間の距離を求める
+		fDistance = sqrtf(((pos.x - g_aAsteroid[nCntAsteroid].pos.x) * (pos.x - g_aAsteroid[nCntAsteroid].pos.x)) + ((pos.z - g_aAsteroid[nCntAsteroid].pos.z) * (pos.z - g_aAsteroid[nCntAsteroid].pos.z))) * 0.5f;
+		PrintDebugProc("2点間の距離 %f\n", fDistance);
+	}
+	return true;
+}
