@@ -5,10 +5,21 @@
 // 
 //======================================================================================
 #include "main.h"
+#include "debugproc.h"
+#include "input.h"
+#include "fade.h"
+#include "color.h"
+#include "title.h"
+#include "game.h"
+#include "result.h"
+
+// 全体で初期化を行う処理
+#include "player.h"
+#include "camera.h"
 
 // マクロ定義
 #define CLASS_NAME	"WindowClass"	// ウィンドウクラスの名前
-#define WINDOW_NAME	"MASTER KEY"	// ウィンドウの名前(キャプションに表示)
+#define WINDOW_NAME	"ケプラーMk3"	// ウィンドウの名前(キャプションに表示)
 #define FULL_SCREEN	(TRUE)			// フルスクリーン状態の管理[TRUE : 通常 / FALSE : フルスクリーン]
 
 // プロトタイプ宣言
@@ -272,7 +283,6 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);	// テクスチャのアルファブレンドの設定
 	g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);	// テクスチャのアルファブレンドの設定
 
-#if 0
 	// デバッグ情報の初期化
 	InitDebugProc();
 
@@ -289,11 +299,10 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	}
 
 	// サウンドの初期化処理
-	InitSound(hWnd);
+	//InitSound(hWnd);
 
 	// フェードの初期化
-	InitFade(MODE_TITLE);
-#endif
+	InitFade(MODE_TITLE, COLOR_BLACK);
 
 	// 乱数の種を設定
 	srand((unsigned int)time(0));
@@ -306,12 +315,8 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 //======================================================================================
 void Uninit(void)
 {
-#if 0
 	// タイトル画面の終了処理
 	UninitTitle();
-
-	// チュートリアル画面の終了処理
-	UninitTutorial();
 
 	// ゲーム画面の終了処理
 	UninitGame();
@@ -319,17 +324,14 @@ void Uninit(void)
 	// リザルト画面の終了処理
 	UninitResult();
 
-	// リザルト画面の終了処理
-	UninitRanking();
-
 	// デバッグ情報の終了処理
 	UninitDebugProc();
 
 	// BGMの停止
-	StopSound();
+	//StopSound();
 	
 	// サウンドの終了処理
-	UninitSound();
+	//UninitSound();
 
 	// キーボードの終了処理
 	UninitKeyboard();
@@ -339,8 +341,6 @@ void Uninit(void)
 
 	// フェードの終了処理
 	UninitFade();
-
-#endif
 
 	// Direct3Dデバイスの破棄
 	if (g_pD3DDevice != NULL)
@@ -362,22 +362,17 @@ void Uninit(void)
 //======================================================================================
 void Update(void)
 {
-#if 0
 	// キーボードの更新処理
 	UpdateKeyboard();
 	// ジョイパッドの更新処理
 	UpdateJoypad();
 
-	PrintDebugProc("%s : %d\n", "FPS", g_nCountFPS);
+	PrintDebugProc("FPS : %d\n", g_nCountFPS);
 
 	switch (g_mode)
 	{
 	case MODE_TITLE:	// タイトル画面
 		UpdateTitle();
-		break;
-
-	case MODE_TUTORIAL:	// チュートリアル画面
-		UpdateTutorial();
 		break;
 
 	case MODE_GAME:		// ゲーム画面
@@ -387,10 +382,6 @@ void Update(void)
 	case MODE_RESULT:	// リザルト画面
 		UpdateResult();
 		break;
-
-	case MODE_RANKING:	// ランキング画面
-		UpdateRanking();
-		break;
 	}
 
 	// デバッグ情報の更新処理
@@ -398,7 +389,6 @@ void Update(void)
 
 	// フェードの更新処理
 	UpdateFade();
-#endif
 }
 
 //======================================================================================
@@ -414,15 +404,10 @@ void Draw(void)
 	// 描画開始
 	if (SUCCEEDED(g_pD3DDevice->BeginScene()))
 	{ // 描画が成功した場合
-#if 0
 		switch (g_mode)
 		{
 		case MODE_TITLE:	// タイトル画面
 			DrawTitle();
-			break;
-
-		case MODE_TUTORIAL:	// チュートリアル画面
-			DrawTutorial();
 			break;
 
 		case MODE_GAME:		// ゲーム画面
@@ -431,10 +416,6 @@ void Draw(void)
 
 		case MODE_RESULT:	// リザルト画面
 			DrawResult();
-			break;
-
-		case MODE_RANKING:	// ランキング画面
-			DrawRanking();
 			break;
 		}
 		// フェードの描画処理
@@ -445,7 +426,6 @@ void Draw(void)
 
 		// 描画終了
 		g_pD3DDevice->EndScene();
-#endif
 	}
 
 	// バックバッファとフロントバッファの入れ替え
@@ -457,16 +437,11 @@ void Draw(void)
 //======================================================================================
 void SetMode(MODE mode)
 {
-#if 0
 	// 現在のモードの終了処理
 	switch (g_mode)
 	{
 	case MODE_TITLE:	// タイトル画面
 		UninitTitle();
-		break;
-
-	case MODE_TUTORIAL:	// チュートリアル画面
-		UninitTutorial();
 		break;
 
 	case MODE_GAME:		// ゲーム画面
@@ -475,10 +450,6 @@ void SetMode(MODE mode)
 
 	case MODE_RESULT:	// リザルト画面
 		UninitResult();
-		break;
-
-	case MODE_RANKING:	// ランキング画面
-		UninitRanking();
 		break;
 	}
 
@@ -489,10 +460,6 @@ void SetMode(MODE mode)
 		InitTitle();
 		break;
 
-	case MODE_TUTORIAL:	// チュートリアル画面
-		InitTutorial();
-		break;
-
 	case MODE_GAME:		// ゲーム画面
 		InitGame();
 		break;
@@ -500,13 +467,8 @@ void SetMode(MODE mode)
 	case MODE_RESULT:	// リザルト画面
 		InitResult();
 		break;
-
-	case MODE_RANKING:	// リザルト画面
-		InitRanking();
-		break;
 	}
 	g_mode = mode;	// 現在のモードを保存
-#endif
 }
 
 //======================================================================================
