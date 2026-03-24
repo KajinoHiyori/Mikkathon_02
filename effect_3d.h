@@ -11,8 +11,9 @@
 // エフェクトタイプ ============================================
 typedef enum
 {
-	EFFECTTYPE_NORMAL = 0,		//汎用
-	EFFECTTYPE_OCTOINK,			//タコ墨
+	EFFECTTYPE_NORMAL = 0,		//通常
+	EFFECTTYPE_DIAMOND,			//ダイヤ
+	EFFECTTYPE_SQUARE,			//四角
 	EFFECTTYPE_MAX,
 }EFFECTTYPE;
 

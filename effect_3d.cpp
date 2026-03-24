@@ -16,8 +16,6 @@
 
 #define MAX_SET_EFFECT3D		(7000)							// エフェクトの最大数
 
-#define EFFECT3D_FILENAME		"data\\TEXTURE\\shadow000.png"	// 使用するエフェクトのファイル名
-
 #define EFFECT_INERTIA			(0.017f)						// 慣性
 
 // 構造体の定義 ================================================
@@ -49,7 +47,7 @@ typedef struct
 
 // グローバル宣言 ==============================================
 
-LPDIRECT3DTEXTURE9 g_pTextureEffect3D = NULL;			// テクスチャへのポインタ
+LPDIRECT3DTEXTURE9 g_pTextureEffect3D[EFFECTTYPE_MAX] = {};			// テクスチャへのポインタ
 LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffEffect3D = NULL;		// 頂点バッファ
 
 Effect3D g_aEffect3D[MAX_SET_EFFECT3D];					// エフェクトの情報
@@ -57,6 +55,16 @@ Effect3D g_aEffect3D[MAX_SET_EFFECT3D];					// エフェクトの情報
 bool g_bDispEffect3D = true;							// 3Dエフェクトの表示状態
 
 //int g_nNumEffect3D = 0;
+
+//*****************************************************************************
+// テクスチャファイル名
+//*****************************************************************************
+const char* c_apFilernamaEffect[EFFECTTYPE_MAX] =
+{
+	"data\\TEXTURE\\effect000.jpg",
+	"data\\TEXTURE\\effect001.jpg",
+	"data\\TEXTURE\\effect002.jpg",
+};
 
 //======================================================================== 
 // 3Dエフェクトの初期化処理
@@ -73,9 +81,10 @@ void InitEffect3D(void)
 	// ====================================================
 
 	// テクスチャの読み込み
-	D3DXCreateTextureFromFile(pDevice,					// Direct3Dデバイスへのポインタ
-		EFFECT3D_FILENAME,		// 読み込むテクスチャ
-		&g_pTextureEffect3D);		// テクスチャへのポインタ
+	for (int nCntTexture = 0; nCntTexture < EFFECTTYPE_MAX; nCntTexture++)
+	{
+		D3DXCreateTextureFromFile(pDevice, c_apFilernamaEffect[nCntTexture], &g_pTextureEffect3D[nCntTexture]);
+	}
 
 // エフェクト情報の初期化
 	for (nCntEffect = 0; nCntEffect < MAX_SET_EFFECT3D; nCntEffect++)
@@ -152,10 +161,13 @@ void InitEffect3D(void)
 void UninitEffect3D(void)
 {
 	// テクスチャの破棄
-	if (g_pTextureEffect3D != NULL)
+	for (int nCntTexture = 0; nCntTexture < EFFECTTYPE_MAX; nCntTexture++)
 	{
-		g_pTextureEffect3D->Release();
-		g_pTextureEffect3D = NULL;		// 中身を空にする
+		if (g_pTextureEffect3D[nCntTexture] != NULL)
+		{
+			g_pTextureEffect3D[nCntTexture]->Release();
+			g_pTextureEffect3D[nCntTexture] = NULL;		// 中身を空にする
+		}
 	}
 
 	// 頂点バッファの破棄
@@ -271,23 +283,6 @@ void DrawEffect3D(void)
 	{
 		if (g_aEffect3D[nCntEffect].bUse == true)
 		{// 使用されている場合
-
-			if (g_aEffect3D[nCntEffect].effecttype != EFFECTTYPE_OCTOINK)
-			{
-				// Zテストを無効にする
-				pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESS);
-				pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);			// Zバッファ更新の無効の設定
-
-				//アルファテストを有効にする
-				pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);		// アルファブレンドを有効に設定
-				pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);	// ( , 比較方法(より大きい))
-				pDevice->SetRenderState(D3DRS_ALPHAREF, 100);				// ( , 基準値)
-
-				// 減算合成の設定
-				pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);		// アルファブレンドの設定1
-				pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);	// アルファブレンドの設定2
-				pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);		// アルファブレンドの設定3
-			}
 			// ワールドマトリックスの初期化
 			D3DXMatrixIdentity(&g_aEffect3D[nCntEffect].mtxWorld);			// ワールドマトリックスの初期値を設定
 
@@ -317,7 +312,7 @@ void DrawEffect3D(void)
 			pDevice->SetFVF(FVF_VERTEX_3D);
 
 			// テクスチャの設定
-			pDevice->SetTexture(0, g_pTextureEffect3D);
+			pDevice->SetTexture(0, g_pTextureEffect3D[g_aEffect3D[nCntEffect].effecttype]);
 
 			// ポリゴンの描画
 			pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,	// プリミティブの種類
