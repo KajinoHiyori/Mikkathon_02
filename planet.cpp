@@ -162,7 +162,7 @@ void SetLoadPlanetInfo(int nIdxStage, float fHitRadius, float fGravity, float fR
 		if (g_aPlanetInfo[nCntModel].bUse == false)
 		{
 			g_aPlanetInfo[nCntModel].nIdxStageModel = nIdxStage;	// 
-			g_aPlanetInfo[nCntModel].fHitRadius = fRadius;			// 
+			g_aPlanetInfo[nCntModel].fHitRadius = fHitRadius;		// 
 			g_aPlanetInfo[nCntModel].fGravity = fGravity;			// 
 			g_aPlanetInfo[nCntModel].fRadius = fRadius;				// 
 			g_aPlanetInfo[nCntModel].bUse = true;					// 
@@ -225,17 +225,13 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 			// ‘ÎÛ‚Æ‚Ì‹——£‚ð‹‚ß‚é
 			fDestLength = sqrtf(fLengthXZ * fLengthXZ + fHeight * fHeight);
 
-			//PrintDebugProc("\nPLANET_DISTXY  %f", fLengthXZ);
-			//PrintDebugProc("\nPLANET_DIST    %f", fDestLength);
-			
 			if (g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fRadius >= fDestLength)
 			{// ˜f¯‚ÌŒø‰Ê”ÍˆÍ‚É“ü‚Á‚½
 
 				// ‹——£‚ÌŠ„‡
 				fNomDistance = fDestLength / g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fRadius;
 
-				PrintDebugProc("\nPLANET_NOMDIST %f\n", fNomDistance);
-
+				// Šp“x‚ð‹‚ß‚é
 				fAngleXZ = atan2f(fWidth, fDipth);
 				fDestAngle = atan2f(fLengthXZ, fHeight);
 #if 0
@@ -247,9 +243,24 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 				pPos->z += cosf(fAngleXZ) * g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity;
 				pPos->y += cosf(fDestAngle) * g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity;
 #endif
+				// •ÏXŒã‚Ì—£‚ê‹ï‡‚ð‹‚ß‚é
+				fWidth = g_aPlanet[nCntPlanet].pos.x - pPos->x;
+				fHeight = g_aPlanet[nCntPlanet].pos.y - pPos->y;
+				fDipth = g_aPlanet[nCntPlanet].pos.z - pPos->z;
+
+				// XZ‚Ì‹——£‚ð‹‚ß‚é
+				fLengthXZ = sqrtf(fWidth * fWidth + fDipth * fDipth);
+
+				// ‘ÎÛ‚Æ‚Ì‹——£‚ð‹‚ß‚é
+				fDestLength = sqrtf(fLengthXZ * fLengthXZ + fHeight * fHeight);
+
+				if (g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fHitRadius + fRadius > fDestLength)
+				{
+					PrintDebugProc("\nHIT=============================================================\n");
+					return true;
+
+				}
 			}
-
-
 		}
 	}
 
