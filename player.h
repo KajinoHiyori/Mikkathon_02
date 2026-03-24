@@ -52,6 +52,7 @@ typedef struct
 	PLAYERSTATE state;			// 状態
 	int nCounterState;			// 状態カウンター
 	float fOil;					// 燃料
+	bool bBreak;				// 小惑星を破壊できるか
 	bool bUse;					// 使用しているか
 }Player;
 

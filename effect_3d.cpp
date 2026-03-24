@@ -64,6 +64,8 @@ const char* c_apFilernamaEffect[EFFECTTYPE_MAX] =
 	"data\\TEXTURE\\effect000.jpg",
 	"data\\TEXTURE\\effect001.jpg",
 	"data\\TEXTURE\\effect002.jpg",
+	"data\\TEXTURE\\rock000.jpeg",
+	NULL,
 };
 
 //======================================================================== 
@@ -276,6 +278,20 @@ void DrawEffect3D(void)
 		return;	// 描画を行わない
 	}
 
+	// Zテストを無効にする
+	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESS);
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);			// Zバッファ更新の無効の設定
+
+	//アルファテストを有効にする
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);		// アルファブレンドを有効に設定
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);	// ( , 比較方法(より大きい))
+	pDevice->SetRenderState(D3DRS_ALPHAREF, 100);				// ( , 基準値)
+
+	// 減算合成の設定
+	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);		// アルファブレンドの設定1
+	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);	// アルファブレンドの設定2
+	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);		// アルファブレンドの設定3
+
 	// ライティングを無効化（影の影響を受けない）
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
@@ -318,21 +334,6 @@ void DrawEffect3D(void)
 			pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,	// プリミティブの種類
 				nCntEffect * 4,		// インデックス数
 				2);					// プリミティブ（ポリゴン）数
-
-
-			// Zテストを有効にする
-			pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
-			pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);				// Zバッファ更新の有効の設定
-
-			// アルファテストを無効にする
-			pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);			// アルファブレンドを無効に設定
-			pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);		// ( , 比較方法(すべて))
-			pDevice->SetRenderState(D3DRS_ALPHAREF, 0);						// ( , 基準値)
-
-			// ブレンディング(減算合成)を元に戻す 
-			pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);			// アルファブレンドの設定1
-			pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);		// アルファブレンドの設定2
-			pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	// アルファブレンドの設定3
 		}
 	}
 	// ライティングを元に戻す

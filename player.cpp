@@ -8,6 +8,7 @@
 #include "camera.h"
 #include "input.h"
 #include "debugproc.h"
+#include "asteroid.h"
 #include "planet.h"
 //*****************************************************************************
 // マクロ定義
@@ -17,6 +18,7 @@
 #define INERTIA_MOVE			(0.4f)									// 移動の慣性
 #define INERTIA_ANGLE			(0.1f)									// 角度の慣性
 #define MINUS_OIL				(0.01f)									// 燃料の減り方
+#define BREAK_OIL				(15.0f)									// 壊せる燃料の量
 #define PLAYER_FILE				"data\\MODEL\\rocket000.x"				// プレイヤーのファイル名
 
 //*****************************************************************************
@@ -43,6 +45,7 @@ void InitPlayer(void)
 	g_Player.state = PLAYERSTATE_APPEAR;
 	g_Player.nCounterState = 0;
 	g_Player.fOil = MAX_OIL * 0.5f;
+	g_Player.bBreak = false;
 	g_Player.bUse = false;
 
 	if (g_PlayerModel.pMesh == NULL)
@@ -221,8 +224,11 @@ void UpdatePlayer(void)
 	g_Player.move.y += (0.0f - g_Player.move.y) * INERTIA_MOVE;
 	g_Player.move.z += (0.0f - g_Player.move.z) * INERTIA_MOVE;
 
-	CollisionPlanet(&g_Player.pos, 1.0f);
+	// 小惑星との当たり判定
+	CollisionAsteroid(g_Player.pos, g_Player.bBreak);
 
+	// 惑星との当たり判定
+	CollisionPlanet(&g_Player.pos, 1.0f);
 	PrintDebugProc("プレイヤーのpos : ( %f %f %f )\n", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
 	PrintDebugProc("プレイヤーのmove : ( %f %f %f )\n", g_Player.move.x, g_Player.move.y, g_Player.move.z);
 
@@ -246,9 +252,18 @@ void UpdatePlayer(void)
 		CorrectAngle(&g_Player.rot.z, g_Player.rot.z);
 	}
 
-#ifdef _DEBUG
+#if 1
 	g_Player.fOil -= MINUS_OIL;
 #endif
+
+	if (g_Player.fOil <= BREAK_OIL)
+	{// 小惑星を壊せる
+		g_Player.bBreak = true;
+	}
+	else
+	{// 壊せない
+		g_Player.bBreak = false;
+	}
 
 	if (g_Player.fOil > MAX_OIL)
 	{// 燃料の最大
@@ -324,8 +339,9 @@ void SetPlayer(D3DXVECTOR3 pos)
 	g_Player.fAngleZ = 0.0f;
 	g_Player.fSpeedZ = MOVEMENT.z;
 	g_Player.state = PLAYERSTATE_APPEAR;
-	g_Player.nCounterState = 180;
+	g_Player.nCounterState = 30;
 	g_Player.fOil = MAX_OIL * 0.5f;
+	g_Player.bBreak = false;
 	g_Player.bUse = true;
 }
 
