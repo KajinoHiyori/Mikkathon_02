@@ -9,7 +9,7 @@
 #include "input.h"
 #include "debugproc.h"
 #include "asteroid.h"
-
+#include "planet.h"
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
@@ -250,6 +250,8 @@ void UpdatePlayer(void)
 	// 小惑星との当たり判定
 	CollisionAsteroid(g_Player.pos, g_Player.bBreak);
 
+	// 惑星との当たり判定
+	CollisionPlanet(&g_Player.pos, 1.0f);
 	PrintDebugProc("プレイヤーのpos : ( %f %f %f )\n", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
 	PrintDebugProc("プレイヤーのmove : ( %f %f %f )\n", g_Player.move.x, g_Player.move.y, g_Player.move.z);
 

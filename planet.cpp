@@ -9,6 +9,8 @@
 #include "planet.h"
 #include "stage.h"
 
+#include "debugproc.h"
+
 // マクロ定義 ==================================================
 
 #define MAX_NUM_PLANET			(256)
@@ -16,7 +18,7 @@
 
 // グローバル宣言 ==============================================
 
-PlanetModelInfo g_aPlanetModelInfo[MAX_TYPE_PLANETINFO];	// 惑星モデルの情報
+PlanetModelInfo g_aPlanetInfo[MAX_TYPE_PLANETINFO];	// 惑星モデルの情報
 Planet g_aPlanet[MAX_NUM_PLANET];							// 惑星の情報
 
 //========================================================================
@@ -31,9 +33,11 @@ void InitPlanet(void)
 		for (int nCntPlanetInfo = 0; nCntPlanetInfo < MAX_TYPE_PLANETINFO; nCntPlanetInfo++)
 		{
 			// モデル情報
-			g_aPlanetModelInfo[nCntPlanetInfo].nIdxStageModel = -1;	// ステージモデルのインデックスを初期化
-			g_aPlanetModelInfo[nCntPlanetInfo].fRadius = 0.0f;		// 半径を初期化
-			g_aPlanetModelInfo[nCntPlanetInfo].bUse = false;		// 使用していない状態に設定
+			g_aPlanetInfo[nCntPlanetInfo].nIdxStageModel = -1;	// ステージモデルのインデックスを初期化
+			g_aPlanetInfo[nCntPlanetInfo].fHitRadius = 0.0f;	// 当たり半径を初期化
+			g_aPlanetInfo[nCntPlanetInfo].fGravity = 0.0f;		// 重力を初期化
+			g_aPlanetInfo[nCntPlanetInfo].fRadius = 0.0f;		// 半径を初期化
+			g_aPlanetInfo[nCntPlanetInfo].bUse = false;			// 使用していない状態に設定
 		}
 
 		// 惑星の情報の初期化
@@ -60,7 +64,18 @@ void UninitPlanet(void)
 //========================================================================
 void UpdatePlanet(void)
 {
+	for (int nCntPlanetInfo = 0; nCntPlanetInfo < MAX_TYPE_PLANETINFO; nCntPlanetInfo++)
+	{
+		if (g_aPlanet[nCntPlanetInfo].bUse == true)
+		{// 使用している場合
 
+			switch (g_aPlanet[nCntPlanetInfo].type)
+			{
+			case PLANETTYPE_NONE:
+				break;
+			}
+		}
+	}
 }
 
 //========================================================================
@@ -108,10 +123,10 @@ void DrawPlanet(void)
 			pDevice->GetMaterial(&matDef);
 
 			// モデル情報を獲得
-			if (g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].nIdxStageModel != 1)
+			if (g_aPlanetInfo[g_aPlanet[nCntPlanet].type].nIdxStageModel != 1)
 			{// モデルがある
 
-				pSageModelInfo = GetStageModelInfo(g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].nIdxStageModel);
+				pSageModelInfo = GetStageModelInfo(g_aPlanetInfo[g_aPlanet[nCntPlanet].type].nIdxStageModel);
 
 				// マテリアルデータへのポインタを所得
 				pMat = (D3DXMATERIAL*)pSageModelInfo->pBuffMat->GetBufferPointer();
@@ -139,16 +154,18 @@ void DrawPlanet(void)
 //========================================================================
 // 惑星のモデルの読み込み処理
 //========================================================================
-void SetLoadPlanetInfo(int nIdxStage, float fRadius)
+void SetLoadPlanetInfo(int nIdxStage, float fHitRadius, float fGravity, float fRadius)
 {
 	// 惑星モデル情報の設定
 	for (int nCntModel = 0; nCntModel < MAX_TYPE_PLANETINFO; nCntModel++)
 	{
-		if (g_aPlanetModelInfo[nCntModel].bUse == false)
+		if (g_aPlanetInfo[nCntModel].bUse == false)
 		{
-			g_aPlanetModelInfo[nCntModel].nIdxStageModel = nIdxStage;
-			g_aPlanetModelInfo[nCntModel].fRadius = fRadius;
-			g_aPlanetModelInfo[nCntModel].bUse = true;
+			g_aPlanetInfo[nCntModel].nIdxStageModel = nIdxStage;	// 
+			g_aPlanetInfo[nCntModel].fHitRadius = fRadius;			// 
+			g_aPlanetInfo[nCntModel].fGravity = fGravity;			// 
+			g_aPlanetInfo[nCntModel].fRadius = fRadius;				// 
+			g_aPlanetInfo[nCntModel].bUse = true;					// 
 
 			break;
 		}
@@ -185,9 +202,57 @@ void SetPlanet(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 //========================================================================
 // 惑星の当たり判定処理
 //========================================================================
-bool CollisionPlanet(D3DXVECTOR3 pos1, float fRadius1,
-	D3DXVECTOR3 pos2, float fRadius2)
+bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 {
+	float fWidth, fHeight, fDipth;
+	float fLengthXZ, fDestLength;
+	float fAngleXZ, fDestAngle;
+	float fNomDistance;
+
+	for (int nCntPlanet = 0; nCntPlanet < MAX_NUM_PLANET; nCntPlanet++)
+	{
+		if (g_aPlanet[nCntPlanet].bUse == true)
+		{// 使用している場合
+			
+			// 離れ具合を求める
+			fWidth = g_aPlanet[nCntPlanet].pos.x - pPos->x;
+			fHeight = g_aPlanet[nCntPlanet].pos.y - pPos->y;
+			fDipth = g_aPlanet[nCntPlanet].pos.z - pPos->z;
+
+			// XZの距離を求める
+			fLengthXZ = sqrtf(fWidth * fWidth + fDipth * fDipth);
+
+			// 対象との距離を求める
+			fDestLength = sqrtf(fLengthXZ * fLengthXZ + fHeight * fHeight);
+
+			//PrintDebugProc("\nPLANET_DISTXY  %f", fLengthXZ);
+			//PrintDebugProc("\nPLANET_DIST    %f", fDestLength);
+			
+			if (g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fRadius >= fDestLength)
+			{// 惑星の効果範囲に入った
+
+				// 距離の割合
+				fNomDistance = fDestLength / g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fRadius;
+
+				PrintDebugProc("\nPLANET_NOMDIST %f\n", fNomDistance);
+
+				fAngleXZ = atan2f(fWidth, fDipth);
+				fDestAngle = atan2f(fLengthXZ, fHeight);
+#if 0
+				pPos->x += sinf(fAngleXZ) * (g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity - g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity * fNomDistance);
+				pPos->z += cosf(fAngleXZ) * (g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity - g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity * fNomDistance);
+				pPos->y += cosf(fDestAngle) * (g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity - g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity * fNomDistance);
+#else
+				pPos->x += sinf(fAngleXZ) * g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity;
+				pPos->z += cosf(fAngleXZ) * g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity;
+				pPos->y += cosf(fDestAngle) * g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity;
+#endif
+			}
+
+
+		}
+	}
+
 	return false;
 }
 

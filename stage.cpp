@@ -197,6 +197,8 @@ bool SetLoadStage(const char* pStageFilename)
 
 				// 設定情報の初期化
 				tmpPlanetModelInfo.nIdxStageModel = -1;
+				tmpPlanetModelInfo.fHitRadius = 0.0f;
+				tmpPlanetModelInfo.fGravity = 0.0f;
 				tmpPlanetModelInfo.fRadius = 0.0f;
 
 				while (FileExtractText(pFile, &aReadText[0]))
@@ -204,7 +206,7 @@ bool SetLoadStage(const char* pStageFilename)
 					if (strcmp(&aReadText[0], "END_PLANETTYPE") == false)
 					{
 						// 惑星の情報の設定
-						SetLoadPlanetInfo(tmpPlanetModelInfo.nIdxStageModel, tmpPlanetModelInfo.fRadius);
+						SetLoadPlanetInfo(tmpPlanetModelInfo.nIdxStageModel, tmpPlanetModelInfo.fHitRadius, tmpPlanetModelInfo.fGravity, tmpPlanetModelInfo.fRadius);
 
 						nCntPlanetType++;	// 設定した惑星の種類をインクリメント
 
@@ -217,10 +219,24 @@ bool SetLoadStage(const char* pStageFilename)
 
 						continue;
 					}
+					else if (strcmp(&aReadText[0], "HITRADIUS") == false)
+					{
+						fscanf(pFile, "%[ =\t\n]", &aBlankText[0]);			// 余分な情報を読み取る
+						fscanf(pFile, "%f", &tmpPlanetModelInfo.fHitRadius);	// モデルインデックスを読み取る
+
+						continue;
+					}
 					else if (strcmp(&aReadText[0], "RADIUS") == false)
 					{
 						fscanf(pFile, "%[ =\t\n]", &aBlankText[0]);			// 余分な情報を読み取る
 						fscanf(pFile, "%f", &tmpPlanetModelInfo.fRadius);	// モデルインデックスを読み取る
+
+						continue;
+					}
+					else if (strcmp(&aReadText[0], "GRAVITY") == false)
+					{
+						fscanf(pFile, "%[ =\t\n]", &aBlankText[0]);			// 余分な情報を読み取る
+						fscanf(pFile, "%f", &tmpPlanetModelInfo.fGravity);	// モデルインデックスを読み取る
 
 						continue;
 					}
