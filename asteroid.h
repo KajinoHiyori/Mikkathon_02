@@ -72,4 +72,6 @@ void SetAsteroid(ASTEROIDTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 move);
 void SetSarellite(D3DXVECTOR3 posParent, D3DXVECTOR3 move, float fRadius, float fMove);
 Asteroid* GetAsteroid(int nIdx);
 Asteroid* GetAllAsteroid(void);
+bool CollisionAsteroid(D3DXVECTOR3 pos, bool bBreak);
+
 #endif
