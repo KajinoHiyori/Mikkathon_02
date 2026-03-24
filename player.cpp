@@ -8,7 +8,7 @@
 #include "camera.h"
 #include "input.h"
 #include "debugproc.h"
-
+#include "planet.h"
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
@@ -220,6 +220,8 @@ void UpdatePlayer(void)
 	g_Player.move.x += (0.0f - g_Player.move.x) * INERTIA_MOVE;
 	g_Player.move.y += (0.0f - g_Player.move.y) * INERTIA_MOVE;
 	g_Player.move.z += (0.0f - g_Player.move.z) * INERTIA_MOVE;
+
+	CollisionPlanet(&g_Player.pos, 1.0f);
 
 	PrintDebugProc("プレイヤーのpos : ( %f %f %f )\n", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
 	PrintDebugProc("プレイヤーのmove : ( %f %f %f )\n", g_Player.move.x, g_Player.move.y, g_Player.move.z);

@@ -26,7 +26,9 @@ typedef struct
 {
 	int nIdxStageModel;		// モデルインデックス
 
-	float fRadius;			// 半径
+	float fHitRadius;		// 当たり半径
+	float fGravity;			// 重力
+	float fRadius;			// 効果範囲
 
 	bool bUse;				// 使用状態
 
@@ -57,11 +59,10 @@ void SetPlanet				// 惑星の設定処理
 (PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot);
 
 bool CollisionPlanet		// 惑星の当たり判定処理
-(D3DXVECTOR3 pos1, float fRadius1,
-	D3DXVECTOR3 pos2, float fRadius2);
+(D3DXVECTOR3* pPos, float fRadius);
 
 void SetLoadPlanetInfo		// 惑星のモデルの読み込み処理
-(int nIdxStage, float fRadius);
+(int nIdxStage, float fHitRadius, float fGravity, float fRadius);
 
 
 

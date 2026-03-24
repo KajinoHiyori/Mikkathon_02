@@ -21,8 +21,10 @@ MODEL_FILENAME = data/Model/asteroid000.x		[0]惑星モデル1
 NUM_PLANETTYPE = 1	# 設定する惑星の種類
 
 SET_PLANETTYPE	# [0]通常惑星
-	MODELIDX = 0	# モデルインデックス
-	RADIUS = 0.0	# 効果範囲
+	MODELIDX  = 0		# モデルインデックス
+	HITRADIUS = 50.0	# 当たり半径
+	GRAVITY   = 2.0		# 重力
+	RADIUS    = 300.0	# 効果範囲
 END_PLANETTYPE
 
 #===========================================================
@@ -32,12 +34,17 @@ SET_LAYOUT_STAGE
 
 	SET_PLANET	# 惑星
 		TYPE = 0			# 種類
-		POS = 0.0 5.0 0.0   # 位置
+		POS = 50.0 0.0 500.0   # 位置
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 0			# 種類
-		POS = 0.0 5.0 1000.0   # 位置
+		POS = -50.0 5.0 1000.0   # 位置
+	END_PLANET
+	
+	SET_PLANET	# 惑星
+		TYPE = 0			# 種類
+		POS = 0.0 5.0 1500.0   # 位置
 	END_PLANET
 	
 END_LAYOUT_STAGE
