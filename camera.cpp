@@ -81,17 +81,17 @@ void UninitCamera(void)
 //=============================================================================
 void UpdateCamera(void)
 {
-	Camera* pCamera = &g_aCamera[0];
-	Player* pPlayer = GetPlayer();
-
 	//if (GetPause() == true)
 	//{// ポーズ中
 	//	return;
 	//}
 
 	// それぞれのカメラの処理
-	for (int nCntCamera = 0; nCntCamera < g_nNumCamera; nCntCamera++, pCamera++, pPlayer++)
+	for (int nCntCamera = 0; nCntCamera < MAX_CAMERA; nCntCamera++)
 	{
+		Player* pPlayer = GetPlayer();
+		Camera* pCamera = &g_aCamera[nCntCamera];
+
 		switch (pCamera->type)
 		{
 		case CAMERATYPE_PLAYER:
@@ -388,22 +388,22 @@ void SetNumCamera(int nNum)
 		g_aCamera[0].viewport.MinZ = 0.0f;
 		g_aCamera[0].viewport.MaxZ = 1.0f;
 	}
-	else if (nNum == 2)
-	{// 2人プレイ
-		g_aCamera[0].viewport.X = 0;
-		g_aCamera[0].viewport.Y = 0;
-		g_aCamera[0].viewport.Width = SCREEN_WIDTH / 2;
-		g_aCamera[0].viewport.Height = SCREEN_HEIGHT;
-		g_aCamera[0].viewport.MinZ = 0.0f;
-		g_aCamera[0].viewport.MaxZ = 1.0f;
+	//else if (nNum == 2)
+	//{// 2人プレイ
+	//	g_aCamera[0].viewport.X = 0;
+	//	g_aCamera[0].viewport.Y = 0;
+	//	g_aCamera[0].viewport.Width = SCREEN_WIDTH / 2;
+	//	g_aCamera[0].viewport.Height = SCREEN_HEIGHT;
+	//	g_aCamera[0].viewport.MinZ = 0.0f;
+	//	g_aCamera[0].viewport.MaxZ = 1.0f;
 
-		g_aCamera[1].viewport.X = SCREEN_WIDTH / 2;
-		g_aCamera[1].viewport.Y = 0;
-		g_aCamera[1].viewport.Width = SCREEN_WIDTH / 2;
-		g_aCamera[1].viewport.Height = SCREEN_HEIGHT;
-		g_aCamera[1].viewport.MinZ = 0.0f;
-		g_aCamera[1].viewport.MaxZ = 1.0f;
-	}
+	//	g_aCamera[1].viewport.X = SCREEN_WIDTH / 2;
+	//	g_aCamera[1].viewport.Y = 0;
+	//	g_aCamera[1].viewport.Width = SCREEN_WIDTH / 2;
+	//	g_aCamera[1].viewport.Height = SCREEN_HEIGHT;
+	//	g_aCamera[1].viewport.MinZ = 0.0f;
+	//	g_aCamera[1].viewport.MaxZ = 1.0f;
+	//}
 }
 
 //=============================================================================
@@ -411,14 +411,12 @@ void SetNumCamera(int nNum)
 //=============================================================================
 void SetCameraPos(int nIdx, D3DXVECTOR3 posV, D3DXVECTOR3 posR, D3DXVECTOR3 rot, CAMERATYPE type)
 {
-	Camera* pCamera = GetCamera();
-
-	pCamera[nIdx].posV = posV;
-	pCamera[nIdx].posVDest = posV;
-	pCamera[nIdx].posR = posR;
-	pCamera[nIdx].posRDest = posR;
-	pCamera[nIdx].rot = rot;
-	pCamera[nIdx].type = type;
+	g_aCamera[nIdx].posV = posV;
+	g_aCamera[nIdx].posVDest = posV;
+	g_aCamera[nIdx].posR = posR;
+	g_aCamera[nIdx].posRDest = posR;
+	g_aCamera[nIdx].rot = rot;
+	g_aCamera[nIdx].type = type;
 }
 
 //=============================================================================
@@ -426,9 +424,7 @@ void SetCameraPos(int nIdx, D3DXVECTOR3 posV, D3DXVECTOR3 posR, D3DXVECTOR3 rot,
 //=============================================================================
 void SetCameraViewAngle(int nIdx, float fViewAngle)
 {
-	Camera* pCamera = GetCamera();
-
-	pCamera[nIdx].fMoveVA = fViewAngle;
+	g_aCamera[nIdx].fMoveVA = fViewAngle;
 }
 
 //=============================================================================
