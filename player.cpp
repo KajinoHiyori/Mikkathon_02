@@ -28,6 +28,7 @@
 #define LOW_SPPED				(70.0f)									// スピードが遅くなる
 #define FIRE_COUNT				(60)									// 火花の間隔
 #define SMOKE_COUNT				(20)									// 煙の間隔
+#define SPACE_ROTATE			(0.01f)									// 宇宙を漂っているときの回転
 #define PLAYER_FILE				"data\\MODEL\\rocket000.x"				// プレイヤーのファイル名
 
 //*****************************************************************************
@@ -150,7 +151,7 @@ void UpdatePlayer(void)
 		if (g_Player.bClear == false)
 		{// ゲームオーバー中の演出
 
-			if (g_Player.nCounterState % FIRE_COUNT == 0)
+			if (g_Player.nCounterState % FIRE_COUNT == (rand() % FIRE_COUNT))
 			{// 火花
 				SetParticle3D(rand() % 3 + 1, 1, g_Player.pos, D3DXCOLOR(1.0f, 0.8f, 0.0f, 1.0f), FIRST_POS, 4.0f, 10, 1.0f, 0.0f, EFFECTTYPE_NORMAL, PATICLETYPE_NOMAL, 0);
 			}
@@ -159,6 +160,17 @@ void UpdatePlayer(void)
 			{// 煙
 				SetExplosion(g_Player.pos, D3DXVECTOR3((float)(rand() % 2), 1.0f, (float)(rand() % 2)), D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f), 20.0f, EXPLOSIONTYPE_1);
 				SetExplosion(g_Player.pos, D3DXVECTOR3((float)(rand() % 2), 1.0f, (float)(rand() % 2)), D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f), 20.0f, EXPLOSIONTYPE_1);
+			}
+
+			if (g_Player.planetType == -1)
+			{// 惑星にぶつかって死んだわけではない→宇宙を漂っている演出
+				g_Player.rot.x += SPACE_ROTATE;
+				g_Player.rot.y += SPACE_ROTATE;
+				g_Player.rot.z += SPACE_ROTATE;
+
+				CorrectAngle(&g_Player.rot.x, g_Player.rot.x);
+				CorrectAngle(&g_Player.rot.y, g_Player.rot.y);
+				CorrectAngle(&g_Player.rot.z, g_Player.rot.z);
 			}
 		}
 
@@ -252,6 +264,9 @@ void UpdatePlayer(void)
 				g_Player.fAngleZ = 0.0f;
 			}
 		}
+
+		SetEffect3D(3, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 6.0f), FIRST_POS, 0.0f, 7.0f, -1.0f, COLOR_RED, EFFECTTYPE_NORMAL);
+		SetEffect3D(3, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 6.0f), FIRST_POS, 0.0f, 7.0f, -1.0f, COLOR_ORANGE, EFFECTTYPE_NORMAL);
 
 		if (g_Player.fOil <= HIGH_SPPED)
 		{// 速い
@@ -439,7 +454,7 @@ void SetPlayer(D3DXVECTOR3 pos, D3DXVECTOR3 rot, PLAYERSTATE state)
 
 			if (g_Player.planetType != -1)
 			{// 惑星にぶつかって死んだ
-				SetPlanet(g_Player.planetType, D3DXVECTOR3(0.0f, -100.0f, 0.0f), FIRST_POS);
+				SetPlanet(g_Player.planetType, D3DXVECTOR3(0.0f, -40.0f, 0.0f), FIRST_POS);
 			}
 		}
 	}
