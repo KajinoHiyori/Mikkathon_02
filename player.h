@@ -55,6 +55,7 @@ typedef struct
 	int nCounterState;			// 状態カウンター
 	float fOil;					// 燃料
 	PLANETTYPE planetType;		// ぶつかった惑星の種類
+	bool bClear;				// クリア状態かオーバー状態か
 	bool bBreak;				// 小惑星を破壊できるか
 	bool bUse;					// 使用しているか
 }Player;
