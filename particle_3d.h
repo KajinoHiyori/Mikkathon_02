@@ -14,6 +14,19 @@
 
 #define MAX_SET_PARTCL3D		(5096)	// パーティクルの最大数
 
+// 列挙型の定義 ================================================
+
+// 3Dパーティクルの種類
+typedef enum
+{
+	PATICLETYPE_NOMAL = 0,
+
+	PATICLETYPE_BLACKHOLE,
+
+	PATICLETYPE_MAX
+
+}PATICLETYPE;
+
 // 構造体の定義 ================================================
 
 // 3Dパーティクルの構造体
@@ -42,6 +55,7 @@ typedef struct
 	int nEffectLife;				// エフェクトの寿命
 
 	EFFECTTYPE effecttype;			// エフェクトの用途
+	PATICLETYPE paticleType;
 
 	// 状態
 	bool bUse;						// 使用状況

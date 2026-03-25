@@ -105,6 +105,9 @@ void UpdateGame(void)
 		// プレイヤーの更新処理
 		UpdatePlayer();
 
+		// 惑星の初期化
+		UpdatePlanet();
+
 		// 小惑星の更新処理
 		UpdateAsteroid();
 
@@ -156,7 +159,7 @@ void DrawGame(void)
 	// プレイヤーの描画処理
 	DrawPlayer();
 
-	// 惑星の更新
+	// 惑星の描画
 	DrawPlanet();
 
 	// 小惑星の描画処理
