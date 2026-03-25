@@ -265,8 +265,8 @@ void UpdatePlayer(void)
 			}
 		}
 
-		SetEffect3D(3, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 6.0f), FIRST_POS, 0.0f, 7.0f, -1.0f, COLOR_RED, EFFECTTYPE_NORMAL);
-		SetEffect3D(3, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 6.0f), FIRST_POS, 0.0f, 7.0f, -1.0f, COLOR_ORANGE, EFFECTTYPE_NORMAL);
+		SetEffect3D(3, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 8.0f), FIRST_POS, 0.0f, 7.0f, -1.0f, COLOR_RED, EFFECTTYPE_NORMAL);
+		SetEffect3D(3, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 8.0f), FIRST_POS, 0.0f, 7.0f, -1.0f, COLOR_ORANGE, EFFECTTYPE_NORMAL);
 
 		if (g_Player.fOil <= HIGH_SPPED)
 		{// ‘¬‚¢
