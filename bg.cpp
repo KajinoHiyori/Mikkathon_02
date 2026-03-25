@@ -124,32 +124,23 @@ void UninitBG(void)
 //=============================================================================
 void UpdateBG(void)
 {
-#if 0
 	VERTEX_2D* pVtx;					// 頂点情報へのポインタ
 
-	g_BG.nCounterAnim++;		// カウンターを加算
+	// 頂点バッファをロックし、頂点情報へのポインタを取得
+	g_pVtxBuffBG->Lock(0, 0, (void**)&pVtx, 0);
 
-	if (g_BG.nCounterAnim % ANIM_SPEED == 0)
-	{// 一定時間経過した
-		g_BG.nPatternAnim++;		// パターンNO.を更新
+	// テクスチャ座標の設定
+	pVtx[0].tex.x += 0.0001f;
+	pVtx[1].tex.x += 0.0001f;
+	pVtx[2].tex.x += 0.0001f;
+	pVtx[3].tex.x += 0.0001f;
+	pVtx[0].tex.y += -0.0001f;
+	pVtx[1].tex.y += -0.0001f;
+	pVtx[2].tex.y += -0.0001f;
+	pVtx[3].tex.y += -0.0001f;
 
-		// 頂点バッファをロックし、頂点情報へのポインタを取得
-		g_pVtxBuffBG->Lock(0, 0, (void**)&pVtx, 0);
-
-		// テクスチャ座標の設定
-		pVtx[0].tex.x = g_BG.nPatternAnim * SCROLL_SPEED;
-		pVtx[1].tex.x = g_BG.nPatternAnim * SCROLL_SPEED + 1.0f;
-		pVtx[2].tex.x = g_BG.nPatternAnim * SCROLL_SPEED;
-		pVtx[3].tex.x = g_BG.nPatternAnim * SCROLL_SPEED + 1.0f;
-		pVtx[0].tex.y = g_BG.nPatternAnim * -SCROLL_SPEED;
-		pVtx[1].tex.y = g_BG.nPatternAnim * -SCROLL_SPEED;
-		pVtx[2].tex.y = g_BG.nPatternAnim * -SCROLL_SPEED + 1.0f;
-		pVtx[3].tex.y = g_BG.nPatternAnim * -SCROLL_SPEED + 1.0f;
-
-		// 頂点バッファをアンロックする
-		g_pVtxBuffBG->Unlock();
-	}
-#endif
+	// 頂点バッファをアンロックする
+	g_pVtxBuffBG->Unlock();
 }
 
 //=============================================================================
