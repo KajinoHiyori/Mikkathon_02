@@ -9,7 +9,6 @@
 #include "input.h"
 #include "debugproc.h"
 #include "asteroid.h"
-#include "planet.h"
 #include "explosion.h"
 #include "particle_3d.h"
 #include "color.h"
@@ -52,6 +51,7 @@ void InitPlayer(void)
 	g_Player.state = PLAYERSTATE_APPEAR;
 	g_Player.nCounterState = 0;
 	g_Player.fOil = MAX_OIL * 0.5f;
+	g_Player.planetType = (PLANETTYPE)-1;
 	g_Player.bBreak = false;
 	g_Player.bUse = false;
 
@@ -384,6 +384,7 @@ void SetPlayer(D3DXVECTOR3 pos)
 	g_Player.state = PLAYERSTATE_APPEAR;
 	g_Player.nCounterState = 30;
 	g_Player.fOil = MAX_OIL * 0.2f;
+	g_Player.planetType = (PLANETTYPE)-1;
 	g_Player.bBreak = false;
 	g_Player.bUse = true;
 }

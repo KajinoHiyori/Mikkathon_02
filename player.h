@@ -8,6 +8,7 @@
 #define _PLAYER_H_		// 2重インクルード防止のマクロを定義する
 
 #include "main.h"
+#include "planet.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -52,6 +53,7 @@ typedef struct
 	PLAYERSTATE state;			// 状態
 	int nCounterState;			// 状態カウンター
 	float fOil;					// 燃料
+	PLANETTYPE planetType;		// ぶつかった惑星の種類
 	bool bBreak;				// 小惑星を破壊できるか
 	bool bUse;					// 使用しているか
 }Player;
