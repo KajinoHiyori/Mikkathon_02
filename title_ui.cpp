@@ -10,6 +10,7 @@
 #include "debugproc.h"
 #include "color.h"
 #include "fade.h"
+#include "sound.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -201,6 +202,7 @@ void UpdateTitleUI(void)
 				if (g_aTitleUI[1].pos.y == TITLELOGO_HEIGHT &&
 					((GetKeyboardTrigger(DIK_RETURN) == true) || GetJoypadTrigger(JOYKEY_A) == true || GetJoypadTrigger(JOYKEY_START) == true))
 				{// ロゴが規定の高さのときにキーが押されたら
+					PlaySound(SE_ENTER);
 					g_aTitleUI[nCntTitleUI].state = TITLEUISTATE_BLINK;
 					g_aTitleUI[nCntTitleUI].nCounterState = WAIT_COUNT;
 				}

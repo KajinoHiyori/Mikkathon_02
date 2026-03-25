@@ -10,6 +10,7 @@
 #include "game.h"
 #include "input.h"
 #include "color.h"
+#include "sound.h"
 
 // マクロ定義
 #define TEX_PAUSE		(PAUSE_MENU_MAX)	// ポーズメニューで使うテクスチャ数
@@ -199,6 +200,7 @@ void UpdatePause(void)
 			g_selectPause = PAUSE_MENU_QUIT;
 		}
 		nCounterUp = PRESS_MAEGIN;
+		PlaySound(SE_SELECT);
 	}
 	else if (GetKeyboardTrigger(DIK_S) == true || GetJoypadTrigger(JOYKEY_DOWN) == true || GetJoypadLeftStickTrigger(JOYKEY_LSTICK_DOWN) == true)	// 下
 	{
@@ -208,6 +210,7 @@ void UpdatePause(void)
 		{
 			g_selectPause = PAUSE_MENU_CONTINUE;
 		}
+		PlaySound(SE_SELECT);
 	}
 
 	// WSキーが押された場合、テクスチャの状態を変更する(リピート)
@@ -218,6 +221,7 @@ void UpdatePause(void)
 		{
 			g_selectPause = PAUSE_MENU_QUIT;
 		}
+		PlaySound(SE_SELECT);
 	}
 	else if (GetKeyboardRepeat(DIK_S) == true || GetJoypadRepeat(JOYKEY_DOWN) == true)	// 下
 	{
@@ -226,6 +230,7 @@ void UpdatePause(void)
 		{
 			g_selectPause = PAUSE_MENU_CONTINUE;
 		}
+		PlaySound(SE_SELECT);
 	}
 	else if (GetJoypadLeftStick(JOYKEY_LSTICK_UP) == true)
 	{
@@ -239,6 +244,7 @@ void UpdatePause(void)
 				g_selectPause = PAUSE_MENU_QUIT;
 			}
 		}
+		PlaySound(SE_SELECT);
 	}
 	else if (GetJoypadLeftStick(JOYKEY_LSTICK_DOWN) == true)
 	{
@@ -252,6 +258,7 @@ void UpdatePause(void)
 				g_selectPause = PAUSE_MENU_CONTINUE;
 			}
 		}
+		PlaySound(SE_SELECT);
 	}
 
 	// 何が選ばれているかの判定
@@ -300,12 +307,15 @@ void UpdatePause(void)
 		{
 		case PAUSE_MENU_CONTINUE:	// コンテニュー
 			SetEnablePause(false);
+			PlaySound(SE_ENTER);
 			break;
 		case PAUSE_MENU_RETRY:		// リトライ
 			SetFade(MODE_GAME, COLOR_BLACK);
+			PlaySound(SE_ENTER);
 			break;
 		case PAUSE_MENU_QUIT:		// タイトルへ戻る
 			SetFade(MODE_TITLE, COLOR_BLACK);
+			PlaySound(SE_ENTER);
 			break;
 		}
 	}

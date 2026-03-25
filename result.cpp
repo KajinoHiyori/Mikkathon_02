@@ -111,6 +111,7 @@ void UpdateResult(void)
 	FADE fade = GetFade();
 	if (fade == FADE_NONE && ((GetKeyboardTrigger(DIK_RETURN) == true) || GetJoypadTrigger(JOYKEY_A) == true || GetJoypadTrigger(JOYKEY_START) == true))
 	{
+		PlaySound(SE_ENTER);
 		SetFade(MODE_TITLE, COLOR_BLACK);
 	}
 }

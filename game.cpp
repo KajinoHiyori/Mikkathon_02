@@ -95,6 +95,7 @@ void UpdateGame(void)
 	// ポーズ機能
 	if ((GetKeyboardTrigger(DIK_P) == true || GetJoypadTrigger(JOYKEY_START) == true) && g_gameState != GAMESTATE_CLEAR && g_gameState != GAMESTATE_OVER)
 	{
+		PlaySound(SE_ENTER);
 		SetPause(PAUSE_MENU_CONTINUE);
 		g_bPause = g_bPause ? false : true;
 	}
