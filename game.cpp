@@ -18,7 +18,7 @@
 #include "oil.h"
 #include "meshcylinder.h"
 #include "bg.h"
-
+#include "explantation.h"
 #include "effect_3d.h"
 #include "particle_3d.h"
 #include "explosion.h"
@@ -63,6 +63,9 @@ void InitGame(void)
 
 	// ポーズ状態の初期化
 	InitPause();
+
+	// 説明UIの初期化
+	InitExplantation();
 }
 
 //=======================================================
@@ -72,6 +75,9 @@ void UninitGame(void)
 {
 	// ポーズ状態の終了処理
 	UninitPause();
+
+	// 説明UIの終了処理
+	UninitExplantation();
 }
 
 //=======================================================
@@ -119,6 +125,9 @@ void UpdateGame(void)
 
 		// 背景の更新処理
 		UpdateBG();
+
+		// 説明UIの更新処理
+		UpdateExplantation();
 	}
 	else if (g_bPause == true)
 	{ // pause状態
@@ -174,6 +183,9 @@ void DrawGame(void)
 
 	// 爆発の描画処理
 	DrawExplosion();
+
+	// 説明UIの描画処理
+	DrawExplantation();
 
 	if (g_bDisp == true && g_bPause == true)
 	{
