@@ -41,26 +41,26 @@ typedef struct
 
 // マクロ定義
 #define MAX_EXPLANTATION	(EXPLANTATIONTYPE_MAX)	// テクスチャの最大数
-#define WIDTH				(300.0f)	// 横幅
-#define HEIGHT				(200.0f)	// 縦幅
+#define WIDTH				(300.0f * 0.5f)	// 横幅
+#define HEIGHT				(200.0f * 0.5f)	// 縦幅
 #define UI_KEY				(30)		// UIのキー数
 #define UI_ROT				(D3DXVECTOR3(0.0f, 0.0f, 0.0f))	// 表示方向
 #define NORMAL				(D3DXVECTOR3(0.0f, 1.0f, 0.0f))	// 法線ベクトル
-#define POS_MOVE			(D3DXVECTOR3(0.0f, 0.0f, 3100.0f))	// 操作方法
-#define POS_DEST			(D3DXVECTOR3(0.0f, 0.0f, 3100.0f))	// 目的地
-#define POS_OIL				(D3DXVECTOR3(0.0f, 0.0f, 3100.0f))	// オイル
-#define POS_PLANET			(D3DXVECTOR3(0.0f, 0.0f, 3100.0f))	// 惑星
-#define POS_SARELLITE		(D3DXVECTOR3(0.0f, 0.0f, 4140.0f))	// 衛星
+#define POS_MOVE			(D3DXVECTOR3(0.0f, 0.0f, 0.0f))	// 操作方法
+#define POS_DEST			(D3DXVECTOR3(0.0f, 0.0f, 100.0f))	// 目的地
+#define POS_OIL				(D3DXVECTOR3(0.0f, 0.0f, 200.0f))	// オイル
+#define POS_PLANET			(D3DXVECTOR3(0.0f, 0.0f, 300.0f))	// 惑星
+#define POS_SARELLITE		(D3DXVECTOR3(0.0f, 0.0f, 400.0f))	// 衛星
 #define APPEAR_SIZE			(250.0f)	// 出現の当たり判定を管理するサイズ
 
 // テクスチャの読み込み
 const char* c_apFilenameExplantation[MAX_EXPLANTATION] =
 {
-	"data\\TEXTURE\\tutorial\\explantation000.png",	// EXPLANTATIONTYPE_PLAYPAD
-	"data\\TEXTURE\\tutorial\\explantation001.png",	// EXPLANTATIONTYPE_PLAYKEY	
-	"data\\TEXTURE\\tutorial\\explantation002.png",	// EXPLANTATIONTYPE_MAGICPAD
-	"data\\TEXTURE\\tutorial\\explantation003.png",	// EXPLANTATIONTYPE_MAGICKEY
-	"data\\TEXTURE\\tutorial\\explantation004.png",	// EXPLANTATIONTYPE_TIMELIMIT
+	"data\\TEXTURE\\explantation\\explantation000.png",	// EXPLANTATIONTYPE_PLAYPAD
+	"data\\TEXTURE\\explantation\\explantation001.png",	// EXPLANTATIONTYPE_PLAYKEY	
+	"data\\TEXTURE\\explantation\\explantation002.png",	// EXPLANTATIONTYPE_MAGICPAD
+	"data\\TEXTURE\\explantation\\explantation003.png",	// EXPLANTATIONTYPE_MAGICKEY
+	"data\\TEXTURE\\explantation\\explantation004.png",	// EXPLANTATIONTYPE_TIMELIMIT
 };
 
 // グローバル変数
@@ -136,7 +136,7 @@ void InitExplantation(void)
 	// 頂点バッファをアンロック
 	g_pVtxBuffExplantation->Unlock();
 
-
+	// 説明用のUIを設置
 	SetExplantation(EXPLANTATIONTYPE_MOVE, POS_MOVE, UI_ROT);
 	SetExplantation(EXPLANTATIONTYPE_DEST, POS_DEST, UI_ROT);
 	SetExplantation(EXPLANTATIONTYPE_OIL, POS_OIL, UI_ROT);
@@ -319,24 +319,15 @@ void DrawExplantation(void)
 		// ポリゴンのワールドマトリックスを初期化
 		D3DXMatrixIdentity(&g_aExplantation[nCntUI].mtxWorld);
 
-		//if (g_aExplantation[nCntUI].type != EXPLANTATIONTYPE_MAGICCIRCLE)	// 魔法陣以外はビルボードにする
-		//{
-			// ビューマトリックスを取得する
-			pDevice->GetTransform(D3DTS_VIEW, &mtxView);
+		// ビューマトリックスを取得する
+		pDevice->GetTransform(D3DTS_VIEW, &mtxView);
 
-			// ポリゴンをカメラに対して正面に向ける
-			D3DXMatrixInverse(&g_aExplantation[nCntUI].mtxWorld, NULL, &mtxView);	//逆行列を求める
+		// ポリゴンをカメラに対して正面に向ける
+		D3DXMatrixInverse(&g_aExplantation[nCntUI].mtxWorld, NULL, &mtxView);	//逆行列を求める
 
-			g_aExplantation[nCntUI].mtxWorld._41 = 0.0f;		//マトリックス(行列)の内容
-			g_aExplantation[nCntUI].mtxWorld._42 = 0.0f;
-			g_aExplantation[nCntUI].mtxWorld._43 = 0.0f;
-		//}
-		//else
-		//{
-		//	// 向きを反映
-		//	D3DXMatrixRotationYawPitchRoll(&mtxRot, g_aExplantation[nCntUI].rot.y, g_aExplantation[nCntUI].rot.x, g_aExplantation[nCntUI].rot.z);
-		//	D3DXMatrixMultiply(&g_aExplantation[nCntUI].mtxWorld, &g_aExplantation[nCntUI].mtxWorld, &mtxRot);
-		//}
+		g_aExplantation[nCntUI].mtxWorld._41 = 0.0f;		//マトリックス(行列)の内容
+		g_aExplantation[nCntUI].mtxWorld._42 = 0.0f;
+		g_aExplantation[nCntUI].mtxWorld._43 = 0.0f;
 
 		// パーツの位置を反映
 		D3DXMatrixTranslation(&mtxTransModel, g_aExplantation[nCntUI].pos.x, g_aExplantation[nCntUI].pos.y, g_aExplantation[nCntUI].pos.z);
