@@ -26,8 +26,10 @@ PlanetModelInfo g_aPlanetModelInfo[MAX_TYPE_PLANETINFO];	// 惑星モデルの情報
 Planet g_aPlanetLayoutInfo[MAX_NUM_PLANET];					// 惑星の配置情報
 Planet g_aPlanet[MAX_NUM_PLANET];							// 惑星の情報
 
-int g_nNumWhiteHoalPlanet;
-int g_aIdxWhiteHoalPlanet[MAX_NUM_PLANET];
+int g_nNumWhiteHoalPlanet;									// ホワイトホールの総数
+int g_aIdxWhiteHoalPlanet[MAX_NUM_PLANET];					// ホワイトホールのインデックス
+
+int g_nNumPlanet;
 
 //========================================================================
 // 惑星の初期化処理
@@ -59,6 +61,8 @@ void InitPlanet(void)
 			g_aPlanetLayoutInfo[nCntPlanet].bUse = false;
 		}
 
+		g_nNumPlanet = 0;	// 惑星の総数を初期化
+
 		g_nNumWhiteHoalPlanet = 0;												// ホワイトホールの総数
 		memset(&g_aIdxWhiteHoalPlanet[0], -1, sizeof g_aIdxWhiteHoalPlanet);	// ホワイトホールのインデックス
 	}
@@ -68,7 +72,7 @@ void InitPlanet(void)
 		{
 			if (g_aPlanet[nCntPlanet].type == PLANETTYPE_ASTEROID)
 			{
-				for (int nCntSatrellite = 0; nCntSatrellite < 10; nCntSatrellite++)
+				for (int nCntSatrellite = 0; nCntSatrellite < PLANET_SET_ASTEROID; nCntSatrellite++)
 				{
 					SetSarellite(g_aPlanet[nCntPlanet].pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5.0f, 1.0f);
 				}
@@ -261,6 +265,8 @@ void SetPlanetInfo(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 			g_aPlanetLayoutInfo[nCntPlanet].nIdx = -1;
 			g_aPlanetLayoutInfo[nCntPlanet].bUse = true;
 
+			g_nNumPlanet++;	// 惑星の総数をインクリメント
+
 			break;
 		}
 	}
@@ -305,7 +311,7 @@ void SetPlanet(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 
 			case PLANETTYPE_ASTEROID:	// 小惑星付き惑星
 
-				for (int nCntSatrellite = 0; nCntSatrellite < 10; nCntSatrellite++)
+				for (int nCntSatrellite = 0; nCntSatrellite < PLANET_SET_ASTEROID; nCntSatrellite++)
 				{
 					SetSarellite(g_aPlanet[nCntPlanet].pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3.0f, 0.1f);
 				}
@@ -389,8 +395,12 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 			// 対象との距離を求める
 			fDestLength = sqrtf(fLengthXZ * fLengthXZ + fHeight * fHeight);
 
+			PrintDebugProc("\nDEST_LENGTH %f",fDestLength);
+
 			if (g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fRadius >= fDestLength)
 			{// 惑星の効果範囲に入った
+
+				PrintDebugProc("\nIN_PLANETRADIUS!!!!!\n\n");
 
 				// 距離の割合
 				fNomDistance = fDestLength / g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fRadius;
@@ -398,15 +408,20 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 				// 角度を求める
 				fAngleXZ = atan2f(fWidth, fDipth);
 				fDestAngle = atan2f(fLengthXZ, fHeight);
-#if 0
-				pPos->x += sinf(fAngleXZ) * (g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity - g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity * fNomDistance);
-				pPos->z += cosf(fAngleXZ) * (g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity - g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity * fNomDistance);
-				pPos->y += cosf(fDestAngle) * (g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity - g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity * fNomDistance);
-#else
-				pPos->x += sinf(fAngleXZ) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity;
-				pPos->z += cosf(fAngleXZ) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity;
-				pPos->y += cosf(fDestAngle) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity;
-#endif
+
+				if(g_aPlanet[nCntPlanet].type == PLANETTYPE_BLACKHOLE)
+				{ 
+					pPos->x += sinf(fAngleXZ) * (g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity - g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity * fNomDistance);
+					pPos->z += cosf(fAngleXZ) * (g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity - g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity * fNomDistance);
+					pPos->y += cosf(fDestAngle) * (g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity - g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity * fNomDistance);
+				}
+				else
+				{
+					pPos->x += sinf(fAngleXZ) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity;
+					pPos->z += cosf(fAngleXZ) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity;
+					pPos->y += cosf(fDestAngle) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity;
+				}
+
 				// 変更後の離れ具合を求める
 				fWidth = g_aPlanet[nCntPlanet].pos.x - pPos->x;
 				fHeight = g_aPlanet[nCntPlanet].pos.y - pPos->y;
@@ -431,8 +446,10 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 						pPos->z = g_aPlanet[g_aPlanet[nCntPlanet].nIdx].pos.z;
 					}
 
-					if (g_aPlanet[nCntPlanet].type != PLANETTYPE_BLACKHOLE && g_aPlanet[nCntPlanet].type != PLANETTYPE_WHITEHOLE)
-					{
+					if (g_aPlanet[nCntPlanet].type != PLANETTYPE_BLACKHOLE 
+					 && g_aPlanet[nCntPlanet].type != PLANETTYPE_WHITEHOLE)
+					{// ブラックホール, ホワイトホールではない
+
 						pPlayer->planetType = g_aPlanet[nCntPlanet].type;	// ぶつかった惑星の種類を返す
 						pPlayer->bUse = false;								// プレイヤーの使用していない状態に設定
 					}
@@ -442,15 +459,20 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 				else
 				{// 衝突していない
 
-					if (fNomDistance > 0.5f)
-					{// 効果範囲の半分より外にいる
+					if (g_aPlanet[nCntPlanet].type != PLANETTYPE_BLACKHOLE
+						&& g_aPlanet[nCntPlanet].type != PLANETTYPE_WHITEHOLE)
+					{// ブラックホール, ホワイトホールではない
 
-						pPlayer->fOil += 0.05f * (1.0f - fNomDistance);
-					}
-					else
-					{// 効果範囲の半分より内にいる
+						if (fNomDistance > 0.5f)
+						{// 効果範囲の半分より外にいる
 
-						pPlayer->fOil += 0.05f * 1.25f;
+							pPlayer->fOil += 0.05f * (1.0f - fNomDistance);
+						}
+						else
+						{// 効果範囲の半分より内にいる
+
+							pPlayer->fOil += 0.05f * 1.25f;
+						}
 					}
 				}
 			}

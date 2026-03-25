@@ -8,6 +8,10 @@
 #ifndef _PLANET_H_
 #define _PLANET_H_
 
+// ƒ}ƒNƒ’è‹` ==================================================
+
+#define PLANET_SET_ASTEROID		(10)	// ¬˜f¯•t‚«‚Å¶¬‚·‚é¬˜f¯”
+
 // —ñ‹“Œ^‚Ì’è‹` ================================================
 
 // ˜f¯‚Ìí—Ş
@@ -83,5 +87,7 @@ bool CollisionPlanet		// ˜f¯‚Ì“–‚½‚è”»’èˆ—
 (D3DXVECTOR3* pPos, float fRadius);
 
 Planet* GetPlanet(void);	// ˜f¯‚Ìî•ñ‚ğ•Ô‚·ˆ—
+
+int GetNumPlanet(void);		// ˜f¯‚Ì‘”‚ğ•Ô‚·ˆ—
 
 #endif

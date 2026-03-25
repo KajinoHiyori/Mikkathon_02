@@ -41,23 +41,23 @@ SET_PLANETTYPE	# [1]小惑星付き惑星
 	MODELIDX  = 1		# モデルインデックス
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
-	RADIUS    = 300.0	# 効果範囲
+	RADIUS    = 450.0	# 効果範囲
 	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [2]ブラックホール惑星
 	MODELIDX  = 2		# モデルインデックス
 	HITRADIUS = 50.0	# 当たり半径
-	GRAVITY   = 2.0		# 重力
-	RADIUS    = 300.0	# 効果範囲
+	GRAVITY   = 9.0		# 重力
+	RADIUS    = 700.0	# 効果範囲
 	ROTATION  = 0.0 0.1 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [3]ホワイトホール惑星
 	MODELIDX  = 3		# モデルインデックス
 	HITRADIUS = 50.0	# 当たり半径
-	GRAVITY   = 2.0		# 重力
-	RADIUS    = 300.0	# 効果範囲
+	GRAVITY   = -3.0		# 重力
+	RADIUS    = 500.0	# 効果範囲
 	ROTATION  = 0.0 0.1 0.0	# 回転速度
 END_PLANETTYPE
 
@@ -65,7 +65,7 @@ SET_PLANETTYPE	# [4]重量変わる惑星
 	MODELIDX  = 4		# モデルインデックス
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
-	RADIUS    = 300.0	# 効果範囲
+	RADIUS    = 450.0	# 効果範囲
 	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
@@ -73,7 +73,7 @@ SET_PLANETTYPE	# [5]斥力惑星
 	MODELIDX  = 5		# モデルインデックス
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = -2.0	# 重力
-	RADIUS    = 300.0	# 効果範囲
+	RADIUS    = -300.0	# 効果範囲
 	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
@@ -81,7 +81,7 @@ SET_PLANETTYPE	# [6]一般(引力：小)惑星
 	MODELIDX  = 6		# モデルインデックス
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
-	RADIUS    = 300.0	# 効果範囲
+	RADIUS    = 450.0	# 効果範囲
 	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
@@ -89,7 +89,7 @@ SET_PLANETTYPE	# [7]一般(引力：中)惑星
 	MODELIDX  = 7		# モデルインデックス
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
-	RADIUS    = 300.0	# 効果範囲
+	RADIUS    = 450.0	# 効果範囲
 	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
@@ -97,7 +97,7 @@ SET_PLANETTYPE	# [8]一般(引力：大)惑星
 	MODELIDX  = 8		# モデルインデックス
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
-	RADIUS    = 300.0	# 効果範囲
+	RADIUS    = 450.0	# 効果範囲
 	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
@@ -105,7 +105,7 @@ SET_PLANETTYPE	# [9]ゴール惑星
 	MODELIDX  = 9		# モデルインデックス
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
-	RADIUS    = 300.0	# 効果範囲
+	RADIUS    = 450.0	# 効果範囲
 	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
@@ -116,67 +116,67 @@ SET_LAYOUT_STAGE
 
 	SET_PLANET	# 惑星
 		TYPE = 0			# 種類
-		POS = 500.0 0.0 500.0   # 位置
+		POS = 500.0 0.0 1000.0   # 位置
 		ROT = 0.0 0.0 0.0	# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 1				# 種類
-		POS = -500.0 0.0 1000.0   # 位置
+		POS = -500.0 0.0 2000.0   # 位置
 		ROT = 0.0 0.0 0.0	# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 3			# 種類
-		POS = 500.0 0.0 1250.0   # 位置
+		POS = 500.0 0.0 3000.0   # 位置
 		ROT = 0.0 0.0 0.0	# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 3			# 種類
-		POS = 500.0 0.0 2250.0   # 位置
+		POS = 500.0 0.0 4000.0   # 位置
 		ROT = 0.0 0.0 0.0	# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 2			# 種類
-		POS = -500.0 0.0 1500.0   # 位置
+		POS = -500.0 0.0 5000.0   # 位置
 		ROT = 0.0 0.0 0.0	# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 4			# 種類
-		POS = 500.0 0.0 2000.0   # 位置
+		POS = 500.0 0.0 6000.0   # 位置
 		ROT = 0.0 0.0 0.0	# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 5			# 種類
-		POS = -500.0 0.0 2250.0   # 位置
+		POS = -500.0 0.0 7000.0   # 位置
 		ROT = 0.0 0.0 0.0	# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 6			# 種類
-		POS = 500.0 0.0 2500.0   # 位置
+		POS = 500.0 0.0 8000.0   # 位置
 		ROT = 0.0 0.0 0.0	# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 7			# 種類
-		POS = -500.0 0.0 3000.0   # 位置
+		POS = -500.0 0.0 9000.0   # 位置
 		ROT = 0.0 0.0 0.0	# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 8			# 種類
-		POS = 500.0 0.0 3250.0   # 位置
+		POS = 500.0 0.0 10000.0   # 位置
 		ROT = 0.0 0.0 0.0	# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 9			# 種類
-		POS = -500.0 0.0 3500.0   # 位置
+		POS = -500.0 0.0 11000.0   # 位置
 		ROT = 0.0 0.0 0.0	# 角度
 	END_PLANET
 	
