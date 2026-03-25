@@ -10,6 +10,9 @@
 #include "input.h"
 #include "color.h"
 
+#include "result_ui.h"
+#include "bg.h"
+
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -22,6 +25,9 @@ void InitResult(void)
 {
 	// 変数の初期化
 	g_nCounterState = 0;
+
+	// リザルトUIの初期化
+	InitResultUI();
 }
 
 //=======================================================
@@ -29,7 +35,8 @@ void InitResult(void)
 //=======================================================
 void UninitResult(void)
 {
-
+	// リザルトUIの終了処理
+	UninitResultUI();
 }
 
 //=======================================================
@@ -37,6 +44,12 @@ void UninitResult(void)
 //=======================================================
 void UpdateResult(void)
 {
+	// 背景の更新処理
+	UpdateBG();
+
+	// リザルトUIの更新処理
+	UpdateResultUI();
+
 	FADE fade = GetFade();
 	if (fade == FADE_NONE && ((GetKeyboardTrigger(DIK_RETURN) == true) || GetJoypadTrigger(JOYKEY_A) == true || GetJoypadTrigger(JOYKEY_START) == true))
 	{
@@ -49,5 +62,9 @@ void UpdateResult(void)
 //=======================================================
 void DrawResult(void)
 {
+	// 背景の描画処理
+	DrawBG();
 
+	// リザルトUIの描画処理
+	DrawResultUI();
 }
