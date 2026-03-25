@@ -18,6 +18,8 @@
 #include "effect_3d.h"
 #include "particle_3d.h"
 #include "explosion.h"
+#include "game.h"
+#include "sound.h"
 
 //*****************************************************************************
 // グローバル変数
@@ -43,6 +45,22 @@ void InitResult(void)
 
 	// リザルトUIの初期化
 	InitResultUI();
+
+	GAMESTATE gameState = GetGAmeState();
+	switch (gameState)
+	{
+	case GAMESTATE_OVER:	// ゲームオーバー
+		PlaySound(BGM_OVER);
+		break;
+
+	case GAMESTATE_CLEAR:	// ゲームクリア
+		PlaySound(BGM_CLEAR);
+		break;
+
+	default:
+		// error
+		break;
+	}
 }
 
 //=======================================================
@@ -52,6 +70,9 @@ void UninitResult(void)
 {
 	// リザルトUIの終了処理
 	UninitResultUI();
+
+	// 音楽の停止
+	StopSound();
 }
 
 //=======================================================

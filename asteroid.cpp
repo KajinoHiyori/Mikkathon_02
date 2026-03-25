@@ -120,6 +120,29 @@ void UninitAsteroid(void)
 			g_asteroidModel.apTexture[nCntPlayer] = NULL;
 		}
 	}
+
+	// ¬˜f¯\‘¢‘Ì‚Ì‰Šú‰»
+	for (int nCntAsteroid = 0; nCntAsteroid < MAX_ASTEROID; nCntAsteroid++)
+	{
+		g_aAsteroid[nCntAsteroid].type = ASTEROIDTYPE_NONE;				// ¬˜f¯‚Ìí—Ş
+		g_aAsteroid[nCntAsteroid].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// ˆÊ’u
+		g_aAsteroid[nCntAsteroid].posParent = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// e‚ÌˆÊ’u
+		g_aAsteroid[nCntAsteroid].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// ˆÚ“®—Ê
+		g_aAsteroid[nCntAsteroid].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// ‰ñ“]•ûŒü
+		g_aAsteroid[nCntAsteroid].fRadius = 0.0f;		// e˜f¯‚Æ‚Ì‹——£
+		g_aAsteroid[nCntAsteroid].fMove = 0.0f;		// ˆÚ“®•ûŒü
+		g_aAsteroid[nCntAsteroid].fAngle = 0.0f;		// ‰ñ“]“x”
+		g_aAsteroid[nCntAsteroid].nIdx = -1;		// ƒCƒ“ƒfƒbƒNƒX
+		g_aAsteroid[nCntAsteroid].bUse = false;	// g—pó‘Ô
+		// ‰‰o–Ê
+		g_aAsteroid[nCntAsteroid].floatingX = FLOATINGX_ADD;	// •‚—Vó‘Ô[X]
+		g_aAsteroid[nCntAsteroid].floatingY = FLOATINGY_ADD;	// •‚—Vó‘Ô[Y]
+		g_aAsteroid[nCntAsteroid].floatingZ = FLOATINGZ_ADD;	// •‚—Vó‘Ô[Z]
+		g_aAsteroid[nCntAsteroid].nKeyX = 0;				// •‚—VŠÔ[X]
+		g_aAsteroid[nCntAsteroid].nKeyY = 0;				// •‚—VŠÔ[Y]
+		g_aAsteroid[nCntAsteroid].nKeyZ = 0;				// •‚—VŠÔ[Z]
+		g_aAsteroid[nCntAsteroid].nNumKey = ASTEROID_KEY;		// •‚—VŠÔŠu‚ğŠÇ—
+	}
 }
 
 //=======================================================

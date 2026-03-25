@@ -22,6 +22,7 @@
 #include "effect_3d.h"
 #include "particle_3d.h"
 #include "explosion.h"
+#include "sound.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -66,6 +67,9 @@ void InitGame(void)
 
 	// 説明UIの初期化
 	InitExplantation();
+
+	// 音楽の再生
+	PlaySound(BGM_GAME);
 }
 
 //=======================================================
@@ -78,6 +82,9 @@ void UninitGame(void)
 
 	// 説明UIの終了処理
 	UninitExplantation();
+
+	// 音楽の停止
+	StopSound();
 }
 
 //=======================================================

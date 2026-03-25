@@ -10,7 +10,7 @@
 #include "input.h"
 #include "color.h"
 #include "camera.h"
-
+#include "sound.h"
 #include "title_ui.h"
 #include "bg.h"
 #include "meshcylinder.h"
@@ -24,6 +24,9 @@ void InitTitle(void)
 
 	// タイトルUIの初期化処理
 	InitTitleUI();
+
+	// 音源の再生
+	PlaySound(BGM_TITLE);
 }
 
 //=======================================================
@@ -33,6 +36,9 @@ void UninitTitle(void)
 {
 	// タイトルUIの終了処理
 	UninitTitleUI();
+
+	// 音楽の停止
+	StopSound();
 }
 
 //=======================================================
