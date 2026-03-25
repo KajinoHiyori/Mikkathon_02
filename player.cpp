@@ -153,7 +153,8 @@ void UpdatePlayer(void)
 
 			if (g_Player.nCounterState % FIRE_COUNT == (rand() % FIRE_COUNT))
 			{// 火花
-				SetParticle3D(rand() % 3 + 1, 1, g_Player.pos, D3DXCOLOR(1.0f, 0.8f, 0.0f, 1.0f), FIRST_POS, 4.0f, 10, 1.0f, 0.0f, EFFECTTYPE_NORMAL, PATICLETYPE_NOMAL, 0);
+				SetParticle3D(rand() % 3 + 1, 1, g_Player.pos, D3DXCOLOR(1.0f, 0.8f, 0.0f, 1.0f), FIRST_POS, 4.0f, 10, 1.2f, 0.0f, EFFECTTYPE_NORMAL, PATICLETYPE_NOMAL, 0);
+				SetParticle3D(rand() % 3 + 1, 1, g_Player.pos, D3DXCOLOR(1.0f, 0.8f, 0.0f, 1.0f), FIRST_POS, 4.0f, 10, 1.2f, 0.0f, EFFECTTYPE_NORMAL, PATICLETYPE_NOMAL, 0);
 			}
 
 			if (g_Player.nCounterState % SMOKE_COUNT == 0)
@@ -410,8 +411,19 @@ void DrawPlayer(void)
 
 	for (int nCntMat = 0; nCntMat < (int)g_PlayerModel.dwNumMat; nCntMat++)
 	{
+		// 色保存用
+		D3DXCOLOR MatCol = pMat[nCntMat].MatD3D.Diffuse;
+
+		if (g_Player.state == PLAYERSTATE_RESULT && g_Player.bClear == false)
+		{// 色を変更(焦げたような色)
+			pMat[nCntMat].MatD3D.Diffuse = D3DXCOLOR(MatCol.r * 0.5f, MatCol.g * 0.5f, MatCol.b * 0.5f, 1.0f);
+		}
+
 		// マテリアルの設定
 		pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+
+		// 色を戻す
+		pMat[nCntMat].MatD3D.Diffuse = MatCol;
 
 		// テクスチャの設定
 		pDevice->SetTexture(0, g_PlayerModel.apTexture[nCntMat]);
@@ -457,6 +469,10 @@ void SetPlayer(D3DXVECTOR3 pos, D3DXVECTOR3 rot, PLAYERSTATE state)
 				SetPlanet(g_Player.planetType, D3DXVECTOR3(0.0f, -40.0f, 0.0f), FIRST_POS);
 			}
 		}
+	}
+	else if (state == PLAYERSTATE_APPEAR)
+	{// 触れていた惑星の種類を初期化
+		g_Player.planetType = (PLANETTYPE)-1;
 	}
 }
 

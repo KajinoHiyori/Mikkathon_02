@@ -10,6 +10,7 @@
 #include "color.h"
 #include "debugproc.h"
 #include "player.h"
+#include "sound.h"
 
 // マクロ定義
 #define MAX_ASTEROIDTEXTURE	(16)	// 小惑星のテクスチャ数
@@ -430,10 +431,12 @@ bool CollisionAsteroid(D3DXVECTOR3 pos, bool bBreak)
 			if (bBreak == true)
 			{ // 破壊フラグが立っている
 				g_aAsteroid[nCntAsteroid].bUse = false;
+				PlaySound(SE_ROCKBREAK);
 			}
 			else if (bBreak == false)
 			{ // 破壊フラグが立っていない
 				pPlayer->bUse = false;
+				PlaySound(SE_BOMB);
 			}
 			PrintDebugProc("当たっている\n");
 			return true;
