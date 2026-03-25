@@ -10,6 +10,8 @@
 #include "effect_3d.h"	// エフェクトヘッダー
 
 #include "input.h"
+#include "color.h"
+#include "planet.h"
 //#include "debugproc.h"
 
 // マクロ定義 ==================================================
@@ -42,6 +44,7 @@ typedef struct
 	// 状態
 	bool bUse;				// 使用状況
 	bool bHoming;			// ホーミングするか
+	bool bPlanet;			// 惑星の重力を表すものか
 
 	EFFECTTYPE effecttype;	// エフェクトの用途
 
@@ -90,7 +93,7 @@ void InitEffect3D(void)
 		D3DXCreateTextureFromFile(pDevice, c_apFilernamaEffect[nCntTexture], &g_pTextureEffect3D[nCntTexture]);
 	}
 
-// エフェクト情報の初期化
+	// エフェクト情報の初期化
 	for (nCntEffect = 0; nCntEffect < MAX_SET_EFFECT3D; nCntEffect++)
 	{
 		g_aEffect3D[nCntEffect].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 位置を初期化
@@ -206,6 +209,9 @@ void UpdateEffect3D(void)
 
 	//PrintDebugProc("エフェクトの数 : %d\n", g_nNumEffect3D);
 
+	// ▼頂点バッファをロックして頂点情報へのポインタを所得
+	g_pVtxBuffEffect3D->Lock(0, 0, (void**)&pVtx, 0);
+
 	for (nCntEffect = 0; nCntEffect < MAX_SET_EFFECT3D; nCntEffect++)
 	{
 		if (g_aEffect3D[nCntEffect].bUse == true)
@@ -249,16 +255,16 @@ void UpdateEffect3D(void)
 			// 慣性
 			g_aEffect3D[nCntEffect].fSpeed += (0.0f - g_aEffect3D[nCntEffect].fSpeed) * EFFECT_INERTIA;
 
+			if (g_aEffect3D[nCntEffect].bPlanet == true)
+			{// 惑星の重力を受ける
+				CollisionPlanet(&g_aEffect3D[nCntEffect].pos, 1.0f);
+			}
+
 			// 半径の大きさを更新
 			g_aEffect3D[nCntEffect].fRadius += g_aEffect3D[nCntEffect].faddRadius;
 
 			// 寿命を更新
 			g_aEffect3D[nCntEffect].nLife--;
-
-			// ▼頂点バッファをロックして頂点情報へのポインタを所得
-			g_pVtxBuffEffect3D->Lock(0, 0, (void**)&pVtx, 0);
-
-			pVtx += (nCntEffect * 4);
 
 			pVtx[0].pos.x = -g_aEffect3D[nCntEffect].fRadius;
 			pVtx[1].pos.x = g_aEffect3D[nCntEffect].fRadius;
@@ -275,9 +281,6 @@ void UpdateEffect3D(void)
 			pVtx[2].pos.z = 0.0f;
 			pVtx[3].pos.z = 0.0f;
 
-			// ▲頂点バッファをアンロックする
-			g_pVtxBuffEffect3D->Unlock();
-
 			if (g_aEffect3D[nCntEffect].nLife < 0)
 			{// 寿命が尽きた場合
 
@@ -285,7 +288,12 @@ void UpdateEffect3D(void)
 				//g_nNumEffect3D--;
 			}
 		}
+
+		pVtx += 4;
 	}
+
+	// ▲頂点バッファをアンロックする
+	g_pVtxBuffEffect3D->Unlock();
 }
 
 //======================================================================== 
@@ -402,12 +410,16 @@ void SetEffect3D(int nLife,							// 寿命
 	D3DXCOLOR col,						// 色
 	EFFECTTYPE type,						// エフェクトのタイプ
 	bool bHoming,
-	D3DXVECTOR3 HomingPos
-	)
+	D3DXVECTOR3 HomingPos,
+	bool bPlanet
+)
 {
 	// 変数宣言 ===========================================
 
 	VERTEX_3D* pVtx;	// 頂点情報へのポインタを宣言
+
+	// ▼頂点バッファをロックして頂点情報へのポインタを所得
+	g_pVtxBuffEffect3D->Lock(0, 0, (void**)&pVtx, 0);
 
 	// ====================================================
 
@@ -432,11 +444,7 @@ void SetEffect3D(int nLife,							// 寿命
 
 			g_aEffect3D[nCntEffect].bHoming = bHoming;
 			g_aEffect3D[nCntEffect].HomingPos = HomingPos;
-
-			// ▼頂点バッファをロックして頂点情報へのポインタを所得
-			g_pVtxBuffEffect3D->Lock(0, 0, (void**)&pVtx, 0);
-
-			pVtx += (nCntEffect * 4);	// 頂点バッファを進める
+			g_aEffect3D[nCntEffect].bPlanet = bPlanet;
 
 			// 頂点座標の設定
 			pVtx[0].pos.x = -g_aEffect3D[nCntEffect].fRadius;
@@ -460,12 +468,49 @@ void SetEffect3D(int nLife,							// 寿命
 			pVtx[2].col = col;
 			pVtx[3].col = col;
 
-			// ▲頂点バッファをアンロックする
-			g_pVtxBuffEffect3D->Unlock();
-
 			//g_nNumEffect3D++;
 
 			break;	// for文を抜ける
+		}
+
+		pVtx += 4;
+	}
+
+	// ▲頂点バッファをアンロックする
+	g_pVtxBuffEffect3D->Unlock();
+}
+
+//======================================================================== 
+// 惑星の周りにエフェクトを設定する処理(重力)
+//========================================================================
+void SetEffect3DAroundPlanet(void)
+{
+	Planet* pPlanet = GetPlanet();
+	int nNumPlanet = GetNumPlanet();
+
+	for (int nCntPlanet = 0; nCntPlanet < nNumPlanet; nCntPlanet++, pPlanet++)
+	{
+		PlanetModelInfo* pPlanetInfo = GetPlanetInfo();
+
+		if (pPlanetInfo[pPlanet->type].fGravity >= 0)
+		{// 重力
+			for (int nCnt = 0; nCnt < 10; nCnt++)
+			{
+				D3DXVECTOR3 rot, pos;
+
+				rot.x = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
+				rot.y = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
+				rot.z = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
+
+				D3DXVec3Normalize(&rot, &rot);						// 正規化
+
+				pos.x = pPlanet->pos.x + sinf(rot.x) * pPlanetInfo[pPlanet->type].fHitRadius;
+				pos.y = pPlanet->pos.y + cosf(rot.y) * pPlanetInfo[pPlanet->type].fHitRadius;
+				pos.z = pPlanet->pos.z + cosf(rot.z) * pPlanetInfo[pPlanet->type].fHitRadius;
+
+				SetEffect3D(10, pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 5.0f, 0.0f, COLOR_WHITE, EFFECTTYPE_NORMAL,
+					false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), true);
+			}
 		}
 	}
 }

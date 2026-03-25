@@ -34,7 +34,10 @@ void SetEffect3D				// 3Dエフェクトの設定処理
 	D3DXCOLOR col,							// 色
 	EFFECTTYPE type,						// エフェクトのタイプ
 	bool bHoming,							// ホーミングするか
-	D3DXVECTOR3 HomingPos					// ホーミング対象の位置
-	);				
+	D3DXVECTOR3 HomingPos,					// ホーミング対象の位置
+	bool bPlanet
+	);		
+
+void SetEffect3DAroundPlanet(void);
 
 #endif

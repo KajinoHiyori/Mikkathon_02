@@ -119,8 +119,8 @@ void UpdateParticle3D(void)
 					g_aPaticle3D[nCntPaticle].col,					// エフェクトの色	
 					g_aPaticle3D[nCntPaticle].effecttype,
 					false,
-					D3DXVECTOR3(0.0f, 0.0f, 0.0f)
-					);
+					D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+					false);
 			}
 
 			if (g_aPaticle3D[nCntPaticle].nParticleLife > 0)g_aPaticle3D[nCntPaticle].nParticleLife--;	// 寿命を減らす
