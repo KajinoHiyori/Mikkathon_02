@@ -33,7 +33,7 @@ SET_PLANETTYPE	# [0]エネルギー惑星
 	MODELIDX  = 0		# モデルインデックス
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
-	RADIUS    = 300.0	# 効果範囲
+	RADIUS    = 450.0	# 効果範囲
 	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
@@ -48,7 +48,7 @@ END_PLANETTYPE
 SET_PLANETTYPE	# [2]ブラックホール惑星
 	MODELIDX  = 2		# モデルインデックス
 	HITRADIUS = 50.0	# 当たり半径
-	GRAVITY   = 9.0		# 重力
+	GRAVITY   = 20.0		# 重力
 	RADIUS    = 700.0	# 効果範囲
 	ROTATION  = 0.0 0.1 0.0	# 回転速度
 END_PLANETTYPE
