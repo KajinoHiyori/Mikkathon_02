@@ -10,12 +10,15 @@
 #include "input.h"
 #include "color.h"
 
+#include "title_ui.h"
+
 //=======================================================
 // タイトルの初期化処理
 //=======================================================
 void InitTitle(void)
 {
-
+	// タイトルUIの初期化処理
+	InitTitleUI();
 }
 
 //=======================================================
@@ -23,7 +26,8 @@ void InitTitle(void)
 //=======================================================
 void UninitTitle(void)
 {
-
+	// タイトルUIの終了処理
+	UninitTitleUI();
 }
 
 //=======================================================
@@ -31,8 +35,12 @@ void UninitTitle(void)
 //=======================================================
 void UpdateTitle(void)
 {
+	// タイトルUIの更新処理
+	UpdateTitleUI();
+
 	FADE fade = GetFade();
-	if (fade == FADE_NONE && ((GetKeyboardTrigger(DIK_RETURN) == true) || GetJoypadTrigger(JOYKEY_A) == true || GetJoypadTrigger(JOYKEY_START) == true))
+	if (fade == FADE_NONE &&
+		GetTitleFinish() == true)
 	{
 		SetFade(MODE_GAME, COLOR_WHITE);
 	}
@@ -43,5 +51,6 @@ void UpdateTitle(void)
 //=======================================================
 void DrawTitle(void)
 {
-
+	// タイトルUIの描画処理
+	DrawTitleUI();
 }
