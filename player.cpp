@@ -11,19 +11,20 @@
 #include "asteroid.h"
 #include "explosion.h"
 #include "particle_3d.h"
+#include "meshcylinder.h"
 #include "color.h"
 #include "game.h"
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define MOVEMENT				(D3DXVECTOR3(1.0f, 1.0f, 1.0f))			// 移動量
+#define MOVEMENT				(D3DXVECTOR3(3.0f, 3.0f, 3.0f))			// 移動量
 #define ROT						(D3DXVECTOR3(0.05f, 0.05f, 0.05f))		// 向き移動量
 #define INERTIA_MOVE			(0.4f)									// 移動の慣性
 #define INERTIA_ANGLE			(0.1f)									// 角度の慣性
 #define MINUS_OIL				(0.05f)									// 燃料の減り方
 #define BREAK_OIL				(20.0f)									// 壊せる燃料の量
-#define AUTO_SPEED				(1.0f)									// 自動で進むスピード
+#define AUTO_SPEED				(3.0f)									// 自動で進むスピード
 #define HIGH_SPPED				(35.0f)									// スピードが速くなる
 #define LOW_SPPED				(70.0f)									// スピードが遅くなる
 #define FIRE_COUNT				(60)									// 火花の間隔
@@ -177,11 +178,25 @@ void UpdatePlayer(void)
 		}
 
 		break;
+
+	case PLAYERSTATE_BACKAREA:
+		D3DXVECTOR3 correct = -g_Player.pos;
+		g_Player.move += *D3DXVec3Normalize(&g_Player.move, &correct);
+
+		g_Player.nCounterState--;
+
+		if (g_Player.nCounterState < 0)
+		{// 戻り状態を終わる
+			g_Player.state = PLAYERSTATE_WAIT;
+			g_Player.nCounterState = 0;
+		}
+
+		break;
 	}
 
 	if (g_Player.state != PLAYERSTATE_RESULT)
 	{
-		if (g_Player.state != PLAYERSTATE_APPEAR)
+		if (g_Player.state != PLAYERSTATE_APPEAR && g_Player.state != PLAYERSTATE_BACKAREA)
 		{// 出現状態のときは移動できない
 			float fValueH, fValueV;
 
@@ -267,9 +282,6 @@ void UpdatePlayer(void)
 			}
 		}
 
-		SetEffect3D(3, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 8.0f), FIRST_POS, 0.0f, 7.0f, -1.0f, COLOR_RED, EFFECTTYPE_NORMAL);
-		SetEffect3D(3, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 8.0f), FIRST_POS, 0.0f, 7.0f, -1.0f, COLOR_ORANGE, EFFECTTYPE_NORMAL);
-
 		if (g_Player.fOil <= HIGH_SPPED)
 		{// 速い
 			g_Player.Speed.x = 1.5f;
@@ -297,8 +309,20 @@ void UpdatePlayer(void)
 		g_Player.move.y += (0.0f - g_Player.move.y) * INERTIA_MOVE;
 		g_Player.move.z += (0.0f - g_Player.move.z) * INERTIA_MOVE;
 
+		SetEffect3D(1, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 10.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 7.0f, -1.0f, COLOR_RED, EFFECTTYPE_NORMAL, true, g_Player.pos);
+		SetEffect3D(1, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 10.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 7.0f, -1.0f, COLOR_ORANGE, EFFECTTYPE_NORMAL, true, g_Player.pos);
+
 		PrintDebugProc("プレイヤーのpos : ( %f %f %f )\n", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
 		PrintDebugProc("プレイヤーのmove : ( %f %f %f )\n", g_Player.move.x, g_Player.move.y, g_Player.move.z);
+
+		D3DXVECTOR2 XYdist = D3DXVECTOR2(g_Player.pos.x, g_Player.pos.y);
+		float fDist = D3DXVec2Length(&XYdist);
+
+		if (fDist > 5000.0f)
+		{// 移動制限
+			g_Player.state = PLAYERSTATE_BACKAREA;
+			g_Player.nCounterState = 60;
+		}
 
 		if (CollisionAsteroid(g_Player.pos, g_Player.bBreak) == true)
 		{// 小惑星との当たり判定による演出
@@ -329,6 +353,8 @@ void UpdatePlayer(void)
 			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.8f, 0.9f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
 		}
 
+		CollisionMeshCylinder(&g_Player.pos, &g_Player.posOld, &g_Player.move, 0.0f, 0.0f, false);
+
 		if (g_Player.fAngleZ > D3DX_PI * 0.25f)
 		{// 角度の最大
 			g_Player.fAngleZ = D3DX_PI * 0.25f;
@@ -349,7 +375,7 @@ void UpdatePlayer(void)
 			CorrectAngle(&g_Player.rot.z, g_Player.rot.z);
 		}
 
-#if 0
+#if 1
 		g_Player.fOil -= MINUS_OIL;
 #endif
 
@@ -459,7 +485,7 @@ void SetPlayer(D3DXVECTOR3 pos, D3DXVECTOR3 rot, PLAYERSTATE state)
 			g_Player.rot = D3DXVECTOR3(D3DX_PI * -0.5f, 0.0f, 0.0f);
 			g_Player.bClear = true;
 
-			SetPlanet(PLANETTYPE_GOAL, D3DXVECTOR3(0.0f, -40.0f, 0.0f), FIRST_POS);
+			SetPlanet(PLANETTYPE_GOAL, D3DXVECTOR3(0.0f, -210.0f, 0.0f), FIRST_POS);
 		}
 		else if (GetGAmeState() == GAMESTATE_OVER)
 		{// ゲームオーバー
@@ -467,7 +493,7 @@ void SetPlayer(D3DXVECTOR3 pos, D3DXVECTOR3 rot, PLAYERSTATE state)
 
 			if (g_Player.planetType != -1)
 			{// 惑星にぶつかって死んだ
-				SetPlanet(g_Player.planetType, D3DXVECTOR3(0.0f, -40.0f, 0.0f), FIRST_POS);
+				SetPlanet(g_Player.planetType, D3DXVECTOR3(0.0f, -100.0f, 0.0f), FIRST_POS);
 			}
 		}
 	}

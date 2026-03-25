@@ -26,6 +26,7 @@ typedef enum
 	PLAYERSTATE_APPEAR = 0,		// 出現状態
 	PLAYERSTATE_WAIT,			// 待機状態
 	PLAYERSTATE_RESULT,			// リザルト状態
+	PLAYERSTATE_BACKAREA,		// エリア戻り状態
 	PLAYERSTATE_MAX
 }PLAYERSTATE;
 
@@ -45,7 +46,8 @@ typedef struct
 //*****************************************************************************
 typedef struct
 {
-	D3DXVECTOR3 pos;			// 位置
+	D3DXVECTOR3 pos;			// 現在の位置
+	D3DXVECTOR3 posOld;			// 前回の位置
 	D3DXVECTOR3 move;			// 移動量
 	D3DXVECTOR3 Speed;			// スピード
 	D3DXVECTOR3 rot;			// 向き

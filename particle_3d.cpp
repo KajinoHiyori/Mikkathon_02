@@ -79,7 +79,7 @@ void UpdateParticle3D(void)
 			g_aPaticle3D[nCntPaticle].rot.y += 0.07f * ((g_aPaticle3D[nCntPaticle].faddEffectRadius < 0.0f) ? -1 : 1);
 
 			if (g_aPaticle3D[nCntPaticle].rot.y < -D3DX_PI) g_aPaticle3D[nCntPaticle].rot.y += D3DX_PI * 2;
-			if (g_aPaticle3D[nCntPaticle].rot.y >  D3DX_PI) g_aPaticle3D[nCntPaticle].rot.y -= D3DX_PI * 2;
+			if (g_aPaticle3D[nCntPaticle].rot.y > D3DX_PI) g_aPaticle3D[nCntPaticle].rot.y -= D3DX_PI * 2;
 
 			for (int nCntAppear = 0; nCntAppear < g_aPaticle3D[nCntPaticle].nParticleValue; nCntAppear++)
 			{// 生成するだけ繰り返す
@@ -117,7 +117,10 @@ void UpdateParticle3D(void)
 					g_aPaticle3D[nCntPaticle].fEffectRadius,		// 大きさ
 					g_aPaticle3D[nCntPaticle].faddEffectRadius,		// 大きさの加算量
 					g_aPaticle3D[nCntPaticle].col,					// エフェクトの色	
-					g_aPaticle3D[nCntPaticle].effecttype);
+					g_aPaticle3D[nCntPaticle].effecttype,
+					false,
+					D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+					);
 			}
 
 			if (g_aPaticle3D[nCntPaticle].nParticleLife > 0)g_aPaticle3D[nCntPaticle].nParticleLife--;	// 寿命を減らす
@@ -157,9 +160,9 @@ int SetParticle3D
 			g_aPaticle3D[nCntParticle].paticleType = paticletype;				// 用途を設定
 			g_aPaticle3D[nCntParticle].nParticleValue = nValue;				// パーティクルの生成量を設定
 			g_aPaticle3D[nCntParticle].nParticleLife = nLifeP;				// パーティクルの寿命を設定
-			
+
 			g_aPaticle3D[nCntParticle].pos = posP;							// パーティクルの位置を設定
-			g_aPaticle3D[nCntParticle].move = D3DXVECTOR3(0.0f,0.0f,0.0f);	// 移動量を初期化
+			g_aPaticle3D[nCntParticle].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 移動量を初期化
 			g_aPaticle3D[nCntParticle].col = col;							// 色を設定を設定
 
 			//g_aPaticle3D[nCntParticle].fVecMoveParticle =					// パーティクルの移動方向を設定
@@ -176,7 +179,7 @@ int SetParticle3D
 			g_aPaticle3D[nCntParticle].faddEffectRadius = faddRadiusE;		// エフェクトの大きさの加算量を設定
 
 			g_aPaticle3D[nCntParticle].bUse = true;							// 使用状態をtrueに設定
-			
+
 			return nCntParticle;	// ループを抜ける
 		}
 	}

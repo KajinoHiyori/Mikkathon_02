@@ -25,6 +25,7 @@ typedef struct
 {
 	// 頂点情報
 	D3DXVECTOR3 pos;		// 位置
+	D3DXVECTOR3 HomingPos;	// ホーミング対象の位置
 
 	D3DXVECTOR3 vecMove;	// 移動方向(ベクトル)
 	float fSpeed;			// 移動速度
@@ -40,6 +41,7 @@ typedef struct
 
 	// 状態
 	bool bUse;				// 使用状況
+	bool bHoming;			// ホーミングするか
 
 	EFFECTTYPE effecttype;	// エフェクトの用途
 
@@ -92,6 +94,7 @@ void InitEffect3D(void)
 	for (nCntEffect = 0; nCntEffect < MAX_SET_EFFECT3D; nCntEffect++)
 	{
 		g_aEffect3D[nCntEffect].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 位置を初期化
+		g_aEffect3D[nCntEffect].HomingPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 位置を初期化
 
 		g_aEffect3D[nCntEffect].vecMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 移動方向を初期化
 		g_aEffect3D[nCntEffect].fSpeed = 0.0f;								// 移動速度を初期化
@@ -210,6 +213,38 @@ void UpdateEffect3D(void)
 
 			// 位置の更新
 			g_aEffect3D[nCntEffect].pos += g_aEffect3D[nCntEffect].vecMove * g_aEffect3D[nCntEffect].fSpeed;
+
+			if (g_aEffect3D[nCntEffect].bHoming == true)
+			{// ホーミングを使用する場合
+				float fRotMove, fRotDest, fRotDiff;
+
+				fRotMove = atan2f(g_aEffect3D[nCntEffect].vecMove.x, g_aEffect3D[nCntEffect].vecMove.y);		// 現在の移動方向(角度)
+				fRotDest = atan2f(g_aEffect3D[nCntEffect].HomingPos.x - g_aEffect3D[nCntEffect].pos.x, g_aEffect3D[nCntEffect].HomingPos.y - g_aEffect3D[nCntEffect].pos.y);		// 目標の移動方向(角度)		// 現在の移動方向(角度)
+				fRotDiff = fRotDest - fRotMove;		// 目標の移動方向までの差分
+
+				if (fRotDiff > D3DX_PI)
+				{
+					fRotDiff -= D3DX_PI * 2;
+				}
+				else if (fRotDiff < -D3DX_PI)
+				{
+					fRotDiff += D3DX_PI * 2;
+				}
+
+				fRotMove += fRotDiff * 0.2f;		// 移動方向(角度)の補正
+
+				if (fRotMove > D3DX_PI)
+				{
+					fRotMove -= D3DX_PI * 2;
+				}
+				else if (fRotMove < -D3DX_PI)
+				{
+					fRotMove += D3DX_PI * 2;
+				}
+
+				g_aEffect3D[nCntEffect].vecMove.x = sinf(fRotMove) * 3.0f;
+				g_aEffect3D[nCntEffect].vecMove.y = cosf(fRotMove) * 3.0f;
+			}
 
 			// 慣性
 			g_aEffect3D[nCntEffect].fSpeed += (0.0f - g_aEffect3D[nCntEffect].fSpeed) * EFFECT_INERTIA;
@@ -365,7 +400,10 @@ void SetEffect3D(int nLife,							// 寿命
 	D3DXVECTOR3 vecMove, float fSpeed,	// 移動方向, 移動速度
 	float fRadius, float faddRadius,		// 表示サイズ, 加算サイズ
 	D3DXCOLOR col,						// 色
-	EFFECTTYPE type)						// エフェクトのタイプ
+	EFFECTTYPE type,						// エフェクトのタイプ
+	bool bHoming,
+	D3DXVECTOR3 HomingPos
+	)
 {
 	// 変数宣言 ===========================================
 
@@ -391,6 +429,9 @@ void SetEffect3D(int nLife,							// 寿命
 			g_aEffect3D[nCntEffect].bUse = true;				// 使用している状態に設定
 
 			g_aEffect3D[nCntEffect].effecttype = type;			// エフェクトタイプを設定
+
+			g_aEffect3D[nCntEffect].bHoming = bHoming;
+			g_aEffect3D[nCntEffect].HomingPos = HomingPos;
 
 			// ▼頂点バッファをロックして頂点情報へのポインタを所得
 			g_pVtxBuffEffect3D->Lock(0, 0, (void**)&pVtx, 0);
