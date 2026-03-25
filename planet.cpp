@@ -10,6 +10,7 @@
 #include "stage.h"
 
 #include "particle_3d.h"
+#include "player.h"
 
 #include "debugproc.h"
 
@@ -21,7 +22,10 @@
 // グローバル宣言 ==============================================
 
 PlanetModelInfo g_aPlanetInfo[MAX_TYPE_PLANETINFO];	// 惑星モデルの情報
-Planet g_aPlanet[MAX_NUM_PLANET];							// 惑星の情報
+Planet g_aPlanet[MAX_NUM_PLANET];					// 惑星の情報
+
+int g_nNumWhiteHoalPlanet;
+int g_aIdxWhiteHoalPlanet[MAX_NUM_PLANET];
 
 //========================================================================
 // 惑星の初期化処理
@@ -49,8 +53,12 @@ void InitPlanet(void)
 			g_aPlanet[nCntPlanet].type = PLANETTYPE_MAX;
 			g_aPlanet[nCntPlanet].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 			g_aPlanet[nCntPlanet].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			g_aPlanet[nCntPlanet].nIdx = -1;
 			g_aPlanet[nCntPlanet].bUse = false;
 		}
+
+		g_nNumWhiteHoalPlanet = 0;												// ホワイトホールの総数
+		memset(&g_aIdxWhiteHoalPlanet[0], -1, sizeof g_aIdxWhiteHoalPlanet);	// ホワイトホールのインデックス
 	}
 }
 
@@ -219,6 +227,7 @@ void SetPlanet(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 			g_aPlanet[nCntPlanet].type = type;
 			g_aPlanet[nCntPlanet].pos = pos;
 			g_aPlanet[nCntPlanet].rot = rot;
+			g_aPlanet[nCntPlanet].nIdx = -1;
 			g_aPlanet[nCntPlanet].bUse = true;
 
 			// 種類別の設定
@@ -234,12 +243,17 @@ void SetPlanet(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 
 				SetParticle3D(10, -1, g_aPlanet[nCntPlanet].pos, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 7.0f, 10, 5.0f, -0.1f, EFFECTTYPE_NORMAL, PATICLETYPE_HOLE, -1);
 
+				g_aPlanet[nCntPlanet].nIdx = g_aIdxWhiteHoalPlanet[rand() % g_nNumWhiteHoalPlanet];
+
 				break;
 
 			case PLANETTYPE_WHITEHOLE:	// ホワイトホール惑星
 
 				SetParticle3D(10, -1, g_aPlanet[nCntPlanet].pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 7.0f, 10, 0.0f, 0.5f, EFFECTTYPE_NORMAL, PATICLETYPE_HOLE, -1);
 
+				g_aIdxWhiteHoalPlanet[g_nNumWhiteHoalPlanet] = nCntPlanet;
+
+				g_nNumWhiteHoalPlanet++;
 
 				break;
 
@@ -276,6 +290,8 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 	float fLengthXZ, fDestLength;
 	float fAngleXZ, fDestAngle;
 	float fNomDistance;
+
+	Player* pPlayer = GetPlayer();
 
 	for (int nCntPlanet = 0; nCntPlanet < MAX_NUM_PLANET; nCntPlanet++)
 	{
@@ -324,6 +340,17 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 
 				if (g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fHitRadius + fRadius > fDestLength)
 				{
+					if (g_aPlanet[nCntPlanet].type == PLANETTYPE_BLACKHOLE)
+					{// ぶつかった惑星がブラックホールの場合
+						
+						// ホワイトホールの位置を設定
+						pPos->x = g_aPlanet[g_aPlanet[nCntPlanet].nIdx].pos.x;
+						pPos->y = g_aPlanet[g_aPlanet[nCntPlanet].nIdx].pos.y;
+						pPos->z = g_aPlanet[g_aPlanet[nCntPlanet].nIdx].pos.z;
+					}
+
+					pPlayer->planetType = g_aPlanet[nCntPlanet].type;	// ぶつかった惑星の種類を返す
+
 					return true;	// 当たった事を返す
 				}
 			}
