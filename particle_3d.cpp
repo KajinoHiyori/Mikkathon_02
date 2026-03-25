@@ -25,32 +25,27 @@ void InitParticle3D(void)
 
 		// パーティクル
 		g_aPaticle3D[nCntPaticle].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 位置を初期化
-
+		g_aPaticle3D[nCntPaticle].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 角度を初期化
 		g_aPaticle3D[nCntPaticle].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 移動量を初期化
-
 		g_aPaticle3D[nCntPaticle].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);	// 色を初期値に設定
 
-		g_aPaticle3D[nCntPaticle].fSpeedPaticle = 6.0f;						// パーティクルの移動量を初期化
-		g_aPaticle3D[nCntPaticle].fVecMoveParticle = { .0f,0.0f,0.0f };		// パーティクルの移動方向を初期化
+		//g_aPaticle3D[nCntPaticle].fSpeedPaticle = 6.0f;						// パーティクルの移動量を初期化
+		//g_aPaticle3D[nCntPaticle].fVecMoveParticle = { .0f,0.0f,0.0f };		// パーティクルの移動方向を初期化
 
+		g_aPaticle3D[nCntPaticle].paticleType = PATICLETYPE_NOMAL;		// パーティクルのタイプを初期化
+		g_aPaticle3D[nCntPaticle].nParticleLife = 0;						// パーティクルの寿命を初期化
 		g_aPaticle3D[nCntPaticle].nParticleValue = 0;						// パーティクルの生成量を初期化
-		g_aPaticle3D[nCntPaticle].nParticleLifeO = 0;						// パーティクルの寿命の最大値の初期化
-		g_aPaticle3D[nCntPaticle].nParticleLifeV = 0;						// パーティクルの寿命を初期化
 
 		// エフェクト
+		g_aPaticle3D[nCntPaticle].effecttype = EFFECTTYPE_NORMAL;			// エフェクトタイプを初期化
+		g_aPaticle3D[nCntPaticle].nEffectLife = 0;							// エフェクトの寿命を初期化
 		g_aPaticle3D[nCntPaticle].fSpeedEffect = 0.0f;						// エフェクトの移動速度を初期化
 
 		g_aPaticle3D[nCntPaticle].fEffectRadius = 0.0f;						// エフェクトの大きさを初期化
 		g_aPaticle3D[nCntPaticle].faddEffectRadius = 0.0f;					// エフェクトの大きさの加算量を初期化
 
-		g_aPaticle3D[nCntPaticle].nEffectLife = 0;							// エフェクトの寿命を初期化
-
 		// 状態
 		g_aPaticle3D[nCntPaticle].bUse = false;								// 使用していない状況に設定
-
-		g_aPaticle3D[nCntPaticle].effecttype = EFFECTTYPE_NORMAL;			// エフェクトタイプを初期化
-
-		g_aPaticle3D[nCntPaticle].nParentIdx = -1;							// 親のインデックスを初期化
 	}
 
 }
@@ -80,14 +75,39 @@ void UpdateParticle3D(void)
 
 		if (g_aPaticle3D[nCntPaticle].bUse == true)
 		{// 使用している場合
+
+			g_aPaticle3D[nCntPaticle].rot.y += 0.07f * ((g_aPaticle3D[nCntPaticle].faddEffectRadius < 0.0f) ? -1 : 1);
+
+			if (g_aPaticle3D[nCntPaticle].rot.y < -D3DX_PI) g_aPaticle3D[nCntPaticle].rot.y += D3DX_PI * 2;
+			if (g_aPaticle3D[nCntPaticle].rot.y >  D3DX_PI) g_aPaticle3D[nCntPaticle].rot.y -= D3DX_PI * 2;
+
 			for (int nCntAppear = 0; nCntAppear < g_aPaticle3D[nCntPaticle].nParticleValue; nCntAppear++)
 			{// 生成するだけ繰り返す
 
-				rot.x = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
-				rot.y = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
-				rot.z = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
+				switch (g_aPaticle3D[nCntPaticle].paticleType)
+				{
+				case PATICLETYPE_NOMAL:
 
-				D3DXVec3Normalize(&rot, &rot);						// 正規化
+					rot.x = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
+					rot.y = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
+					rot.z = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
+
+					D3DXVec3Normalize(&rot, &rot);						// 正規化
+
+					break;
+
+				case PATICLETYPE_HOLE:
+
+					rot.x = sinf((D3DX_PI * 2 / g_aPaticle3D[nCntPaticle].nParticleValue) * nCntAppear + g_aPaticle3D[nCntPaticle].rot.y);
+					rot.z = cosf((D3DX_PI * 2 / g_aPaticle3D[nCntPaticle].nParticleValue) * nCntAppear + g_aPaticle3D[nCntPaticle].rot.y);
+
+					break;
+				}
+
+				if (g_aPaticle3D[nCntPaticle].paticleType == PATICLETYPE_HOLE)
+				{
+					rot.y = 0.0f;
+				}
 
 				// 3Dエフェクトの設定
 				SetEffect3D(g_aPaticle3D[nCntPaticle].nEffectLife,	// 寿命
@@ -100,14 +120,13 @@ void UpdateParticle3D(void)
 					g_aPaticle3D[nCntPaticle].effecttype);
 			}
 
-			g_aPaticle3D[nCntPaticle].nParticleLifeV--;	// 寿命を減らす
-		}
+			if (g_aPaticle3D[nCntPaticle].nParticleLife > 0)g_aPaticle3D[nCntPaticle].nParticleLife--;	// 寿命を減らす
 
-		if (g_aPaticle3D[nCntPaticle].nParticleLifeV <= g_aPaticle3D[nCntPaticle].nParticleLifeO - g_aPaticle3D[nCntPaticle].nEffectLife)
-		{// 寿命が尽きた
+			if (g_aPaticle3D[nCntPaticle].nParticleLife == 0)
+			{// 寿命が尽きた
 
-			g_aPaticle3D[nCntPaticle].nParentIdx = -1;							// 親のインデックスを初期化
-			g_aPaticle3D[nCntPaticle].bUse = false;		// 使用していない状態に設定
+				g_aPaticle3D[nCntPaticle].bUse = false;		// 使用していない状態に設定
+			}
 		}
 	}
 }
@@ -125,7 +144,7 @@ void DrawParticle3D(void)
 //========================================================================
 int SetParticle3D
 (int nValue, int nLifeP, D3DXVECTOR3 posP, D3DXCOLOR col, D3DXVECTOR3 vec,   				// パーティクル(位置, 色, 生成量, 寿命) (移動方向, 移動速度)
-	float fSpeedE, int nLifeE, float fRadiusE, float faddRadiusE, EFFECTTYPE effecttype, int nParentIdx)	// エフェクト(移動速度, 寿命)(大きさ, 大きさの加算量, 用途)			     							
+	float fSpeedE, int nLifeE, float fRadiusE, float faddRadiusE, EFFECTTYPE effecttype, PATICLETYPE paticletype, int nParentIdx)	// エフェクト(移動速度, 寿命)(大きさ, 大きさの加算量, 用途)			     							
 {
 	int Radian = 400;		//範囲
 
@@ -135,34 +154,29 @@ int SetParticle3D
 		if (g_aPaticle3D[nCntParticle].bUse == false)
 		{// 使用していない場合
 
+			g_aPaticle3D[nCntParticle].paticleType = paticletype;				// 用途を設定
 			g_aPaticle3D[nCntParticle].nParticleValue = nValue;				// パーティクルの生成量を設定
-			g_aPaticle3D[nCntParticle].nParticleLifeO = nLifeP;				// パーティクルの寿命を設定
-			g_aPaticle3D[nCntParticle].nParticleLifeV = nLifeP;
-
+			g_aPaticle3D[nCntParticle].nParticleLife = nLifeP;				// パーティクルの寿命を設定
+			
 			g_aPaticle3D[nCntParticle].pos = posP;							// パーティクルの位置を設定
-			g_aPaticle3D[nCntParticle].fVecMoveParticle =					// パーティクルの移動方向を設定
-			{
-			sinf(vec.y) + ((rand() % Radian - (Radian / 2)) * 3.14f / 1000),
-			(float)(rand() % 157 - 79) / 100.0f,
-			cosf(vec.y) + ((rand() % Radian - (Radian / 2)) * 3.14f / 1000)
-			};
-
-			g_aPaticle3D[nCntParticle].move = {};							// 移動量を初期化
-
+			g_aPaticle3D[nCntParticle].move = D3DXVECTOR3(0.0f,0.0f,0.0f);	// 移動量を初期化
 			g_aPaticle3D[nCntParticle].col = col;							// 色を設定を設定
 
+			//g_aPaticle3D[nCntParticle].fVecMoveParticle =					// パーティクルの移動方向を設定
+			//{
+			//sinf(vec.y) + ((rand() % Radian - (Radian / 2)) * 3.14f / 1000),
+			//(float)(rand() % 157 - 79) / 100.0f,
+			//cosf(vec.y) + ((rand() % Radian - (Radian / 2)) * 3.14f / 1000)
+			//};
+
+			g_aPaticle3D[nCntParticle].effecttype = effecttype;				// 用途を設定
+			g_aPaticle3D[nCntParticle].nEffectLife = nLifeE;				// エフェクトの寿命を設定を設定
 			g_aPaticle3D[nCntParticle].fSpeedEffect = fSpeedE;				// エフェクトの移動速度を設定を設定
 			g_aPaticle3D[nCntParticle].fEffectRadius = fRadiusE;			// エフェクトの大きさを設定
 			g_aPaticle3D[nCntParticle].faddEffectRadius = faddRadiusE;		// エフェクトの大きさの加算量を設定
 
-			g_aPaticle3D[nCntParticle].nEffectLife = nLifeE;				// エフェクトの寿命を設定を設定
-
 			g_aPaticle3D[nCntParticle].bUse = true;							// 使用状態をtrueに設定
-
-			g_aPaticle3D[nCntParticle].effecttype = effecttype;				// 用途を設定
-
-			g_aPaticle3D[nCntParticle].nParentIdx = nParentIdx;
-
+			
 			return nCntParticle;	// ループを抜ける
 		}
 	}
