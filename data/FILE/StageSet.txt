@@ -115,7 +115,7 @@ END_PLANETTYPE
 SET_LAYOUT_STAGE
 
 	SET_PLANET	# 惑星
-		TYPE = 0			# 種類
+		TYPE = 9			# 種類
 		POS = 50.0 0.0 500.0   # 位置
 		ROT = 0.0 0.0 0.0	# 角度
 	END_PLANET

@@ -316,7 +316,10 @@ void SetPlanet(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 
 				SetParticle3D(10, -1, g_aPlanet[nCntPlanet].pos, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 7.0f, 10, 5.0f, -0.1f, EFFECTTYPE_NORMAL, PATICLETYPE_HOLE, -1);
 
-				g_aPlanet[nCntPlanet].nIdx = g_aIdxWhiteHoalPlanet[rand() % g_nNumWhiteHoalPlanet];
+				if (g_nNumWhiteHoalPlanet > 0)
+				{
+					g_aPlanet[nCntPlanet].nIdx = g_aIdxWhiteHoalPlanet[rand() % g_nNumWhiteHoalPlanet];
+				}
 
 				break;
 
