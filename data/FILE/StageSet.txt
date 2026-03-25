@@ -14,11 +14,11 @@ NUM_MODEL = 10	# 読み込むモデルの数
 
 MODEL_FILENAME = data/Model/planet/planet_energy.x		[0]惑星モデル(エネルギー惑星)
 MODEL_FILENAME = data/Model/planet/planet_asteroid.x	[1]惑星モデル(小惑星付き惑星)
-MODEL_FILENAME = data/Model/planet/planet_mid.x			[2]惑星モデル(ブラックホール惑星)
-MODEL_FILENAME = data/Model/planet/planet_mid.x			[3]惑星モデル(ホワイトホール惑星)
+MODEL_FILENAME = data/Model/planet/planet_blackhole.x	[2]惑星モデル(ブラックホール惑星)
+MODEL_FILENAME = data/Model/planet/planet_whitehole.x	[3]惑星モデル(ホワイトホール惑星)
 MODEL_FILENAME = data/Model/planet/planet_change.x		[4]惑星モデル(重量変わる惑星)
 MODEL_FILENAME = data/Model/planet/planet_repulsive.x	[5]惑星モデル(斥力惑星)
-MODEL_FILENAME = data/Model/planet/planet_mid.x			[6]惑星モデル(一般(引力：小)惑星)
+MODEL_FILENAME = data/Model/planet/planet_small.x		[6]惑星モデル(一般(引力：小)惑星)
 MODEL_FILENAME = data/Model/planet/planet_mid.x			[7]惑星モデル(一般(引力：中)惑星)
 MODEL_FILENAME = data/Model/planet/planet_big.x			[8]惑星モデル(一般(引力：大)惑星)
 MODEL_FILENAME = data/Model/planet/planet_goal.x		[9]惑星モデル(ゴール惑星)
@@ -34,7 +34,7 @@ SET_PLANETTYPE	# [0]エネルギー惑星
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
 	RADIUS    = 300.0	# 効果範囲
-	ROTATION  = 0.0 1.0 0.0	# 回転速度
+	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [1]小惑星付き惑星
@@ -42,7 +42,7 @@ SET_PLANETTYPE	# [1]小惑星付き惑星
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
 	RADIUS    = 300.0	# 効果範囲
-	ROTATION  = 0.0 0.0 0.0	# 回転速度
+	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [2]ブラックホール惑星
@@ -66,7 +66,7 @@ SET_PLANETTYPE	# [4]重量変わる惑星
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
 	RADIUS    = 300.0	# 効果範囲
-	ROTATION  = 0.0 0.0 0.0	# 回転速度
+	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [5]斥力惑星
@@ -74,7 +74,7 @@ SET_PLANETTYPE	# [5]斥力惑星
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = -2.0	# 重力
 	RADIUS    = 300.0	# 効果範囲
-	ROTATION  = 0.0 0.0 0.0	# 回転速度
+	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [6]一般(引力：小)惑星
@@ -82,7 +82,7 @@ SET_PLANETTYPE	# [6]一般(引力：小)惑星
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
 	RADIUS    = 300.0	# 効果範囲
-	ROTATION  = 0.0 0.0 0.0	# 回転速度
+	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [7]一般(引力：中)惑星
@@ -90,7 +90,7 @@ SET_PLANETTYPE	# [7]一般(引力：中)惑星
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
 	RADIUS    = 300.0	# 効果範囲
-	ROTATION  = 0.0 0.0 0.0	# 回転速度
+	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [8]一般(引力：大)惑星
@@ -98,7 +98,7 @@ SET_PLANETTYPE	# [8]一般(引力：大)惑星
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
 	RADIUS    = 300.0	# 効果範囲
-	ROTATION  = 0.0 0.0 0.0	# 回転速度
+	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [9]ゴール惑星
@@ -106,7 +106,7 @@ SET_PLANETTYPE	# [9]ゴール惑星
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
 	RADIUS    = 300.0	# 効果範囲
-	ROTATION  = 0.0 0.0 0.0	# 回転速度
+	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
 #===========================================================
@@ -115,7 +115,7 @@ END_PLANETTYPE
 SET_LAYOUT_STAGE
 
 	SET_PLANET	# 惑星
-		TYPE = 0			# 種類
+		TYPE = 9			# 種類
 		POS = 50.0 0.0 500.0   # 位置
 		ROT = 0.0 0.0 0.0	# 角度
 	END_PLANET

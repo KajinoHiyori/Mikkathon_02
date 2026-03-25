@@ -18,17 +18,11 @@ typedef enum
 	BGM_GAME,		// ゲーム
 	BGM_CLEAR,		// ゲームクリア
 	BGM_OVER,		// ゲームオーバー
-	//SE_SELECT,		// セレクト
-	//SE_ENTER,		// 決定
-	//SE_PAUSE,		// ポーズ
-	//SE_COIN,		// コイン獲得
-	//SE_KEY,			// カギ獲得
-	//SE_JUMP,		// ジャンプ
-	//SE_LANDING,		// 着地
-	//SE_ADDTIME,		// 時間追加
-	//SE_FALLCOIN,	// コイン落下
-	//SE_GROWUP,		// 成長
-	//SE_CAMERA,		// カメラ操作
+	SE_SELECT,		// セレクト
+	SE_ENTER,		// 決定
+	SE_BOMB,		// プレイヤー死亡
+	SE_ROCKBREAK,	// 小惑星破壊
+	SE_HOLE,		// ブラックホール/ホワイトホール
 	SOUND_LABEL_MAX,
 } SOUND_LABEL;
 

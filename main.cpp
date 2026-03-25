@@ -553,6 +553,8 @@ void SetMode(MODE mode)
 		break;
 	}
 
+	g_mode = mode;	// 現在のモードを保存
+
 	// 新しいモードの初期化処理
 	switch (mode)
 	{
@@ -568,7 +570,6 @@ void SetMode(MODE mode)
 		InitResult();
 		break;
 	}
-	g_mode = mode;	// 現在のモードを保存
 }
 
 //======================================================================================

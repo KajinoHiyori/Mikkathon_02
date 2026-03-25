@@ -66,15 +66,20 @@ void UninitPlanet(void);  	// ˜f¯‚ÌI—¹ˆ—
 void UpdatePlanet(void);  	// ˜f¯‚ÌXVˆ—
 void DrawPlanet(void);		// ˜f¯‚Ì•`‰æˆ—
 
+void SetLoadPlanetInfo		// ˜f¯‚Ìƒ‚ƒfƒ‹‚Ì“Ç‚İ‚İˆ—
+(int nIdxStage, float fHitRadius, float fGravity, float fRadius, D3DXVECTOR3 addRot);
+
+
+void SetPlanetInfo			// ˜f¯‚Ìİ’èî•ñ‚Ìİ’è
+(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot);
+
+void SetLayoutPlanet(void);	// ˜f¯‚Ì”z’uî•ñ‚©‚çİ’è
+
+
 void SetPlanet				// ˜f¯‚Ìİ’èˆ—
 (PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot);
 
 bool CollisionPlanet		// ˜f¯‚Ì“–‚½‚è”»’èˆ—
 (D3DXVECTOR3* pPos, float fRadius);
-
-void SetLoadPlanetInfo		// ˜f¯‚Ìƒ‚ƒfƒ‹‚Ì“Ç‚İ‚İˆ—
-(int nIdxStage, float fHitRadius, float fGravity, float fRadius, D3DXVECTOR3 addRot);
-
-
 
 #endif

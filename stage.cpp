@@ -264,6 +264,9 @@ bool SetLoadStage(const char* pStageFilename)
 			{
 				if (strcmp(&aReadText[0], "END_LAYOUT_STAGE") == false)
 				{
+					// òfêØÇÃîzíu
+					//SetLayoutPlanet();
+
 					break;	// whileï∂Çî≤ÇØÇÈ
 				}
 			// -----------------------------------
@@ -281,7 +284,7 @@ bool SetLoadStage(const char* pStageFilename)
 						if (strcmp(&aReadText[0], "END_PLANET") == false)
 						{
 							// òfêØÇÃê›íË
-							SetPlanet(tmpPlanet.type, tmpPlanet.pos, tmpPlanet.rot);
+							SetPlanetInfo(tmpPlanet.type, tmpPlanet.pos, tmpPlanet.rot);
 
 							break;	// whileï∂Çî≤ÇØÇÈ
 						}

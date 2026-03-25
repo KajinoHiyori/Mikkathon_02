@@ -56,11 +56,11 @@ void InitGame(void)
 	// カメラの設定
 	SetCameraPos(0, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CAMERATYPE_PLAYER);
 
-	// 惑星の初期化
-	InitPlanet();
-
 	// 小惑星の初期化
 	InitAsteroid();
+
+	// 惑星の初期化
+	InitPlanet();
 
 	// ポーズ状態の初期化
 	InitPause();
@@ -95,6 +95,7 @@ void UpdateGame(void)
 	// ポーズ機能
 	if ((GetKeyboardTrigger(DIK_P) == true || GetJoypadTrigger(JOYKEY_START) == true) && g_gameState != GAMESTATE_CLEAR && g_gameState != GAMESTATE_OVER)
 	{
+		PlaySound(SE_ENTER);
 		SetPause(PAUSE_MENU_CONTINUE);
 		g_bPause = g_bPause ? false : true;
 	}
