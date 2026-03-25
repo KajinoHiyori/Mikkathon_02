@@ -48,6 +48,7 @@ typedef struct
 typedef struct
 {
 	PLANETTYPE type;		// 惑星の種類
+	int nIdx;				// 惑星のインデックス
 
 	D3DXVECTOR3 pos;		// 位置
 	D3DXVECTOR3 rot;		// 角度

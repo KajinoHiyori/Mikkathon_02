@@ -127,13 +127,19 @@ SET_LAYOUT_STAGE
 	END_PLANET
 	
 	SET_PLANET	# 惑星
-		TYPE = 2			# 種類
+		TYPE = 3			# 種類
 		POS = 50.0 0.0 1250.0   # 位置
 		ROT = 0.0 0.0 0.0	# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 3			# 種類
+		POS = 100.0 0.0 2250.0   # 位置
+		ROT = 0.0 0.0 0.0	# 角度
+	END_PLANET
+	
+	SET_PLANET	# 惑星
+		TYPE = 2			# 種類
 		POS = -50.0 0.0 1500.0   # 位置
 		ROT = 0.0 0.0 0.0	# 角度
 	END_PLANET
