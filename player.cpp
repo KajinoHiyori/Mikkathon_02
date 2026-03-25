@@ -241,9 +241,9 @@ void UpdatePlayer(void)
 	}
 	else
 	{// ’x‚¢
-		g_Player.Speed.x = -1.5f;
-		g_Player.Speed.y = -1.5f;
-		g_Player.Speed.z = -1.5f;
+		g_Player.Speed.x = -0.5f;
+		g_Player.Speed.y = -0.5f;
+		g_Player.Speed.z = -0.5f;
 	}
 
 	g_Player.move.z += AUTO_SPEED + g_Player.Speed.z;

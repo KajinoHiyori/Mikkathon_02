@@ -30,8 +30,8 @@ MeshCylinder g_aMeshCylinder[MAX_MESHCYLINDER];			// メッシュシリンダーの情報
 //*****************************************************************************
 const char* c_apFilenameMeshCylinder[MESHCYLINDERTYPE_MAX] =
 {
-	"data\\TEXTURE\\sea2.jpg",
-	"data\\TEXTURE\\rock.jpg",
+	"data\\TEXTURE\\space.png",
+	NULL,
 };
 
 //=============================================================================
@@ -222,14 +222,7 @@ void DrawMeshCylinder(void)
 			pDevice->SetFVF(FVF_VERTEX_3D);
 
 			// テクスチャの設定
-			if (g_aMeshCylinder[nCntMeshCylinder].type == MESHCYLINDERTYPE_NONE)
-			{// NULL
-				pDevice->SetTexture(0, NULL);
-			}
-			else
-			{// テクスチャあり
-				pDevice->SetTexture(0, g_apTextureMeshCylinder[g_aMeshCylinder[nCntMeshCylinder].type]);
-			}
+			pDevice->SetTexture(0, g_apTextureMeshCylinder[g_aMeshCylinder[nCntMeshCylinder].type]);
 
 			// ポリゴンの描画
 			pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLESTRIP, 0, 0, ((int)g_aMeshCylinder[nCntMeshCylinder].block.x + 1) * ((int)g_aMeshCylinder[nCntMeshCylinder].block.y + 1), 0,
@@ -318,17 +311,9 @@ int SetMeshCylinder(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR2 block, D3DXVEC
 					// 頂点カラーの設定
 					pVtx[0].col = col;
 
-					if (type == MESHCYLINDERTYPE_SEA)
-					{// 海
-						// テクスチャ座標の設定
-						pVtx[0].tex = D3DXVECTOR2((float)nCntMeshCylinder2, (float)nCntMeshCylinder1);
-					}
-					else
-					{// 岩とか
-						// テクスチャ座標の設定
-						pVtx[0].tex = D3DXVECTOR2((float)nCntMeshCylinder2 / g_aMeshCylinder[nCntMeshCylinder].block.x
-							, (float)nCntMeshCylinder1);
-					}
+					// テクスチャ座標の設定
+					pVtx[0].tex = D3DXVECTOR2((float)nCntMeshCylinder2 / g_aMeshCylinder[nCntMeshCylinder].block.x
+						, (float)nCntMeshCylinder1);
 
 					pVtx++;
 				}

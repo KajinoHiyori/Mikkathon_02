@@ -14,8 +14,7 @@
 //*****************************************************************************
 typedef enum
 {
-	MESHCYLINDERTYPE_SEA = 0,			// 海
-	MESHCYLINDERTYPE_ROCK,				// 岩
+	MESHCYLINDERTYPE_SPACE = 0,			// 宇宙
 	MESHCYLINDERTYPE_NONE,				// テクスチャ無し
 	MESHCYLINDERTYPE_MAX			
 }MESHCYLINDERTYPE;
