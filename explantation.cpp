@@ -47,8 +47,8 @@ typedef struct
 #define UI_ROT				(D3DXVECTOR3(0.0f, 0.0f, 0.0f))	// 表示方向
 #define NORMAL				(D3DXVECTOR3(0.0f, 1.0f, 0.0f))	// 法線ベクトル
 #define POS_MOVE			(D3DXVECTOR3(0.0f, 0.0f, 0.0f))	// 操作方法
-#define POS_DEST			(D3DXVECTOR3(0.0f, 0.0f, 100.0f))	// 目的地
-#define POS_OIL				(D3DXVECTOR3(0.0f, 0.0f, 200.0f))	// オイル
+#define POS_DEST			(D3DXVECTOR3(-500.0f, 0.0f, 1000.0f))	// 目的地
+#define POS_OIL				(D3DXVECTOR3(0.0f, 0.0f, 1200.0f))	// オイル
 #define POS_PLANET			(D3DXVECTOR3(0.0f, 0.0f, 300.0f))	// 惑星
 #define POS_SARELLITE		(D3DXVECTOR3(0.0f, 0.0f, 400.0f))	// 衛星
 #define APPEAR_SIZE			(250.0f)	// 出現の当たり判定を管理するサイズ
