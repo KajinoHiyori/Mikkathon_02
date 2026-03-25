@@ -257,22 +257,33 @@ void UpdatePlayer(void)
 	PrintDebugProc("プレイヤーのpos : ( %f %f %f )\n", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
 	PrintDebugProc("プレイヤーのmove : ( %f %f %f )\n", g_Player.move.x, g_Player.move.y, g_Player.move.z);
 
-	if (CollisionAsteroid(g_Player.pos, g_Player.bBreak) == true || CollisionPlanet(&g_Player.pos, 1.0f) == true)
-	{// 当たり判定による演出
+	if (CollisionAsteroid(g_Player.pos, g_Player.bBreak) == true)
+	{// 小惑星との当たり判定による演出
 		SetExplosion(g_Player.pos, FIRST_POS, 20.0f, EXPLOSIONTYPE_0);
 		SetVibration(10000, 12000, 10);
 
 		if (g_Player.bBreak == false)
 		{// ロケットの破壊エフェクト
-			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), FIRST_POS, 4.0f, 20, 2.0f, 0.0f, EFFECTTYPE_ROCKET,PATICLETYPE_NOMAL, 0);
-			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 20, 2.0f, 0.0f, EFFECTTYPE_ROCKET,PATICLETYPE_NOMAL, 0);
-			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 20, 2.0f, 0.0f, EFFECTTYPE_ROCKET,PATICLETYPE_NOMAL, 0);
-			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.8f, 0.9f, 1.0f), FIRST_POS, 4.0f, 20, 2.0f, 0.0f, EFFECTTYPE_ROCKET,PATICLETYPE_NOMAL, 0);
+			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET,PATICLETYPE_NOMAL, 0);
+			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET,PATICLETYPE_NOMAL, 0);
+			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET,PATICLETYPE_NOMAL, 0);
+			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.8f, 0.9f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET,PATICLETYPE_NOMAL, 0);
 		}
 		else
 		{// 岩の破壊エフェクト
 			SetParticle3D(2, 5, g_Player.pos, D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f), FIRST_POS, 6.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCK, PATICLETYPE_NOMAL, 0);
 		}
+	}
+
+	if(CollisionPlanet(&g_Player.pos, 1.0f) == true)
+	{// 惑星との当たり判定による演出
+		SetExplosion(g_Player.pos, FIRST_POS, 20.0f, EXPLOSIONTYPE_0);
+		SetVibration(10000, 12000, 10);
+
+		SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
+		SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
+		SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
+		SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.8f, 0.9f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
 	}
 
 	if (g_Player.fAngleZ > D3DX_PI * 0.25f)
