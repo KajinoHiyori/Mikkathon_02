@@ -10,6 +10,7 @@
 #include "stage.h"
 
 #include "particle_3d.h"
+#include "player.h"
 
 #include "debugproc.h"
 
@@ -290,6 +291,8 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 	float fAngleXZ, fDestAngle;
 	float fNomDistance;
 
+	Player* pPlayer = GetPlayer();
+
 	for (int nCntPlanet = 0; nCntPlanet < MAX_NUM_PLANET; nCntPlanet++)
 	{
 		if (g_aPlanet[nCntPlanet].bUse == true)
@@ -345,6 +348,8 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 						pPos->y = g_aPlanet[g_aPlanet[nCntPlanet].nIdx].pos.y;
 						pPos->z = g_aPlanet[g_aPlanet[nCntPlanet].nIdx].pos.z;
 					}
+
+					pPlayer->planetType = g_aPlanet[nCntPlanet].type;	// ‚Ô‚Â‚©‚Á‚½˜f¯‚Ìí—Ş‚ğ•Ô‚·
 
 					return true;	// “–‚½‚Á‚½–‚ğ•Ô‚·
 				}
