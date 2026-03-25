@@ -82,4 +82,6 @@ void SetPlanet				// ˜f¯‚Ìİ’èˆ—
 bool CollisionPlanet		// ˜f¯‚Ì“–‚½‚è”»’èˆ—
 (D3DXVECTOR3* pPos, float fRadius);
 
+Planet* GetPlanet(void);	// ˜f¯‚Ìî•ñ‚ğ•Ô‚·ˆ—
+
 #endif

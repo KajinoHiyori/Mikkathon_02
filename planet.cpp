@@ -431,8 +431,11 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 						pPos->z = g_aPlanet[g_aPlanet[nCntPlanet].nIdx].pos.z;
 					}
 
-					pPlayer->planetType = g_aPlanet[nCntPlanet].type;	// ぶつかった惑星の種類を返す
-					pPlayer->bUse = false;								// プレイヤーの使用していない状態に設定
+					if (g_aPlanet[nCntPlanet].type != PLANETTYPE_BLACKHOLE && g_aPlanet[nCntPlanet].type != PLANETTYPE_WHITEHOLE)
+					{
+						pPlayer->planetType = g_aPlanet[nCntPlanet].type;	// ぶつかった惑星の種類を返す
+						pPlayer->bUse = false;								// プレイヤーの使用していない状態に設定
+					}
 
 					return true;	// 当たった事を返す
 				}
@@ -457,4 +460,10 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 	return false;
 }
 
-
+//========================================================================
+// 惑星の情報を返す処理
+//========================================================================
+Planet* GetPlanet(void)
+{
+	return &g_aPlanet[0];
+}

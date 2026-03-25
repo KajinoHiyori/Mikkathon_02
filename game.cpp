@@ -56,11 +56,11 @@ void InitGame(void)
 	// カメラの設定
 	SetCameraPos(0, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CAMERATYPE_PLAYER);
 
-	// 小惑星の初期化
-	InitAsteroid();
-
 	// 惑星の初期化
 	InitPlanet();
+
+	// 小惑星の初期化
+	InitAsteroid();
 
 	// ポーズ状態の初期化
 	InitPause();

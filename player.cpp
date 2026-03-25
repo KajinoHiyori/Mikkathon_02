@@ -128,6 +128,7 @@ void UpdatePlayer(void)
 		return;
 	}
 
+	PrintDebugProc("player‚Ìg—pó‘Ô‚Ítrue\n");
 	Camera* pCamera = GetCamera();
 
 	switch (g_Player.state)
