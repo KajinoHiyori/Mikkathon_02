@@ -9,9 +9,11 @@
 #include "main.h"
 #include "input.h"
 #include "color.h"
+#include "camera.h"
 
 #include "result_ui.h"
 #include "bg.h"
+#include "player.h"
 
 //*****************************************************************************
 // グローバル変数
@@ -25,6 +27,13 @@ void InitResult(void)
 {
 	// 変数の初期化
 	g_nCounterState = 0;
+
+	// カメラの位置設定
+	SetCameraPos(0, D3DXVECTOR3(0.0f, 200.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CAMERATYPE_POINT);
+
+	// プレイヤーの初期化
+	InitPlayer();
+	SetPlayer(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(D3DX_PI * 0.4f, D3DX_PI * 0.2f, D3DX_PI * 0.2f), PLAYERSTATE_RESULT);
 
 	// リザルトUIの初期化
 	InitResultUI();
@@ -47,6 +56,9 @@ void UpdateResult(void)
 	// 背景の更新処理
 	UpdateBG();
 
+	// プレイヤーの更新処理
+	UpdatePlayer();
+
 	// リザルトUIの更新処理
 	UpdateResultUI();
 
@@ -64,6 +76,9 @@ void DrawResult(void)
 {
 	// 背景の描画処理
 	DrawBG();
+
+	// プレイヤーの描画処理
+	DrawPlayer();
 
 	// リザルトUIの描画処理
 	DrawResultUI();

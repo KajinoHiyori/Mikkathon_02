@@ -25,6 +25,7 @@ typedef enum
 {
 	PLAYERSTATE_APPEAR = 0,		// 出現状態
 	PLAYERSTATE_WAIT,			// 待機状態
+	PLAYERSTATE_RESULT,			// リザルト状態
 	PLAYERSTATE_MAX
 }PLAYERSTATE;
 
@@ -65,7 +66,7 @@ void InitPlayer(void);
 void UninitPlayer(void);
 void UpdatePlayer(void);
 void DrawPlayer(void);
-void SetPlayer(D3DXVECTOR3 pos);
+void SetPlayer(D3DXVECTOR3 pos, D3DXVECTOR3 rot, PLAYERSTATE state);
 Player* GetPlayer(void);
 
 void CorrectAngle(float* fAngle, float fAngleCmp);
