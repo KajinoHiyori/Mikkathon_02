@@ -14,11 +14,13 @@
 // マクロ定義
 #define MAX_ASTEROIDTEXTURE	(16)	// 小惑星のテクスチャ数
 #define ASTEROID_MODELPATH	("data\\MODEL\\asteroid000.x")	// 小惑星のモデルパス
+#define RAND_HEIGHT			((float)(rand() % (int)(g_aAsteroid[nCntAsteroid].fRadius * 0.5f) - g_aAsteroid[nCntAsteroid].fRadius * 0.25f))
+#define RAND_ANGLE			((float)(rand() % 629 - 314) / 100.0f)
 #define ASTEROID_KEY		(120)	// キー数
 #define FLOATING			(0.5f)	// 移動間隔
 #define ROTATE				(0.05f)	// 回転速度
-#define ASTEROID_HEIGHT		(50.0f)	// 小惑星の高さ
-#define ASTEROID_SIZE		(50.0f)	// 小惑星の大きさ
+#define ASTEROID_HEIGHT		(30.0f)	// 小惑星の高さ
+#define ASTEROID_SIZE		(30.0f)	// 小惑星の大きさ
 
 // 小惑星のモデル情報
 typedef struct
@@ -71,6 +73,7 @@ void InitAsteroid(void)
 		g_aAsteroid[nCntAsteroid].rot			= D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 回転方向
 		g_aAsteroid[nCntAsteroid].fRadius		= 0.0f;		// 親惑星との距離
 		g_aAsteroid[nCntAsteroid].fMove			= 0.0f;		// 移動方向
+		g_aAsteroid[nCntAsteroid].fAngle		= 0.0f;		// 回転度数
 		g_aAsteroid[nCntAsteroid].nIdx			= -1;		// インデックス
 		g_aAsteroid[nCntAsteroid].bUse			= false;	// 使用状態
 		// 演出面
@@ -84,6 +87,9 @@ void InitAsteroid(void)
 	}
 
 	SetAsteroid(ASTEROIDTYPE_FLOATING, D3DXVECTOR3(0.0f, 0.0f, 2000.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	SetSarellite(D3DXVECTOR3(0.0f, 5.0f, 1500.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 300.0f, 0.05f);
+	SetSarellite(D3DXVECTOR3(0.0f, 5.0f, 1500.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 300.0f, 0.05f);
+	SetSarellite(D3DXVECTOR3(0.0f, 5.0f, 1500.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 300.0f, 0.05f);
 }
 
 //=======================================================
@@ -128,6 +134,8 @@ void UpdateAsteroid(void)
 			continue;
 		}
 
+		float fMove = 0.0f;	// 衛星の回転量を追加
+
 		// 小惑星の種類ごとの処理
 		switch (g_aAsteroid[nCntAsteroid].type)
 		{
@@ -136,8 +144,10 @@ void UpdateAsteroid(void)
 			break;
 
 		case ASTEROIDTYPE_SARELLITE:	// 衛星
-			g_aAsteroid[nCntAsteroid].move.x = sinf(g_aAsteroid[nCntAsteroid].fMove) * g_aAsteroid[nCntAsteroid].fRadius;
-			g_aAsteroid[nCntAsteroid].move.z = cosf(g_aAsteroid[nCntAsteroid].fMove) * g_aAsteroid[nCntAsteroid].fRadius;
+			g_aAsteroid[nCntAsteroid].fAngle += g_aAsteroid[nCntAsteroid].fMove;	// 回転量を増加
+			g_aAsteroid[nCntAsteroid].fAngle = AngleNormalization(g_aAsteroid[nCntAsteroid].fAngle);
+			g_aAsteroid[nCntAsteroid].pos.x = g_aAsteroid[nCntAsteroid].posParent.x + sinf(g_aAsteroid[nCntAsteroid].fAngle) * g_aAsteroid[nCntAsteroid].fRadius;
+			g_aAsteroid[nCntAsteroid].pos.z = g_aAsteroid[nCntAsteroid].posParent.z + cosf(g_aAsteroid[nCntAsteroid].fAngle) * g_aAsteroid[nCntAsteroid].fRadius;
 			break;
 
 		default:	// フィールド内で浮遊 / プレイヤーの行動制限
@@ -172,7 +182,6 @@ void UpdateAsteroid(void)
 			}
 			break;
 		}
-
 		// Y軸方向の浮遊感
 		switch (g_aAsteroid[nCntAsteroid].floatingY)
 		{
@@ -196,7 +205,6 @@ void UpdateAsteroid(void)
 			}
 			break;
 		}
-
 		// Z軸方向の浮遊感
 		switch (g_aAsteroid[nCntAsteroid].floatingZ)
 		{
@@ -303,6 +311,7 @@ void SetAsteroid(ASTEROIDTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 move)
 		g_aAsteroid[nCntAsteroid].rot		= D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 回転方向
 		g_aAsteroid[nCntAsteroid].fRadius	= 0.0f;		// 親惑星との距離
 		g_aAsteroid[nCntAsteroid].fMove		= 0.0f;		// 移動方向
+		g_aAsteroid[nCntAsteroid].fAngle = 0.0f;		// 回転度数
 		g_aAsteroid[nCntAsteroid].nIdx		= nCntAsteroid;	// インデックス
 		g_aAsteroid[nCntAsteroid].bUse		= true;			// 使用状態
 		// 演出面
@@ -331,13 +340,15 @@ void SetSarellite(D3DXVECTOR3 posParent, D3DXVECTOR3 move, float fRadius, float 
 		// 各種情報を格納
 		g_aAsteroid[nCntAsteroid].type = ASTEROIDTYPE_SARELLITE;		// 小惑星の種類
 		g_aAsteroid[nCntAsteroid].posParent = posParent;				// 親の位置
-		g_aAsteroid[nCntAsteroid].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 位置
 		g_aAsteroid[nCntAsteroid].move = move;							// 移動量
 		g_aAsteroid[nCntAsteroid].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 回転方向
-		g_aAsteroid[nCntAsteroid].fRadius = 0.0f;	// 親惑星との距離
-		g_aAsteroid[nCntAsteroid].fMove = 0.0f;		// 移動方向
+		g_aAsteroid[nCntAsteroid].fRadius = fRadius;	// 親惑星との距離
+		g_aAsteroid[nCntAsteroid].fMove = fMove;		// 移動方向
+		g_aAsteroid[nCntAsteroid].fAngle = RAND_ANGLE;		// 回転度数
 		g_aAsteroid[nCntAsteroid].nIdx = nCntAsteroid;	// インデックス
 		g_aAsteroid[nCntAsteroid].bUse = true;			// 使用状態
+		g_aAsteroid[nCntAsteroid].pos = D3DXVECTOR3(sinf(g_aAsteroid[nCntAsteroid].fAngle) * g_aAsteroid[nCntAsteroid].fRadius, RAND_HEIGHT, cosf(g_aAsteroid[nCntAsteroid].fAngle) * g_aAsteroid[nCntAsteroid].fRadius);	// 位置
+
 		// 演出面
 		g_aAsteroid[nCntAsteroid].floatingX = (FLOATINGX)(rand() % 2);	// 浮遊状態[X]
 		g_aAsteroid[nCntAsteroid].floatingY = (FLOATINGY)(rand() % 2);	// 浮遊状態[Y]

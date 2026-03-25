@@ -50,7 +50,8 @@ typedef struct
 	D3DXVECTOR3		move;		// 移動量
 	D3DXVECTOR3		rot;		// 回転
 	float			fRadius;	// 親惑星との距離
-	float			fMove;		// 回転速度及び方向
+	float			fMove;		// 回転速度[増加量]
+	float			fAngle;		// 回転度数
 	int				nIdx;		// インデックス
 	bool			bUse;		// 使用状態
 	// 演出面
@@ -69,7 +70,8 @@ void UninitAsteroid(void);
 void UpdateAsteroid(void);
 void DrawAsteroid(void);
 void SetAsteroid(ASTEROIDTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 move);
-void SetSarellite(D3DXVECTOR3 posParent, D3DXVECTOR3 move, float fRadius, float fMove);
+void SetSarellite(D3DXVECTOR3 posParent, D3DXVECTOR3 move, float fRadius, float fMove);		// fRadiusは衛星と惑星との距離及び公転の軌跡を、fMoveは回転速度を決定
+																							// ただし、角度での設定なのでかなり小さい値を入れる必要がある
 Asteroid* GetAsteroid(int nIdx);
 Asteroid* GetAllAsteroid(void);
 bool CollisionAsteroid(D3DXVECTOR3 pos, bool bBreak);
