@@ -295,7 +295,7 @@ void UpdatePlayer(void)
 		CorrectAngle(&g_Player.rot.z, g_Player.rot.z);
 	}
 
-#if 1
+#if 0
 	g_Player.fOil -= MINUS_OIL;
 #endif
 

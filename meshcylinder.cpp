@@ -116,10 +116,13 @@ void UpdateMeshCylinder(void)
 
 		MeshCylinder* pMeshC = &g_aMeshCylinder[nCntMeshC];
 
+		static float fTex = 0.0f;
+
 		switch (pMeshC->state)
 		{
 		case MESHCYLINDERSTATE_NONE:
 			pMeshC->col.a = 1.0f;
+			fTex += 0.01f;
 
 			break;
 
@@ -157,6 +160,9 @@ void UpdateMeshCylinder(void)
 			{
 				// テクスチャ座標の設定
 				pVtx[0].col = pMeshC->col;
+
+				pVtx[0].tex.x += -0.0001f;
+				pVtx[0].tex.y += -0.001f;
 
 				pVtx++;
 			}
