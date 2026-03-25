@@ -167,6 +167,7 @@
     <ClCompile Include="planet.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="result.cpp" />
+    <ClCompile Include="result_ui.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="title_ui.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="planet.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="result.h" />
+    <ClInclude Include="result_ui.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="title.h" />
     <ClInclude Include="title_ui.h" />
