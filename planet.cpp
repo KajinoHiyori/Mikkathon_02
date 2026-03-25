@@ -11,6 +11,7 @@
 
 #include "particle_3d.h"
 #include "player.h"
+#include "asteroid.h"
 
 #include "debugproc.h"
 
@@ -21,8 +22,9 @@
 
 // グローバル宣言 ==============================================
 
-PlanetModelInfo g_aPlanetInfo[MAX_TYPE_PLANETINFO];	// 惑星モデルの情報
-Planet g_aPlanet[MAX_NUM_PLANET];					// 惑星の情報
+PlanetModelInfo g_aPlanetModelInfo[MAX_TYPE_PLANETINFO];	// 惑星モデルの情報
+Planet g_aPlanetLayoutInfo[MAX_NUM_PLANET];					// 惑星の配置情報
+Planet g_aPlanet[MAX_NUM_PLANET];							// 惑星の情報
 
 int g_nNumWhiteHoalPlanet;
 int g_aIdxWhiteHoalPlanet[MAX_NUM_PLANET];
@@ -39,26 +41,55 @@ void InitPlanet(void)
 		for (int nCntPlanetInfo = 0; nCntPlanetInfo < MAX_TYPE_PLANETINFO; nCntPlanetInfo++)
 		{
 			// モデル情報
-			g_aPlanetInfo[nCntPlanetInfo].nIdxStageModel = -1;	// ステージモデルのインデックスを初期化
-			g_aPlanetInfo[nCntPlanetInfo].fHitRadius = 0.0f;	// 当たり半径を初期化
-			g_aPlanetInfo[nCntPlanetInfo].fGravity = 0.0f;		// 重力を初期化
-			g_aPlanetInfo[nCntPlanetInfo].fRadius = 0.0f;		// 半径を初期化
-			g_aPlanetInfo[nCntPlanetInfo].addRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 加算角度を初期化
-			g_aPlanetInfo[nCntPlanetInfo].bUse = false;			// 使用していない状態に設定
+			g_aPlanetModelInfo[nCntPlanetInfo].nIdxStageModel = -1;						// ステージモデルのインデックスを初期化
+			g_aPlanetModelInfo[nCntPlanetInfo].fHitRadius = 0.0f;						// 当たり半径を初期化
+			g_aPlanetModelInfo[nCntPlanetInfo].fGravity = 0.0f;							// 重力を初期化
+			g_aPlanetModelInfo[nCntPlanetInfo].fRadius = 0.0f;							// 半径を初期化
+			g_aPlanetModelInfo[nCntPlanetInfo].addRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 加算角度を初期化
+			g_aPlanetModelInfo[nCntPlanetInfo].bUse = false;							// 使用していない状態に設定
 		}
 
 		// 惑星の情報の初期化
 		for (int nCntPlanet = 0; nCntPlanet < MAX_NUM_PLANET; nCntPlanet++)
 		{
-			g_aPlanet[nCntPlanet].type = PLANETTYPE_MAX;
-			g_aPlanet[nCntPlanet].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-			g_aPlanet[nCntPlanet].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-			g_aPlanet[nCntPlanet].nIdx = -1;
-			g_aPlanet[nCntPlanet].bUse = false;
+			g_aPlanetLayoutInfo[nCntPlanet].type = PLANETTYPE_MAX;
+			g_aPlanetLayoutInfo[nCntPlanet].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			g_aPlanetLayoutInfo[nCntPlanet].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			g_aPlanetLayoutInfo[nCntPlanet].nIdx = -1;
+			g_aPlanetLayoutInfo[nCntPlanet].bUse = false;
 		}
 
 		g_nNumWhiteHoalPlanet = 0;												// ホワイトホールの総数
 		memset(&g_aIdxWhiteHoalPlanet[0], -1, sizeof g_aIdxWhiteHoalPlanet);	// ホワイトホールのインデックス
+	}
+	else
+	{
+		for (int nCntPlanet = 0; nCntPlanet < MAX_NUM_PLANET; nCntPlanet++)
+		{
+			if (g_aPlanet[nCntPlanet].type == PLANETTYPE_ASTEROID)
+			{
+				for (int nCntSatrellite = 0; nCntSatrellite < 10; nCntSatrellite++)
+				{
+					SetSarellite(g_aPlanet[nCntPlanet].pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5.0f, 1.0f);
+				}
+			}
+		}
+	}
+
+	// 惑星の初期化
+	for (int nCntPlanet = 0; nCntPlanet < MAX_NUM_PLANET; nCntPlanet++)
+	{
+		g_aPlanet[nCntPlanet].type = PLANETTYPE_MAX;
+		g_aPlanet[nCntPlanet].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aPlanet[nCntPlanet].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aPlanet[nCntPlanet].nIdx = -1;
+		g_aPlanet[nCntPlanet].bUse = false;
+	}
+
+	if (GetMode() == MODE_GAME)
+	{
+		// 惑星の配置
+		SetLayoutPlanet();
 	}
 }
 
@@ -114,7 +145,7 @@ void UpdatePlanet(void)
 			}
 
 			// 角度を加算
-			g_aPlanet[nCntPlanet].rot += g_aPlanetInfo[g_aPlanet[nCntPlanet].type].addRot;
+			g_aPlanet[nCntPlanet].rot += g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].addRot;
 		}
 	}
 }
@@ -164,10 +195,10 @@ void DrawPlanet(void)
 			pDevice->GetMaterial(&matDef);
 
 			// モデル情報を獲得
-			if (g_aPlanetInfo[g_aPlanet[nCntPlanet].type].nIdxStageModel != -1)
+			if (g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].nIdxStageModel != -1)
 			{// モデルがある
 
-				pSageModelInfo = GetStageModelInfo(g_aPlanetInfo[g_aPlanet[nCntPlanet].type].nIdxStageModel);
+				pSageModelInfo = GetStageModelInfo(g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].nIdxStageModel);
 
 				// マテリアルデータへのポインタを所得
 				pMat = (D3DXMATERIAL*)pSageModelInfo->pBuffMat->GetBufferPointer();
@@ -200,16 +231,52 @@ void SetLoadPlanetInfo(int nIdxStage, float fHitRadius, float fGravity, float fR
 	// 惑星モデル情報の設定
 	for (int nCntModel = 0; nCntModel < MAX_TYPE_PLANETINFO; nCntModel++)
 	{
-		if (g_aPlanetInfo[nCntModel].bUse == false)
+		if (g_aPlanetModelInfo[nCntModel].bUse == false)
 		{
-			g_aPlanetInfo[nCntModel].nIdxStageModel = nIdxStage;	// 
-			g_aPlanetInfo[nCntModel].fHitRadius = fHitRadius;		// 
-			g_aPlanetInfo[nCntModel].fGravity = fGravity;			// 
-			g_aPlanetInfo[nCntModel].fRadius = fRadius;				// 
-			g_aPlanetInfo[nCntModel].addRot = addRot;				// 
-			g_aPlanetInfo[nCntModel].bUse = true;					// 
+			g_aPlanetModelInfo[nCntModel].nIdxStageModel = nIdxStage;	// 
+			g_aPlanetModelInfo[nCntModel].fHitRadius = fHitRadius;		// 
+			g_aPlanetModelInfo[nCntModel].fGravity = fGravity;			// 
+			g_aPlanetModelInfo[nCntModel].fRadius = fRadius;				// 
+			g_aPlanetModelInfo[nCntModel].addRot = addRot;				// 
+			g_aPlanetModelInfo[nCntModel].bUse = true;					// 
 
 			break;
+		}
+	}
+}
+
+//========================================================================
+// 惑星の設定情報の設定処理
+//========================================================================
+void SetPlanetInfo(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
+{
+	for (int nCntPlanet = 0; nCntPlanet < MAX_NUM_PLANET; nCntPlanet++)
+	{
+		if (g_aPlanetLayoutInfo[nCntPlanet].bUse == false)
+		{// 使用していない場合
+
+			g_aPlanetLayoutInfo[nCntPlanet].type = type;
+			g_aPlanetLayoutInfo[nCntPlanet].pos = pos;
+			g_aPlanetLayoutInfo[nCntPlanet].rot = rot;
+			g_aPlanetLayoutInfo[nCntPlanet].nIdx = -1;
+			g_aPlanetLayoutInfo[nCntPlanet].bUse = true;
+
+			break;
+		}
+	}
+}
+
+//========================================================================
+// 惑星の配置情報の設定
+///========================================================================
+void SetLayoutPlanet(void)
+{
+	// 配置情報を設定
+	for (int nCntPlanet = 0; nCntPlanet < MAX_NUM_PLANET; nCntPlanet++)
+	{
+		if (g_aPlanetLayoutInfo[nCntPlanet].bUse == true)
+		{
+			SetPlanet(g_aPlanetLayoutInfo[nCntPlanet].type, g_aPlanetLayoutInfo[nCntPlanet].pos, g_aPlanetLayoutInfo[nCntPlanet].rot);
 		}
 	}
 }
@@ -237,6 +304,12 @@ void SetPlanet(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 				break;
 
 			case PLANETTYPE_ASTEROID:	// 小惑星付き惑星
+
+				for (int nCntSatrellite = 0; nCntSatrellite < 10; nCntSatrellite++)
+				{
+					SetSarellite(g_aPlanet[nCntPlanet].pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3.0f, 0.1f);
+				}
+
 				break;
 
 			case PLANETTYPE_BLACKHOLE:	// ブラックホール惑星
@@ -249,7 +322,7 @@ void SetPlanet(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 
 			case PLANETTYPE_WHITEHOLE:	// ホワイトホール惑星
 
-				SetParticle3D(10, -1, g_aPlanet[nCntPlanet].pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 7.0f, 10, 0.0f, 0.5f, EFFECTTYPE_NORMAL, PATICLETYPE_HOLE, -1);
+				SetParticle3D(10, -1, g_aPlanet[nCntPlanet].pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 7.0f, 10, 0.0f, 0.5f, EFFECTTYPE_NORMAL, PATICLETYPE_HOLE, -1);
 
 				g_aIdxWhiteHoalPlanet[g_nNumWhiteHoalPlanet] = nCntPlanet;
 
@@ -309,23 +382,23 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 			// 対象との距離を求める
 			fDestLength = sqrtf(fLengthXZ * fLengthXZ + fHeight * fHeight);
 
-			if (g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fRadius >= fDestLength)
+			if (g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fRadius >= fDestLength)
 			{// 惑星の効果範囲に入った
 
 				// 距離の割合
-				fNomDistance = fDestLength / g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fRadius;
+				fNomDistance = fDestLength / g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fRadius;
 
 				// 角度を求める
 				fAngleXZ = atan2f(fWidth, fDipth);
 				fDestAngle = atan2f(fLengthXZ, fHeight);
 #if 0
-				pPos->x += sinf(fAngleXZ) * (g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity - g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity * fNomDistance);
-				pPos->z += cosf(fAngleXZ) * (g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity - g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity * fNomDistance);
-				pPos->y += cosf(fDestAngle) * (g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity - g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity * fNomDistance);
+				pPos->x += sinf(fAngleXZ) * (g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity - g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity * fNomDistance);
+				pPos->z += cosf(fAngleXZ) * (g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity - g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity * fNomDistance);
+				pPos->y += cosf(fDestAngle) * (g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity - g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity * fNomDistance);
 #else
-				pPos->x += sinf(fAngleXZ) * g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity;
-				pPos->z += cosf(fAngleXZ) * g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity;
-				pPos->y += cosf(fDestAngle) * g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fGravity;
+				pPos->x += sinf(fAngleXZ) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity;
+				pPos->z += cosf(fAngleXZ) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity;
+				pPos->y += cosf(fDestAngle) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity;
 #endif
 				// 変更後の離れ具合を求める
 				fWidth = g_aPlanet[nCntPlanet].pos.x - pPos->x;
@@ -338,7 +411,7 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 				// 変更後の対象との距離を求める
 				fDestLength = sqrtf(fLengthXZ * fLengthXZ + fHeight * fHeight);
 
-				if (g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fHitRadius + fRadius > fDestLength)
+				if (g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fHitRadius + fRadius > fDestLength)
 				{
 					if (g_aPlanet[nCntPlanet].type == PLANETTYPE_BLACKHOLE)
 					{// ぶつかった惑星がブラックホールの場合
@@ -350,6 +423,7 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 					}
 
 					pPlayer->planetType = g_aPlanet[nCntPlanet].type;	// ぶつかった惑星の種類を返す
+					pPlayer->bUse = false;								// プレイヤーの使用していない状態に設定
 
 					return true;	// 当たった事を返す
 				}

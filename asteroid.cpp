@@ -347,7 +347,7 @@ void SetSarellite(D3DXVECTOR3 posParent, D3DXVECTOR3 move, float fRadius, float 
 		g_aAsteroid[nCntAsteroid].fAngle = RAND_ANGLE;		// 回転度数
 		g_aAsteroid[nCntAsteroid].nIdx = nCntAsteroid;	// インデックス
 		g_aAsteroid[nCntAsteroid].bUse = true;			// 使用状態
-		g_aAsteroid[nCntAsteroid].pos = D3DXVECTOR3(sinf(g_aAsteroid[nCntAsteroid].fAngle) * g_aAsteroid[nCntAsteroid].fRadius, RAND_HEIGHT, cosf(g_aAsteroid[nCntAsteroid].fAngle) * g_aAsteroid[nCntAsteroid].fRadius);	// 位置
+		g_aAsteroid[nCntAsteroid].pos = D3DXVECTOR3(sinf(g_aAsteroid[nCntAsteroid].fAngle) * g_aAsteroid[nCntAsteroid].fRadius, posParent.y + RAND_HEIGHT, cosf(g_aAsteroid[nCntAsteroid].fAngle) * g_aAsteroid[nCntAsteroid].fRadius);	// 位置
 
 		// 演出面
 		g_aAsteroid[nCntAsteroid].floatingX = (FLOATINGX)(rand() % 2);	// 浮遊状態[X]
