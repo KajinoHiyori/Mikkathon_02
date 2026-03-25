@@ -80,6 +80,26 @@ void UpdateParticle3D(void)
 
 		if (g_aPaticle3D[nCntPaticle].bUse == true)
 		{// 使用している場合
+			for (int nCntAppear = 0; nCntAppear < g_aPaticle3D[nCntPaticle].nParticleValue; nCntAppear++)
+			{// 生成するだけ繰り返す
+
+				rot.x = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
+				rot.y = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
+				rot.z = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
+
+				D3DXVec3Normalize(&rot, &rot);						// 正規化
+
+				// 3Dエフェクトの設定
+				SetEffect3D(g_aPaticle3D[nCntPaticle].nEffectLife,	// 寿命
+					g_aPaticle3D[nCntPaticle].pos,					// 位置
+					D3DXVECTOR3(rot.x, rot.y, rot.z),				// 移動方向
+					g_aPaticle3D[nCntPaticle].fSpeedEffect,			// 移動速度
+					g_aPaticle3D[nCntPaticle].fEffectRadius,		// 大きさ
+					g_aPaticle3D[nCntPaticle].faddEffectRadius,		// 大きさの加算量
+					g_aPaticle3D[nCntPaticle].col,					// エフェクトの色	
+					g_aPaticle3D[nCntPaticle].effecttype);
+			}
+
 			g_aPaticle3D[nCntPaticle].nParticleLifeV--;	// 寿命を減らす
 		}
 
