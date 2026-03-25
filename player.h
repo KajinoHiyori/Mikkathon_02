@@ -26,6 +26,7 @@ typedef enum
 	PLAYERSTATE_APPEAR = 0,		// 出現状態
 	PLAYERSTATE_WAIT,			// 待機状態
 	PLAYERSTATE_RESULT,			// リザルト状態
+	PLAYERSTATE_BACKAREA,		// エリア戻り状態
 	PLAYERSTATE_MAX
 }PLAYERSTATE;
 

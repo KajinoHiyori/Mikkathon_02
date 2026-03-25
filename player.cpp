@@ -178,11 +178,25 @@ void UpdatePlayer(void)
 		}
 
 		break;
+
+	case PLAYERSTATE_BACKAREA:
+		D3DXVECTOR3 correct = -g_Player.pos;
+		g_Player.move += *D3DXVec3Normalize(&g_Player.move, &correct);
+
+		g_Player.nCounterState--;
+
+		if (g_Player.nCounterState < 0)
+		{// 戻り状態を終わる
+			g_Player.state = PLAYERSTATE_WAIT;
+			g_Player.nCounterState = 0;
+		}
+
+		break;
 	}
 
 	if (g_Player.state != PLAYERSTATE_RESULT)
 	{
-		if (g_Player.state != PLAYERSTATE_APPEAR)
+		if (g_Player.state != PLAYERSTATE_APPEAR && g_Player.state != PLAYERSTATE_BACKAREA)
 		{// 出現状態のときは移動できない
 			float fValueH, fValueV;
 
@@ -301,23 +315,32 @@ void UpdatePlayer(void)
 		PrintDebugProc("プレイヤーのpos : ( %f %f %f )\n", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
 		PrintDebugProc("プレイヤーのmove : ( %f %f %f )\n", g_Player.move.x, g_Player.move.y, g_Player.move.z);
 
-		//if (CollisionAsteroid(g_Player.pos, g_Player.bBreak) == true)
-		//{// 小惑星との当たり判定による演出
-		//	SetExplosion(g_Player.pos, FIRST_POS, COLOR_WHITE, 20.0f, EXPLOSIONTYPE_0);
-		//	SetVibration(10000, 12000, 10);
+		D3DXVECTOR2 XYdist = D3DXVECTOR2(g_Player.pos.x, g_Player.pos.y);
+		float fDist = D3DXVec2Length(&XYdist);
 
-		//	if (g_Player.bBreak == false)
-		//	{// ロケットの破壊エフェクト
-		//		SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
-		//		SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
-		//		SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
-		//		SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.8f, 0.9f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
-		//	}
-		//	else
-		//	{// 岩の破壊エフェクト
-		//		SetParticle3D(2, 5, g_Player.pos, D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f), FIRST_POS, 6.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCK, PATICLETYPE_NOMAL, 0);
-		//	}
-		//}
+		if (fDist > 5000.0f)
+		{// 移動制限
+			g_Player.state = PLAYERSTATE_BACKAREA;
+			g_Player.nCounterState = 60;
+		}
+
+		if (CollisionAsteroid(g_Player.pos, g_Player.bBreak) == true)
+		{// 小惑星との当たり判定による演出
+			SetExplosion(g_Player.pos, FIRST_POS, COLOR_WHITE, 20.0f, EXPLOSIONTYPE_0);
+			SetVibration(10000, 12000, 10);
+
+			if (g_Player.bBreak == false)
+			{// ロケットの破壊エフェクト
+				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
+				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
+				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
+				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.8f, 0.9f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
+			}
+			else
+			{// 岩の破壊エフェクト
+				SetParticle3D(2, 5, g_Player.pos, D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f), FIRST_POS, 6.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCK, PATICLETYPE_NOMAL, 0);
+			}
+		}
 
 		if (CollisionPlanet(&g_Player.pos, 1.0f) == true)
 		{// 惑星との当たり判定による演出
@@ -352,7 +375,7 @@ void UpdatePlayer(void)
 			CorrectAngle(&g_Player.rot.z, g_Player.rot.z);
 		}
 
-#if 0
+#if 1
 		g_Player.fOil -= MINUS_OIL;
 #endif
 
