@@ -21,6 +21,9 @@
 #include "stage.h"
 #include "planet.h"
 #include "asteroid.h"
+#include "effect_3d.h"
+#include "particle_3d.h"
+#include "explosion.h"
 
 // マクロ定義
 #define CLASS_NAME	"WindowClass"	// ウィンドウクラスの名前
@@ -326,6 +329,15 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	// 小惑星の初期化処理
 	InitAsteroid();
 
+	// エフェクトの初期化処理
+	InitEffect3D();
+
+	// パーティクルの初期化処理
+	InitParticle3D();
+
+	// 爆発の初期化処理
+	InitExplosion();
+
 	// フェードの初期化
 	InitFade(MODE_TITLE, COLOR_BLACK);
 
@@ -342,6 +354,15 @@ void Uninit(void)
 {
 	// カメラの終了処理
 	UninitCamera();
+
+	// 爆発の終了処理
+	UninitExplosion();
+
+	// パーティクルの終了処理
+	UninitParticle3D();
+
+	// エフェクトの終了処理
+	UninitEffect3D();
 
 	// 燃料の終了処理
 	UninitOil();
@@ -432,8 +453,6 @@ void Update(void)
 	case MODE_GAME:		// ゲーム画面
 		UpdateGame();
 
-		// 燃料の更新処理
-		UpdateOil();
 		break;
 
 	case MODE_RESULT:	// リザルト画面

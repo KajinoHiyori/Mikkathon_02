@@ -15,6 +15,11 @@
 #include "stage.h"
 #include "planet.h"
 #include "asteroid.h"
+#include "oil.h"
+
+#include "effect_3d.h"
+#include "particle_3d.h"
+#include "explosion.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -72,6 +77,18 @@ void UpdateGame(void)
 	// 小惑星の更新処理
 	UpdateAsteroid();
 
+	// 燃料の更新処理
+	UpdateOil();
+
+	// エフェクトの更新処理
+	UpdateEffect3D();
+
+	// パーティクルの更新処理
+	UpdateParticle3D();
+
+	// 爆発の更新処理
+	UpdateExplosion();
+
 	if (GetKeyboardTrigger(DIK_SPACE) == true)
 	{
 		SetGameState(GAMESTATE_CLEAR, 0);
@@ -104,6 +121,15 @@ void DrawGame(void)
 
 	// 小惑星の描画処理
 	DrawAsteroid();
+
+	// エフェクトの描画処理
+	DrawEffect3D();
+
+	// パーティクルの描画処理
+	DrawParticle3D();
+
+	// 爆発の描画処理
+	DrawExplosion();
 }
 
 //=======================================================

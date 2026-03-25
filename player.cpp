@@ -10,6 +10,8 @@
 #include "debugproc.h"
 #include "asteroid.h"
 #include "planet.h"
+#include "explosion.h"
+
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
@@ -113,6 +115,11 @@ void UninitPlayer(void)
 //=============================================================================
 void UpdatePlayer(void)
 {
+	if (g_Player.bUse == false)
+	{// 使っていない状態のときはスキップ
+		return;
+	}
+
 	Camera* pCamera = GetCamera();
 
 	switch (g_Player.state)
@@ -141,8 +148,8 @@ void UpdatePlayer(void)
 		{// パッドの移動優先
 			g_Player.fAngleZ = atan2f((float)(-fValueH), (float)(fValueV));
 
-			g_Player.move.x += fValueH;
-			g_Player.move.y += fValueV;
+			g_Player.move.x += fValueH * (MOVEMENT.x + g_Player.Speed.x);
+			g_Player.move.y += fValueV * (MOVEMENT.y + g_Player.Speed.y);
 
 			//g_Player.move.z += cosf(fAngle + pCamera->rot.y) * MOVEMENT.z /** sinf((D3DX_PI * 0.5f) + pCamera->fAngle)*/;
 		}
@@ -150,24 +157,24 @@ void UpdatePlayer(void)
 		{// 上に移動
 			if (GetKeyboardPress(DIK_A) == true || GetJoypadPress(JOYKEY_LEFT) == true)
 			{// 左上に移動
-				g_Player.move.x += sinf(-D3DX_PI * 0.75f - pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf((D3DX_PI * 0.75f)) * -MOVEMENT.y;
+				g_Player.move.x += sinf(-D3DX_PI * 0.75f - pCamera->rot.y) * (MOVEMENT.x + g_Player.Speed.x);
+				g_Player.move.y += cosf((D3DX_PI * 0.75f)) * -(MOVEMENT.y + g_Player.Speed.y);
 				//g_Player.move.z += cosf(-D3DX_PI * 0.25f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = pCamera->rot.y + (D3DX_PI * 0.5f);
 			}
 			else if (GetKeyboardPress(DIK_D) == true || GetJoypadPress(JOYKEY_RIGHT) == true)
 			{// 右上に移動
-				g_Player.move.x += sinf(D3DX_PI * 0.75f - pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf((D3DX_PI * 0.75f)) * -MOVEMENT.y;
+				g_Player.move.x += sinf(D3DX_PI * 0.75f - pCamera->rot.y) * (MOVEMENT.x + g_Player.Speed.x);
+				g_Player.move.y += cosf((D3DX_PI * 0.75f)) * -(MOVEMENT.y + g_Player.Speed.y);
 				//g_Player.move.z += cosf(D3DX_PI * 0.25f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = pCamera->rot.y - (D3DX_PI * 0.5f);
 			}
 			else if (GetKeyboardPress(DIK_W) == true || GetJoypadPress(JOYKEY_UP) == true)
 			{// 上に移動
-				g_Player.move.x += sinf(D3DX_PI * 0.0f + pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf((D3DX_PI * 1.0f)) * -MOVEMENT.y;
+				g_Player.move.x += sinf(D3DX_PI * 0.0f + pCamera->rot.y) * (MOVEMENT.x + g_Player.Speed.x);
+				g_Player.move.y += cosf((D3DX_PI * 1.0f)) * -(MOVEMENT.y + g_Player.Speed.y);
 				//g_Player.move.z += cosf(D3DX_PI * 0.0f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = 0.0f;
@@ -177,24 +184,24 @@ void UpdatePlayer(void)
 		{// 下に移動
 			if (GetKeyboardPress(DIK_A) == true || GetJoypadPress(JOYKEY_LEFT) == true)
 			{// 左下に移動
-				g_Player.move.x += sinf(-D3DX_PI * 0.25f - pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf((D3DX_PI * 0.25f)) * -MOVEMENT.y;
+				g_Player.move.x += sinf(-D3DX_PI * 0.25f - pCamera->rot.y) * (MOVEMENT.x + g_Player.Speed.x);
+				g_Player.move.y += cosf((D3DX_PI * 0.25f)) * -(MOVEMENT.y + g_Player.Speed.y);
 				//g_Player.move.z += cosf(-D3DX_PI * 0.75f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = pCamera->rot.y + (D3DX_PI * 0.5f);
 			}
 			else if (GetKeyboardPress(DIK_D) == true || GetJoypadPress(JOYKEY_RIGHT) == true)
 			{// 右下に移動
-				g_Player.move.x += sinf(D3DX_PI * 0.25f - pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf((D3DX_PI * 0.25f)) * -MOVEMENT.y;
+				g_Player.move.x += sinf(D3DX_PI * 0.25f - pCamera->rot.y) * (MOVEMENT.x + g_Player.Speed.x);
+				g_Player.move.y += cosf((D3DX_PI * 0.25f)) * -(MOVEMENT.y + g_Player.Speed.y);
 				//g_Player.move.z += cosf(D3DX_PI * 0.75f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = pCamera->rot.y - (D3DX_PI * 0.5f);
 			}
 			else if (GetKeyboardPress(DIK_S) == true || GetJoypadPress(JOYKEY_DOWN) == true)
 			{// 下に移動
-				g_Player.move.x += sinf(D3DX_PI * 1.0f + pCamera->rot.y) * MOVEMENT.x;
-				g_Player.move.y += cosf((D3DX_PI * 0.0f)) * -MOVEMENT.y;
+				g_Player.move.x += sinf(D3DX_PI * 1.0f + pCamera->rot.y) * (MOVEMENT.x + g_Player.Speed.x);
+				g_Player.move.y += cosf((D3DX_PI * 0.0f)) * -(MOVEMENT.y + g_Player.Speed.y);
 				//g_Player.move.z += cosf(D3DX_PI * 1.0f + pCamera->rot.y) * MOVEMENT.z;
 
 				g_Player.fAngleZ = 0.0f;
@@ -202,13 +209,13 @@ void UpdatePlayer(void)
 		}
 		else if (GetKeyboardPress(DIK_A) == true || GetJoypadPress(JOYKEY_LEFT) == true)
 		{// 左に移動
-			g_Player.move.x += sinf(-D3DX_PI * 0.5f + pCamera->rot.y) * MOVEMENT.x;
+			g_Player.move.x += sinf(-D3DX_PI * 0.5f + pCamera->rot.y) * (MOVEMENT.x + g_Player.Speed.x);
 
 			g_Player.fAngleZ = pCamera->rot.y + (D3DX_PI * 0.5f);
 		}
 		else if (GetKeyboardPress(DIK_D) == true || GetJoypadPress(JOYKEY_RIGHT) == true)
 		{// 右に移動
-			g_Player.move.x += sinf(D3DX_PI * 0.5f + pCamera->rot.y) * MOVEMENT.x;
+			g_Player.move.x += sinf(D3DX_PI * 0.5f + pCamera->rot.y) * (MOVEMENT.x + g_Player.Speed.x);
 
 			g_Player.fAngleZ = pCamera->rot.y - (D3DX_PI * 0.5f);
 		}
@@ -237,8 +244,6 @@ void UpdatePlayer(void)
 		g_Player.Speed.z = -1.5f;
 	}
 
-	//g_Player.move.x += g_Player.Speed.x;
-	//g_Player.move.y += g_Player.Speed.y;
 	g_Player.move.z += AUTO_SPEED + g_Player.Speed.z;
 
 	// 慣性
@@ -247,13 +252,13 @@ void UpdatePlayer(void)
 	g_Player.move.y += (0.0f - g_Player.move.y) * INERTIA_MOVE;
 	g_Player.move.z += (0.0f - g_Player.move.z) * INERTIA_MOVE;
 
-	// 小惑星との当たり判定
-	CollisionAsteroid(g_Player.pos, g_Player.bBreak);
-
-	// 惑星との当たり判定
-	CollisionPlanet(&g_Player.pos, 1.0f);
 	PrintDebugProc("プレイヤーのpos : ( %f %f %f )\n", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
 	PrintDebugProc("プレイヤーのmove : ( %f %f %f )\n", g_Player.move.x, g_Player.move.y, g_Player.move.z);
+
+	if (CollisionAsteroid(g_Player.pos, g_Player.bBreak) == true || CollisionPlanet(&g_Player.pos, 1.0f) == true)
+	{// 当たり判定によるエフェクト
+		SetExplosion(g_Player.pos, FIRST_POS, 20.0f, EXPLOSIONTYPE_0);
+	}
 
 	if (g_Player.fAngleZ > D3DX_PI * 0.25f)
 	{// 角度の最大
