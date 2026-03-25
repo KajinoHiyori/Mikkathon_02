@@ -262,7 +262,7 @@ bool SetLoadStage(const char* pStageFilename)
 				else if (strcmp(&aReadText[0], "SET_PLANET") == false)
 				{
 					// 設定情報の初期化
-					tmpPlanet.type = PLANETTYPE_NONE;
+					tmpPlanet.type = PLANETTYPE_MAX;
 					tmpPlanet.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 					tmpPlanet.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
@@ -288,6 +288,15 @@ bool SetLoadStage(const char* pStageFilename)
 							fscanf(pFile, "%f %f %f", &tmpPlanet.pos.x, 
 													  &tmpPlanet.pos.y,
 													  &tmpPlanet.pos.z);			// 位置を読み取る
+
+							continue;
+						}
+						else if (strcmp(&aReadText[0], "ROT") == false)
+						{
+							fscanf(pFile, "%[ =\t\n]", &aBlankText[0]);		// 余分な情報を読み取る
+							fscanf(pFile, "%f %f %f", &tmpPlanet.rot.x, 
+													  &tmpPlanet.rot.y,
+													  &tmpPlanet.rot.z);			// 角度を読み取る
 
 							continue;
 						}
@@ -327,6 +336,12 @@ int SetLoadStageModelInfo(const char* pModelFilename)
 	// 惑星モデルの読み込み
 	for (int nCntModel = 0; nCntModel < MAX_NUM_STAGEMODEL; nCntModel++)
 	{
+		if (g_aStageModelInfo[nCntModel].bUse == true)
+		{// 使用している場合
+
+			continue;
+		}
+
 		// Xファイルの読み込み
 		hr = D3DXLoadMeshFromX(pModelFilename,
 							   D3DXMESH_SYSTEMMEM,

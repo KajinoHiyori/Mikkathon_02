@@ -43,7 +43,7 @@ void InitPlanet(void)
 		// 惑星の情報の初期化
 		for (int nCntPlanet = 0; nCntPlanet < MAX_NUM_PLANET; nCntPlanet++)
 		{
-			g_aPlanet[nCntPlanet].type = PLANETTYPE_NONE;
+			g_aPlanet[nCntPlanet].type = PLANETTYPE_MAX;
 			g_aPlanet[nCntPlanet].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 			g_aPlanet[nCntPlanet].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 			g_aPlanet[nCntPlanet].bUse = false;
@@ -71,7 +71,34 @@ void UpdatePlanet(void)
 
 			switch (g_aPlanet[nCntPlanetInfo].type)
 			{
-			case PLANETTYPE_NONE:
+			case PLANETTYPE_ENERGY:		// エネルギー惑星
+				break;
+
+			case PLANETTYPE_ASTEROID:	// 小惑星付き惑星
+				break;
+
+			case PLANETTYPE_BLACKHOLE:	// ブラックホール惑星
+				break;
+
+			case PLANETTYPE_WHITEHOLE:	// ホワイトホール惑星
+				break;
+
+			case PLANETTYPE_CHANGE:		// 重力変わる惑星
+				break;
+
+			case PLANETTYPE_REPULSIVE:	// 斥力惑星	
+				break;
+
+			case PLANETTYPE_SMALL:		// 一般(引力：小)惑星
+				break;
+
+			case PLANETTYPE_MID:		// 一般(引力：中)惑星
+				break;
+
+			case PLANETTYPE_BIG:		// 一般(引力：大)惑星
+				break;
+
+			case PLANETTYPE_GOAL:		// ゴール
 				break;
 			}
 		}
@@ -123,7 +150,7 @@ void DrawPlanet(void)
 			pDevice->GetMaterial(&matDef);
 
 			// モデル情報を獲得
-			if (g_aPlanetInfo[g_aPlanet[nCntPlanet].type].nIdxStageModel != 1)
+			if (g_aPlanetInfo[g_aPlanet[nCntPlanet].type].nIdxStageModel != -1)
 			{// モデルがある
 
 				pSageModelInfo = GetStageModelInfo(g_aPlanetInfo[g_aPlanet[nCntPlanet].type].nIdxStageModel);
@@ -190,11 +217,38 @@ void SetPlanet(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 			// 種類別の設定
 			switch (g_aPlanet[nCntPlanet].type)
 			{
-			case PLANETTYPE_NONE:
+			case PLANETTYPE_ENERGY:		// エネルギー惑星
+				break;
+
+			case PLANETTYPE_ASTEROID:	// 小惑星付き惑星
+				break;
+
+			case PLANETTYPE_BLACKHOLE:	// ブラックホール惑星
+				break;
+
+			case PLANETTYPE_WHITEHOLE:	// ホワイトホール惑星
+				break;
+
+			case PLANETTYPE_CHANGE:		// 重力変わる惑星
+				break;
+
+			case PLANETTYPE_REPULSIVE:	// 斥力惑星	
+				break;
+
+			case PLANETTYPE_SMALL:		// 一般(引力：小)惑星
+				break;
+
+			case PLANETTYPE_MID:		// 一般(引力：中)惑星
+				break;
+
+			case PLANETTYPE_BIG:		// 一般(引力：大)惑星
+				break;
+
+			case PLANETTYPE_GOAL:		// ゴール
 				break;
 			}
 
-			break;
+			break;	// for文を抜ける
 		}
 	}
 }
@@ -248,17 +302,15 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 				fHeight = g_aPlanet[nCntPlanet].pos.y - pPos->y;
 				fDipth = g_aPlanet[nCntPlanet].pos.z - pPos->z;
 
-				// XZの距離を求める
+				// 変更後のXZの距離を求める
 				fLengthXZ = sqrtf(fWidth * fWidth + fDipth * fDipth);
 
-				// 対象との距離を求める
+				// 変更後の対象との距離を求める
 				fDestLength = sqrtf(fLengthXZ * fLengthXZ + fHeight * fHeight);
 
 				if (g_aPlanetInfo[g_aPlanet[nCntPlanet].type].fHitRadius + fRadius > fDestLength)
 				{
-					PrintDebugProc("\nHIT=============================================================\n");
-					return true;
-
+					return true;	// 当たった事を返す
 				}
 			}
 		}
