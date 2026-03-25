@@ -362,12 +362,16 @@ void SetPlanet(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 //========================================================================
 bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 {
+	// 変数宣言 ================================================
+
 	float fWidth, fHeight, fDipth;
 	float fLengthXZ, fDestLength;
 	float fAngleXZ, fDestAngle;
 	float fNomDistance;
 
 	Player* pPlayer = GetPlayer();
+
+	// =========================================================
 
 	for (int nCntPlanet = 0; nCntPlanet < MAX_NUM_PLANET; nCntPlanet++)
 	{
@@ -414,8 +418,10 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 				// 変更後の対象との距離を求める
 				fDestLength = sqrtf(fLengthXZ * fLengthXZ + fHeight * fHeight);
 
+				// 惑星と衝突したかの判定
 				if (g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fHitRadius + fRadius > fDestLength)
-				{
+				{// 衝突した
+
 					if (g_aPlanet[nCntPlanet].type == PLANETTYPE_BLACKHOLE)
 					{// ぶつかった惑星がブラックホールの場合
 						
@@ -429,6 +435,20 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 					pPlayer->bUse = false;								// プレイヤーの使用していない状態に設定
 
 					return true;	// 当たった事を返す
+				}
+				else
+				{// 衝突していない
+
+					if (fNomDistance > 0.5f)
+					{// 効果範囲の半分より外にいる
+
+						pPlayer->fOil += 0.05f * (1.0f - fNomDistance);
+					}
+					else
+					{// 効果範囲の半分より内にいる
+
+						pPlayer->fOil += 0.05f * 1.25f;
+					}
 				}
 			}
 		}
