@@ -1,16 +1,15 @@
 //======================================================================================
 // 
-// 3Dアクションゲーム_MASTER KEY[pause.cpp]
+// 一時停止処理[pause.cpp]
+// Author : Kajino Hiyori
 //
 //======================================================================================
-#if 0
 #include "main.h"
 #include "pause.h"
 #include "fade.h"
 #include "game.h"
 #include "input.h"
 #include "color.h"
-#include "sound.h"
 
 // マクロ定義
 #define TEX_PAUSE		(PAUSE_MENU_MAX)	// ポーズメニューで使うテクスチャ数
@@ -36,11 +35,11 @@ int g_selectPause = RESET_DATA;	// 選択されているポーズ状態
 
 const char* c_apFilenamePause[TEX_PAUSE] =
 {
-	"data\\TEXTURE\\pause000.png",
-	"data\\TEXTURE\\pause001.png",
-	"data\\TEXTURE\\pause002.png",
-	"data\\TEXTURE\\pause100.png",
-	"data\\TEXTURE\\pause101.png",
+	"data\\TEXTURE\\pause000.png",	// ゲームに戻る
+	"data\\TEXTURE\\pause001.png",	// ゲームをやり直す
+	"data\\TEXTURE\\pause002.png",	// タイトル画面に戻る
+	"data\\TEXTURE\\pause100.png",	// ポーズメニューの背景
+	"data\\TEXTURE\\pause101.png",	// ポーズ背景を暗くする
 };
 
 //======================================================================================
@@ -201,7 +200,6 @@ void UpdatePause(void)
 	// WSキーが押された場合、テクスチャの状態を変更する(トリガー)
 	else if (GetKeyboardTrigger(DIK_W) == true || GetJoypadTrigger(JOYKEY_UP) == true || GetJoypadLeftStickTrigger(JOYKEY_LSTICK_UP) == true)	// 上
 	{
-		PlaySound(SE_SELECT);
 		g_selectPause--;
 		if (g_selectPause < RESET_DATA)
 		{
@@ -212,7 +210,6 @@ void UpdatePause(void)
 	else if (GetKeyboardTrigger(DIK_S) == true || GetJoypadTrigger(JOYKEY_DOWN) == true || GetJoypadLeftStickTrigger(JOYKEY_LSTICK_DOWN) == true)	// 下
 	{
 		nCounterDown = PRESS_MAEGIN;
-		PlaySound(SE_SELECT);
 		g_selectPause++;
 		if (g_selectPause > PAUSE_MENU_QUIT)
 		{
@@ -223,7 +220,6 @@ void UpdatePause(void)
 	// WSキーが押された場合、テクスチャの状態を変更する(リピート)
 	else if (GetKeyboardRepeat(DIK_W) == true || GetJoypadRepeat(JOYKEY_UP) == true)	// 上
 	{
-		PlaySound(SE_SELECT);
 		g_selectPause--;
 		if (g_selectPause < RESET_DATA)
 		{
@@ -232,7 +228,6 @@ void UpdatePause(void)
 	}
 	else if (GetKeyboardRepeat(DIK_S) == true || GetJoypadRepeat(JOYKEY_DOWN) == true)	// 下
 	{
-		PlaySound(SE_SELECT);
 		g_selectPause++;
 		if (g_selectPause > PAUSE_MENU_QUIT)
 		{
@@ -245,7 +240,6 @@ void UpdatePause(void)
 		if (nCounterUp >= PRESS_INTERVAL)
 		{
 			nCounterUp = RESET_DATA;
-			PlaySound(SE_SELECT);
 			g_selectPause--;
 			if (g_selectPause < RESET_DATA)
 			{
@@ -259,7 +253,6 @@ void UpdatePause(void)
 		if (nCounterDown >= PRESS_INTERVAL)
 		{
 			nCounterDown = RESET_DATA;
-			PlaySound(SE_SELECT);
 			g_selectPause++;
 			if (g_selectPause > PAUSE_MENU_QUIT)
 			{
@@ -290,10 +283,10 @@ void UpdatePause(void)
 	{
 		if (nCntPause == g_pauseMenu)	// 選択部だけ明るく表示
 		{
-			pVtx[0].col = COLOR_ORANGE;
-			pVtx[1].col = COLOR_ORANGE;
-			pVtx[2].col = COLOR_ORANGE;
-			pVtx[3].col = COLOR_ORANGE;
+			pVtx[0].col = COLOR_WHITE;
+			pVtx[1].col = COLOR_WHITE;
+			pVtx[2].col = COLOR_WHITE;
+			pVtx[3].col = COLOR_WHITE;
 		}
 		else
 		{
@@ -310,18 +303,16 @@ void UpdatePause(void)
 	// ENTERキーで確定した場合
 	if (GetKeyboardTrigger(DIK_RETURN) == true || GetJoypadTrigger(JOYKEY_A) == true)
 	{
-		PlaySound(SE_ENTER);
-		SetVibration(VIBRATION_POWER, VIBRATION_POWER, VIBRATION_TIME);
 		switch (g_pauseMenu)
 		{
 		case PAUSE_MENU_CONTINUE:	// コンテニュー
 			SetEnablePause(false);
 			break;
 		case PAUSE_MENU_RETRY:		// リトライ
-			SetFade(MODE_GAME);
+			SetFade(MODE_GAME, COLOR_BLACK);
 			break;
 		case PAUSE_MENU_QUIT:		// タイトルへ戻る
-			SetFade(MODE_TITLE);
+			SetFade(MODE_TITLE, COLOR_BLACK);
 			break;
 		}
 	}
@@ -371,4 +362,3 @@ void SetPause(int pauseMenu)
 {
 	g_selectPause = pauseMenu;
 }
-#endif
