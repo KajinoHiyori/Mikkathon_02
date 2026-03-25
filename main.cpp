@@ -24,6 +24,8 @@
 #include "effect_3d.h"
 #include "particle_3d.h"
 #include "explosion.h"
+#include "bg.h"
+#include "meshcylinder.h"
 
 // マクロ定義
 #define CLASS_NAME	"WindowClass"	// ウィンドウクラスの名前
@@ -313,6 +315,14 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitCamera();
 	SetNumCamera(1);
 
+	// 背景の初期化
+	InitBG();
+
+	// メッシュシリンダーの初期化
+	InitMeshCylinder();
+	SetMeshCylinder(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(D3DX_PI * 0.5f, 0.0f, 0.0f), D3DXVECTOR2(8.0f, 2.0f),
+		D3DXVECTOR2(6000.0f, 70000.0f), COLOR_WHITE, true, false, MESHCYLINDERTYPE_SPACE, MESHCYLINDERSTATE_NONE);
+
 	// プレイヤーの初期化処理
 	InitPlayer();
 
@@ -367,6 +377,12 @@ void Uninit(void)
 
 	// 燃料の終了処理
 	UninitOil();
+
+	// 背景の終了処理
+	UninitBG();
+
+	// メッシュシリンダーの終了処理
+	UninitMeshCylinder();
 
 	// 小惑星の終了処理
 	UninitAsteroid();

@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="asteroid.cpp" />
+    <ClCompile Include="bg.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="debugproc.cpp" />
     <ClCompile Include="effect_3d.cpp" />
@@ -168,9 +169,11 @@
     <ClCompile Include="result.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="title.cpp" />
+    <ClCompile Include="title_ui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="asteroid.h" />
+    <ClInclude Include="bg.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="debugproc.h" />
@@ -192,6 +195,7 @@
     <ClInclude Include="result.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="title.h" />
+    <ClInclude Include="title_ui.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

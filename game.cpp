@@ -17,6 +17,7 @@
 #include "asteroid.h"
 #include "oil.h"
 #include "meshcylinder.h"
+#include "bg.h"
 
 #include "effect_3d.h"
 #include "particle_3d.h"
@@ -60,11 +61,6 @@ void InitGame(void)
 	// 小惑星の初期化
 	InitAsteroid();
 
-	// メッシュシリンダーの初期化
-	InitMeshCylinder();
-	SetMeshCylinder(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(D3DX_PI * 0.5f, 0.0f, 0.0f), D3DXVECTOR2(8.0f, 2.0f),
-		D3DXVECTOR2(6000.0f, 70000.0f), COLOR_WHITE, true, false, MESHCYLINDERTYPE_SPACE, MESHCYLINDERSTATE_NONE);
-
 	// ポーズ状態の初期化
 	InitPause();
 }
@@ -74,9 +70,6 @@ void InitGame(void)
 //=======================================================
 void UninitGame(void)
 {
-	// メッシュシリンダーの終了処理
-	UninitMeshCylinder();
-
 	// ポーズ状態の終了処理
 	UninitPause();
 }
@@ -86,8 +79,6 @@ void UninitGame(void)
 //=======================================================
 void UpdateGame(void)
 {
-	FADE fade = GetFade();
-
 	// ポーズ機能
 	if ((GetKeyboardTrigger(DIK_P) == true || GetJoypadTrigger(JOYKEY_START) == true) && g_gameState != GAMESTATE_CLEAR && g_gameState != GAMESTATE_OVER)
 	{
@@ -125,6 +116,9 @@ void UpdateGame(void)
 
 		// メッシュシリンダーの更新処理
 		UpdateMeshCylinder();
+
+		// 背景の更新処理
+		UpdateBG();
 	}
 	else if (g_bPause == true)
 	{ // pause状態
@@ -136,11 +130,12 @@ void UpdateGame(void)
 	{
 		SetGameState(GAMESTATE_CLEAR, 0);
 	}
-	else if (GetKeyboardTrigger(DIK_RETURN) == true)
+	else if (GetKeyboardTrigger(DIK_BACKSPACE) == true)
 	{
 		SetGameState(GAMESTATE_OVER, 0);
 	}
 
+	FADE fade = GetFade();
 	if (g_nCounterGameState <= 0 && g_gameState == GAMESTATE_CLEAR && fade == FADE_NONE)
 	{
 		SetFade(MODE_RESULT, COLOR_WHITE);
@@ -156,6 +151,9 @@ void UpdateGame(void)
 //=======================================================
 void DrawGame(void)
 {
+	// 背景の描画処理
+	DrawBG();
+
 	// プレイヤーの描画処理
 	DrawPlayer();
 
