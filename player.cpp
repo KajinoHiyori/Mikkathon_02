@@ -11,6 +11,7 @@
 #include "asteroid.h"
 #include "explosion.h"
 #include "particle_3d.h"
+#include "meshcylinder.h"
 #include "color.h"
 #include "game.h"
 
@@ -299,23 +300,23 @@ void UpdatePlayer(void)
 		PrintDebugProc("プレイヤーのpos : ( %f %f %f )\n", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
 		PrintDebugProc("プレイヤーのmove : ( %f %f %f )\n", g_Player.move.x, g_Player.move.y, g_Player.move.z);
 
-		if (CollisionAsteroid(g_Player.pos, g_Player.bBreak) == true)
-		{// 小惑星との当たり判定による演出
-			SetExplosion(g_Player.pos, FIRST_POS, COLOR_WHITE, 20.0f, EXPLOSIONTYPE_0);
-			SetVibration(10000, 12000, 10);
+		//if (CollisionAsteroid(g_Player.pos, g_Player.bBreak) == true)
+		//{// 小惑星との当たり判定による演出
+		//	SetExplosion(g_Player.pos, FIRST_POS, COLOR_WHITE, 20.0f, EXPLOSIONTYPE_0);
+		//	SetVibration(10000, 12000, 10);
 
-			if (g_Player.bBreak == false)
-			{// ロケットの破壊エフェクト
-				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
-				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
-				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
-				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.8f, 0.9f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
-			}
-			else
-			{// 岩の破壊エフェクト
-				SetParticle3D(2, 5, g_Player.pos, D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f), FIRST_POS, 6.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCK, PATICLETYPE_NOMAL, 0);
-			}
-		}
+		//	if (g_Player.bBreak == false)
+		//	{// ロケットの破壊エフェクト
+		//		SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
+		//		SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
+		//		SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
+		//		SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.8f, 0.9f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
+		//	}
+		//	else
+		//	{// 岩の破壊エフェクト
+		//		SetParticle3D(2, 5, g_Player.pos, D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f), FIRST_POS, 6.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCK, PATICLETYPE_NOMAL, 0);
+		//	}
+		//}
 
 		if (CollisionPlanet(&g_Player.pos, 1.0f) == true)
 		{// 惑星との当たり判定による演出
@@ -327,6 +328,8 @@ void UpdatePlayer(void)
 			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
 			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.8f, 0.9f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
 		}
+
+		CollisionMeshCylinder(&g_Player.pos, &g_Player.posOld, &g_Player.move, 0.0f, 0.0f, false);
 
 		if (g_Player.fAngleZ > D3DX_PI * 0.25f)
 		{// 角度の最大
@@ -458,7 +461,7 @@ void SetPlayer(D3DXVECTOR3 pos, D3DXVECTOR3 rot, PLAYERSTATE state)
 			g_Player.rot = D3DXVECTOR3(D3DX_PI * -0.5f, 0.0f, 0.0f);
 			g_Player.bClear = true;
 
-			SetPlanet(PLANETTYPE_GOAL, D3DXVECTOR3(0.0f, -40.0f, 0.0f), FIRST_POS);
+			SetPlanet(PLANETTYPE_GOAL, D3DXVECTOR3(0.0f, -210.0f, 0.0f), FIRST_POS);
 		}
 		else if (GetGAmeState() == GAMESTATE_OVER)
 		{// ゲームオーバー
@@ -466,7 +469,7 @@ void SetPlayer(D3DXVECTOR3 pos, D3DXVECTOR3 rot, PLAYERSTATE state)
 
 			if (g_Player.planetType != -1)
 			{// 惑星にぶつかって死んだ
-				SetPlanet(g_Player.planetType, D3DXVECTOR3(0.0f, -40.0f, 0.0f), FIRST_POS);
+				SetPlanet(g_Player.planetType, D3DXVECTOR3(0.0f, -100.0f, 0.0f), FIRST_POS);
 			}
 		}
 	}

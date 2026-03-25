@@ -38,11 +38,11 @@ void InitResult(void)
 	// カメラの位置設定
 	SetCameraPos(0, D3DXVECTOR3(0.0f, 200.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CAMERATYPE_POINT);
 
-	// プレイヤーの初期化
-	SetPlayer(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(D3DX_PI * 0.4f, D3DX_PI * 0.2f, D3DX_PI * 0.2f), PLAYERSTATE_RESULT);
-
 	// 惑星の初期化
 	InitPlanet();
+
+	// プレイヤーの設定
+	SetPlayer(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(D3DX_PI * 0.4f, D3DX_PI * 0.2f, D3DX_PI * 0.2f), PLAYERSTATE_RESULT);
 
 	// リザルトUIの初期化
 	InitResultUI();
