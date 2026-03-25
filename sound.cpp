@@ -5,7 +5,7 @@
 //
 //===========================================================================================
 #include "sound.h"
-#if 0
+
 //*****************************************************************************
 // サウンド情報の構造体定義
 //*****************************************************************************
@@ -33,24 +33,24 @@ DWORD g_aSizeAudio[SOUND_LABEL_MAX] = {};					// オーディオデータサイズ
 // サウンドの情報
 SOUNDINFO g_aSoundInfo[SOUND_LABEL_MAX] =
 {
-	{"data\\SOUND\\bgm\\00_title.wav", -1},			// title
-	{"data\\SOUND\\bgm\\01_tutorial.wav", -1},		// tutorial
-	{"data\\SOUND\\bgm\\02_game.wav", -1},			// game
-	{"data\\SOUND\\bgm\\03_gameclear.wav", -1},		// gameclear
-	{"data\\SOUND\\bgm\\04_gameover.wav", -1},		// gameover
-	{"data\\SOUND\\bgm\\05_ranking.wav", -1},		// ranking
-	{"data\\SOUND\\bgm\\06_coinrush.wav", -1},		// coinrush
-	{"data\\SOUND\\se\\00_select.wav", 0},			// select
-	{"data\\SOUND\\se\\01_enter.wav", 0},			// enter
-	{"data\\SOUND\\se\\02_pause.wav", 0},			// pause
-	{"data\\SOUND\\se\\03_coin.wav", 0},			// coin
-	{"data\\SOUND\\se\\04_key.wav", 0},				// key
-	{"data\\SOUND\\se\\05_jump.wav", 0},			// jump
-	{"data\\SOUND\\se\\06_landing.wav", 0},			// landing
-	{"data\\SOUND\\se\\07_addtime.wav", 0},			// addtime
-	{"data\\SOUND\\se\\08_fallcoin.wav", 0},		// fallcoin
-	{"data\\SOUND\\se\\09_growup.wav", 0},			// fallcoin
-	{"data\\SOUND\\se\\10_camera.wav", 0},			// camera
+	{"data\\SOUND\\bgm\\title.wav", -1},		// title
+	{"data\\SOUND\\bgm\\game.wav", -1},			// game
+	{"data\\SOUND\\bgm\\gameclear.wav", -1},	// gameclear
+	{"data\\SOUND\\bgm\\gameover.wav", -1},		// gameover
+	//{"data\\SOUND\\bgm\\04_gameover.wav", -1},		// gameover
+	//{"data\\SOUND\\bgm\\05_ranking.wav", -1},		// ranking
+	//{"data\\SOUND\\bgm\\06_coinrush.wav", -1},		// coinrush
+	//{"data\\SOUND\\se\\00_select.wav", 0},			// select
+	//{"data\\SOUND\\se\\01_enter.wav", 0},			// enter
+	//{"data\\SOUND\\se\\02_pause.wav", 0},			// pause
+	//{"data\\SOUND\\se\\03_coin.wav", 0},			// coin
+	//{"data\\SOUND\\se\\04_key.wav", 0},				// key
+	//{"data\\SOUND\\se\\05_jump.wav", 0},			// jump
+	//{"data\\SOUND\\se\\06_landing.wav", 0},			// landing
+	//{"data\\SOUND\\se\\07_addtime.wav", 0},			// addtime
+	//{"data\\SOUND\\se\\08_fallcoin.wav", 0},		// fallcoin
+	//{"data\\SOUND\\se\\09_growup.wav", 0},			// fallcoin
+	//{"data\\SOUND\\se\\10_camera.wav", 0},			// camera
 };
 
 //===========================================================================================
@@ -413,4 +413,4 @@ HRESULT ReadChunkData(HANDLE hFile, void* pBuffer, DWORD dwBuffersize, DWORD dwB
 
 	return S_OK;
 }
-#endif
+

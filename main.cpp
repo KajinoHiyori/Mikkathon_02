@@ -13,6 +13,7 @@
 #include "game.h"
 #include "result.h"
 #include "light.h"
+#include "sound.h"
 
 // 全体で初期化を行う処理
 #include "player.h"
@@ -309,7 +310,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	}
 
 	// サウンドの初期化処理
-	//InitSound(hWnd);
+	InitSound(hWnd);
 
 	// カメラの初期化処理
 	InitCamera();
@@ -409,10 +410,10 @@ void Uninit(void)
 	UninitLight();
 
 	// BGMの停止
-	//StopSound();
+	StopSound();
 	
 	// サウンドの終了処理
-	//UninitSound();
+	UninitSound();
 
 	// キーボードの終了処理
 	UninitKeyboard();

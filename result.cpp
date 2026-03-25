@@ -15,9 +15,12 @@
 #include "bg.h"
 #include "player.h"
 #include "planet.h"
+#include "asteroid.h"
 #include "effect_3d.h"
 #include "particle_3d.h"
 #include "explosion.h"
+#include "game.h"
+#include "sound.h"
 
 //*****************************************************************************
 // グローバル変数
@@ -43,6 +46,25 @@ void InitResult(void)
 
 	// リザルトUIの初期化
 	InitResultUI();
+
+	// 小惑星の初期化
+	InitAsteroid();
+
+	GAMESTATE gameState = GetGAmeState();
+	switch (gameState)
+	{
+	case GAMESTATE_OVER:	// ゲームオーバー
+		PlaySound(BGM_OVER);
+		break;
+
+	case GAMESTATE_CLEAR:	// ゲームクリア
+		PlaySound(BGM_CLEAR);
+		break;
+
+	default:
+		// error
+		break;
+	}
 }
 
 //=======================================================
@@ -52,6 +74,9 @@ void UninitResult(void)
 {
 	// リザルトUIの終了処理
 	UninitResultUI();
+
+	// 音楽の停止
+	StopSound();
 }
 
 //=======================================================
@@ -67,6 +92,9 @@ void UpdateResult(void)
 
 	// 惑星の更新処理
 	UpdatePlanet();
+
+	// 小惑星の更新処理
+	UpdateAsteroid();
 
 	// エフェクトの更新処理
 	UpdateEffect3D();
@@ -100,6 +128,9 @@ void DrawResult(void)
 
 	// 惑星の描画処理
 	DrawPlanet();
+
+	// 小惑星の描画処理
+	DrawAsteroid();
 
 	// エフェクトの描画処理
 	DrawEffect3D();
