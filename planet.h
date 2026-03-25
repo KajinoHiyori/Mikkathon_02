@@ -12,8 +12,17 @@
 
 // 惑星の種類
 typedef enum
-{
-	PLANETTYPE_NONE = 0,	// [0]普通惑星	
+{	
+	PLANETTYPE_ENERGY = 0,	// [0]エネルギー惑星	
+	PLANETTYPE_ASTEROID,	// [1]小惑星付き惑星	
+	PLANETTYPE_BLACKHOLE,	// [2]ブラックホール惑星	
+	PLANETTYPE_WHITEHOLE,	// [3]ホワイトホール惑星	
+	PLANETTYPE_CHANGE,		// [4]重力変わる惑星	
+	PLANETTYPE_REPULSIVE,	// [5]斥力惑星	
+	PLANETTYPE_SMALL,		// [6]一般(引力：小)惑星	
+	PLANETTYPE_MID,			// [7]一般(引力：中)惑星	
+	PLANETTYPE_BIG,			// [8]一般(引力：大)惑星	
+	PLANETTYPE_GOAL,		// [9]ゴール	
 
 	PLANETTYPE_MAX			// 最大値
 
@@ -41,6 +50,7 @@ typedef struct
 
 	D3DXVECTOR3 pos;		// 位置
 	D3DXVECTOR3 rot;		// 角度
+	D3DXVECTOR3 addRot;		// 加算角度
 
 	D3DXMATRIX mtxWorld;	// ワールドマトリックス
 
