@@ -152,8 +152,6 @@ void UpdateResultUI(void)
 //=============================================================================
 void DrawResultUI(void)
 {
-	GAMESTATE gameState = GetGAmeState();
-
 	// ローカル変数宣言
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();			// デバイスへのポインタ
 
@@ -171,11 +169,11 @@ void DrawResultUI(void)
 		pDevice->SetFVF(FVF_VERTEX_2D);
 
 		// テクスチャの設定
-		if (gameState == GAMESTATE_CLEAR)
+		if (GetGAmeState() == GAMESTATE_CLEAR)
 		{// ゲームクリア
 			pDevice->SetTexture(0, g_apTextureResultUI[0]);
 		}
-		else if (gameState == GAMESTATE_OVER)
+		else if (GetGAmeState() == GAMESTATE_OVER)
 		{// ゲームクリア
 			pDevice->SetTexture(0, g_apTextureResultUI[1]);
 		}

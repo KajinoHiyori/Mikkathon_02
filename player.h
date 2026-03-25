@@ -55,6 +55,7 @@ typedef struct
 	int nCounterState;			// 状態カウンター
 	float fOil;					// 燃料
 	PLANETTYPE planetType;		// ぶつかった惑星の種類
+	bool bClear;				// クリア状態かオーバー状態か
 	bool bBreak;				// 小惑星を破壊できるか
 	bool bUse;					// 使用しているか
 }Player;
@@ -68,7 +69,9 @@ void UpdatePlayer(void);
 void DrawPlayer(void);
 void SetPlayer(D3DXVECTOR3 pos, D3DXVECTOR3 rot, PLAYERSTATE state);
 Player* GetPlayer(void);
+void AddOil(float fAddOil);
 
 void CorrectAngle(float* fAngle, float fAngleCmp);
+
 
 #endif

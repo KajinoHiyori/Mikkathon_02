@@ -12,6 +12,7 @@
 #include "explosion.h"
 #include "particle_3d.h"
 #include "color.h"
+#include "game.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -25,6 +26,9 @@
 #define AUTO_SPEED				(1.0f)									// 自動で進むスピード
 #define HIGH_SPPED				(35.0f)									// スピードが速くなる
 #define LOW_SPPED				(70.0f)									// スピードが遅くなる
+#define FIRE_COUNT				(60)									// 火花の間隔
+#define SMOKE_COUNT				(20)									// 煙の間隔
+#define SPACE_ROTATE			(0.01f)									// 宇宙を漂っているときの回転
 #define PLAYER_FILE				"data\\MODEL\\rocket000.x"				// プレイヤーのファイル名
 
 //*****************************************************************************
@@ -52,6 +56,7 @@ void InitPlayer(void)
 	g_Player.nCounterState = 0;
 	g_Player.fOil = MAX_OIL * 0.5f;
 	g_Player.planetType = (PLANETTYPE)-1;
+	g_Player.bClear = false;
 	g_Player.bBreak = false;
 	g_Player.bUse = false;
 
@@ -141,6 +146,34 @@ void UpdatePlayer(void)
 		break;
 
 	case PLAYERSTATE_RESULT:
+		g_Player.nCounterState++;
+
+		if (g_Player.bClear == false)
+		{// ゲームオーバー中の演出
+
+			if (g_Player.nCounterState % FIRE_COUNT == (rand() % FIRE_COUNT))
+			{// 火花
+				SetParticle3D(rand() % 3 + 1, 1, g_Player.pos, D3DXCOLOR(1.0f, 0.8f, 0.0f, 1.0f), FIRST_POS, 4.0f, 10, 1.0f, 0.0f, EFFECTTYPE_NORMAL, PATICLETYPE_NOMAL, 0);
+			}
+
+			if (g_Player.nCounterState % SMOKE_COUNT == 0)
+			{// 煙
+				SetExplosion(g_Player.pos, D3DXVECTOR3((float)(rand() % 2), 1.0f, (float)(rand() % 2)), D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f), 20.0f, EXPLOSIONTYPE_1);
+				SetExplosion(g_Player.pos, D3DXVECTOR3((float)(rand() % 2), 1.0f, (float)(rand() % 2)), D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f), 20.0f, EXPLOSIONTYPE_1);
+			}
+
+			if (g_Player.planetType == -1)
+			{// 惑星にぶつかって死んだわけではない→宇宙を漂っている演出
+				g_Player.rot.x += SPACE_ROTATE;
+				g_Player.rot.y += SPACE_ROTATE;
+				g_Player.rot.z += SPACE_ROTATE;
+
+				CorrectAngle(&g_Player.rot.x, g_Player.rot.x);
+				CorrectAngle(&g_Player.rot.y, g_Player.rot.y);
+				CorrectAngle(&g_Player.rot.z, g_Player.rot.z);
+			}
+		}
+
 		break;
 	}
 
@@ -232,6 +265,9 @@ void UpdatePlayer(void)
 			}
 		}
 
+		SetEffect3D(3, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 8.0f), FIRST_POS, 0.0f, 7.0f, -1.0f, COLOR_RED, EFFECTTYPE_NORMAL);
+		SetEffect3D(3, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 8.0f), FIRST_POS, 0.0f, 7.0f, -1.0f, COLOR_ORANGE, EFFECTTYPE_NORMAL);
+
 		if (g_Player.fOil <= HIGH_SPPED)
 		{// 速い
 			g_Player.Speed.x = 1.5f;
@@ -264,7 +300,7 @@ void UpdatePlayer(void)
 
 		if (CollisionAsteroid(g_Player.pos, g_Player.bBreak) == true)
 		{// 小惑星との当たり判定による演出
-			SetExplosion(g_Player.pos, FIRST_POS, 20.0f, EXPLOSIONTYPE_0);
+			SetExplosion(g_Player.pos, FIRST_POS, COLOR_WHITE, 20.0f, EXPLOSIONTYPE_0);
 			SetVibration(10000, 12000, 10);
 
 			if (g_Player.bBreak == false)
@@ -282,7 +318,7 @@ void UpdatePlayer(void)
 
 		if (CollisionPlanet(&g_Player.pos, 1.0f) == true)
 		{// 惑星との当たり判定による演出
-			SetExplosion(g_Player.pos, FIRST_POS, 20.0f, EXPLOSIONTYPE_0);
+			SetExplosion(g_Player.pos, FIRST_POS, COLOR_WHITE, 20.0f, EXPLOSIONTYPE_0);
 			SetVibration(10000, 12000, 10);
 
 			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
@@ -400,10 +436,28 @@ void SetPlayer(D3DXVECTOR3 pos, D3DXVECTOR3 rot, PLAYERSTATE state)
 	g_Player.Speed = FIRST_POS;
 	g_Player.state = state;
 	g_Player.nCounterState = 30;
-	g_Player.fOil = MAX_OIL * 0.2f;
-	g_Player.planetType = (PLANETTYPE)-1;
 	g_Player.bBreak = false;
 	g_Player.bUse = true;
+
+	if (state == PLAYERSTATE_RESULT)
+	{// リザルト用の設定
+		if (GetGAmeState() == GAMESTATE_CLEAR)
+		{// ゲームクリア
+			g_Player.rot = D3DXVECTOR3(D3DX_PI * -0.5f, 0.0f, 0.0f);
+			g_Player.bClear = true;
+
+			SetPlanet(PLANETTYPE_GOAL, D3DXVECTOR3(0.0f, -40.0f, 0.0f), FIRST_POS);
+		}
+		else if (GetGAmeState() == GAMESTATE_OVER)
+		{// ゲームオーバー
+			g_Player.bClear = false;
+
+			if (g_Player.planetType != -1)
+			{// 惑星にぶつかって死んだ
+				SetPlanet(g_Player.planetType, D3DXVECTOR3(0.0f, -40.0f, 0.0f), FIRST_POS);
+			}
+		}
+	}
 }
 
 //=============================================================================
@@ -412,6 +466,19 @@ void SetPlayer(D3DXVECTOR3 pos, D3DXVECTOR3 rot, PLAYERSTATE state)
 Player* GetPlayer(void)
 {
 	return &g_Player;
+}
+
+//=============================================================================
+// 燃料追加
+//=============================================================================
+void AddOil(float fAddOil)
+{
+	g_Player.fOil += fAddOil;
+
+	if (g_Player.fOil > MAX_OIL)
+	{// 燃料の最大
+		g_Player.fOil = MAX_OIL;
+	}
 }
 
 //=============================================================================

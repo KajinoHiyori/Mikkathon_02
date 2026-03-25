@@ -53,6 +53,7 @@ D3DXMATRIX g_mtxWorldExplosion;								// ワールドマトリックス
 const char* c_apFilernamaExplosion[EXPLOSIONTYPE_MAX] =
 {
 	"data\\TEXTURE\\explosion.png",
+	"data\\TEXTURE\\explosion001.png",
 };
 
 //=============================================================================
@@ -291,7 +292,7 @@ void DrawExplosion(void)
 //=============================================================================
 // 爆発の設定処理
 //=============================================================================
-void SetExplosion(D3DXVECTOR3 pos, D3DXVECTOR3 move, float length, EXPLOSIONTYPE type)
+void SetExplosion(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXCOLOR col, float length, EXPLOSIONTYPE type)
 {
 	// ローカル変数宣言
 	VERTEX_3D* pVtx;					// 頂点情報へのポインタ
@@ -305,7 +306,7 @@ void SetExplosion(D3DXVECTOR3 pos, D3DXVECTOR3 move, float length, EXPLOSIONTYPE
 		{// 爆発が使用されていない
 			g_aExplosion[nCntExplosion].pos = pos;
 			g_aExplosion[nCntExplosion].move = move;
-			g_aExplosion[nCntExplosion].col = COLOR_WHITE;
+			g_aExplosion[nCntExplosion].col = col;
 			g_aExplosion[nCntExplosion].fWidth = length;
 			g_aExplosion[nCntExplosion].fDepth = length;
 			g_aExplosion[nCntExplosion].type = type;

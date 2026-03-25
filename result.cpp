@@ -14,6 +14,13 @@
 #include "result_ui.h"
 #include "bg.h"
 #include "player.h"
+#include "planet.h"
+#include "asteroid.h"
+#include "effect_3d.h"
+#include "particle_3d.h"
+#include "explosion.h"
+#include "game.h"
+#include "sound.h"
 
 //*****************************************************************************
 // グローバル変数
@@ -32,11 +39,32 @@ void InitResult(void)
 	SetCameraPos(0, D3DXVECTOR3(0.0f, 200.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CAMERATYPE_POINT);
 
 	// プレイヤーの初期化
-	InitPlayer();
 	SetPlayer(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(D3DX_PI * 0.4f, D3DX_PI * 0.2f, D3DX_PI * 0.2f), PLAYERSTATE_RESULT);
+
+	// 惑星の初期化
+	InitPlanet();
 
 	// リザルトUIの初期化
 	InitResultUI();
+
+	// 小惑星の初期化
+	InitAsteroid();
+
+	GAMESTATE gameState = GetGAmeState();
+	switch (gameState)
+	{
+	case GAMESTATE_OVER:	// ゲームオーバー
+		PlaySound(BGM_OVER);
+		break;
+
+	case GAMESTATE_CLEAR:	// ゲームクリア
+		PlaySound(BGM_CLEAR);
+		break;
+
+	default:
+		// error
+		break;
+	}
 }
 
 //=======================================================
@@ -46,6 +74,9 @@ void UninitResult(void)
 {
 	// リザルトUIの終了処理
 	UninitResultUI();
+
+	// 音楽の停止
+	StopSound();
 }
 
 //=======================================================
@@ -58,6 +89,21 @@ void UpdateResult(void)
 
 	// プレイヤーの更新処理
 	UpdatePlayer();
+
+	// 惑星の更新処理
+	UpdatePlanet();
+
+	// 小惑星の更新処理
+	UpdateAsteroid();
+
+	// エフェクトの更新処理
+	UpdateEffect3D();
+
+	// パーティクルの更新処理
+	UpdateParticle3D();
+
+	// 爆発の更新処理
+	UpdateExplosion();
 
 	// リザルトUIの更新処理
 	UpdateResultUI();
@@ -79,6 +125,21 @@ void DrawResult(void)
 
 	// プレイヤーの描画処理
 	DrawPlayer();
+
+	// 惑星の描画処理
+	DrawPlanet();
+
+	// 小惑星の描画処理
+	DrawAsteroid();
+
+	// エフェクトの描画処理
+	DrawEffect3D();
+
+	// パーティクルの描画処理
+	DrawParticle3D();
+
+	// 爆発の描画処理
+	DrawExplosion();
 
 	// リザルトUIの描画処理
 	DrawResultUI();
