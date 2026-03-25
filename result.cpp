@@ -14,6 +14,7 @@
 #include "result_ui.h"
 #include "bg.h"
 #include "player.h"
+#include "planet.h"
 #include "effect_3d.h"
 #include "particle_3d.h"
 #include "explosion.h"
@@ -36,6 +37,9 @@ void InitResult(void)
 
 	// プレイヤーの初期化
 	SetPlayer(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(D3DX_PI * 0.4f, D3DX_PI * 0.2f, D3DX_PI * 0.2f), PLAYERSTATE_RESULT);
+
+	// 惑星の初期化
+	InitPlanet();
 
 	// リザルトUIの初期化
 	InitResultUI();
@@ -60,6 +64,9 @@ void UpdateResult(void)
 
 	// プレイヤーの更新処理
 	UpdatePlayer();
+
+	// 惑星の更新処理
+	UpdatePlanet();
 
 	// エフェクトの更新処理
 	UpdateEffect3D();
@@ -90,6 +97,9 @@ void DrawResult(void)
 
 	// プレイヤーの描画処理
 	DrawPlayer();
+
+	// 惑星の描画処理
+	DrawPlanet();
 
 	// エフェクトの描画処理
 	DrawEffect3D();
