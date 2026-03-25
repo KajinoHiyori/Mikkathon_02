@@ -86,8 +86,6 @@ void UninitGame(void)
 //=======================================================
 void UpdateGame(void)
 {
-	FADE fade = GetFade();
-
 	// ポーズ機能
 	if ((GetKeyboardTrigger(DIK_P) == true || GetJoypadTrigger(JOYKEY_START) == true) && g_gameState != GAMESTATE_CLEAR && g_gameState != GAMESTATE_OVER)
 	{
@@ -136,11 +134,12 @@ void UpdateGame(void)
 	{
 		SetGameState(GAMESTATE_CLEAR, 0);
 	}
-	else if (GetKeyboardTrigger(DIK_RETURN) == true)
+	else if (GetKeyboardTrigger(DIK_BACKSPACE) == true)
 	{
 		SetGameState(GAMESTATE_OVER, 0);
 	}
 
+	FADE fade = GetFade();
 	if (g_nCounterGameState <= 0 && g_gameState == GAMESTATE_CLEAR && fade == FADE_NONE)
 	{
 		SetFade(MODE_RESULT, COLOR_WHITE);

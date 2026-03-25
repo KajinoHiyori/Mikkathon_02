@@ -14,16 +14,9 @@
 // マクロ定義
 #define TEX_PAUSE		(PAUSE_MENU_MAX)	// ポーズメニューで使うテクスチャ数
 #define PAUSE_NUMBER	(3)					// ポーズメニューの数
-#define PAUSE_SIZE		(20.0f)				// ポーズのポリゴンサイズ
-#define PAUSE_SPACE		(50.0f)				// ポーズの間隔
-#define PAUSE_POS		(310.0f)			// ポーズの開始位置X
-#define PAUSE_LEFT		(490.0f)			// ポーズの左端
-#define PAUSE_RIGHT		(790.0f)			// ポーズの右端
-#define PAUSE_MAEGIN	(20.0f)				// ポーズ背景分の余白
+#define PAUSE_MAEGIN	(125.0f)				// ポーズ背景分の余白
 #define PRESS_MAEGIN	(-15)				// トリガーとリピートの間隔をあける
 #define PRESS_INTERVAL	(20)				// リピートの時の間隔
-#define PAUSE_BG_ABOVE	(110.0f)			// ポーズ背景の上端
-#define PAUSE_BG_BELOW	(610.0f)			// ポーズ背景の下端
 #define VIBRATION_POWER	(500)				// バイブレーションの強度
 #define VIBRATION_TIME	(10)				// バイブレーションの継続時間
 
@@ -35,11 +28,11 @@ int g_selectPause = RESET_DATA;	// 選択されているポーズ状態
 
 const char* c_apFilenamePause[TEX_PAUSE] =
 {
-	"data\\TEXTURE\\pause000.png",	// ゲームに戻る
-	"data\\TEXTURE\\pause001.png",	// ゲームをやり直す
-	"data\\TEXTURE\\pause002.png",	// タイトル画面に戻る
-	"data\\TEXTURE\\pause100.png",	// ポーズメニューの背景
-	"data\\TEXTURE\\pause101.png",	// ポーズ背景を暗くする
+	"data\\TEXTURE\\pause\\pause000.png",	// ゲームに戻る
+	"data\\TEXTURE\\pause\\pause001.png",	// ゲームをやり直す
+	"data\\TEXTURE\\pause\\pause002.png",	// タイトル画面に戻る
+	"data\\TEXTURE\\pause\\pause100.png",	// ポーズメニューの背景
+	"data\\TEXTURE\\pause\\pause101.png",	// ポーズ背景を暗くする
 };
 
 //======================================================================================
@@ -72,10 +65,10 @@ void InitPause(void)
 	for (int nCntPause = 0; nCntPause < PAUSE_NUMBER; nCntPause++)
 	{
 		// 頂点座標の設定
-		pVtx[0].pos = D3DXVECTOR3(PAUSE_LEFT, (PAUSE_POS + nCntPause * PAUSE_SPACE) - PAUSE_SIZE, 0.0f);
-		pVtx[1].pos = D3DXVECTOR3(PAUSE_RIGHT, (PAUSE_POS + nCntPause * PAUSE_SPACE) - PAUSE_SIZE, 0.0f);
-		pVtx[2].pos = D3DXVECTOR3(PAUSE_LEFT, (PAUSE_POS + nCntPause * PAUSE_SPACE) + PAUSE_SIZE, 0.0f);
-		pVtx[3].pos = D3DXVECTOR3(PAUSE_RIGHT, (PAUSE_POS + nCntPause * PAUSE_SPACE) + PAUSE_SIZE, 0.0f);
+		pVtx[0].pos = D3DXVECTOR3(540.0f, (330.0f + nCntPause * 60.0f) - 30.0f, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(740.0f, (330.0f + nCntPause * 60.0f) - 30.0f, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(540.0f, (330.0f + nCntPause * 60.0f) + 30.0f, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(740.0f, (330.0f + nCntPause * 60.0f) + 30.0f, 0.0f);
 
 		// rhwの設定
 		pVtx[0].rhw = 1.0f;
@@ -100,10 +93,10 @@ void InitPause(void)
 
 	// ポーズ背景の設定
 	// 頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(PAUSE_LEFT - PAUSE_MAEGIN, PAUSE_BG_ABOVE, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(PAUSE_RIGHT + PAUSE_MAEGIN, PAUSE_BG_ABOVE, 0.0f);
-	pVtx[2].pos = D3DXVECTOR3(PAUSE_LEFT - PAUSE_MAEGIN, PAUSE_BG_BELOW, 0.0f);
-	pVtx[3].pos = D3DXVECTOR3(PAUSE_RIGHT + PAUSE_MAEGIN, PAUSE_BG_BELOW, 0.0f);
+	pVtx[0].pos = D3DXVECTOR3(510.0f, 360.0f - PAUSE_MAEGIN, 0.0f);
+	pVtx[1].pos = D3DXVECTOR3(770.0f, 360.0f - PAUSE_MAEGIN, 0.0f);
+	pVtx[2].pos = D3DXVECTOR3(510.0f, 360.0f + PAUSE_MAEGIN, 0.0f);
+	pVtx[3].pos = D3DXVECTOR3(770.0f, 360.0f + PAUSE_MAEGIN, 0.0f);
 
 	// rhwの設定
 	pVtx[0].rhw = 1.0f;
