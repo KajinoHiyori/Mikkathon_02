@@ -18,13 +18,13 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define MOVEMENT				(D3DXVECTOR3(1.0f, 1.0f, 1.0f))			// 移動量
+#define MOVEMENT				(D3DXVECTOR3(3.0f, 3.0f, 3.0f))			// 移動量
 #define ROT						(D3DXVECTOR3(0.05f, 0.05f, 0.05f))		// 向き移動量
 #define INERTIA_MOVE			(0.4f)									// 移動の慣性
 #define INERTIA_ANGLE			(0.1f)									// 角度の慣性
 #define MINUS_OIL				(0.05f)									// 燃料の減り方
 #define BREAK_OIL				(20.0f)									// 壊せる燃料の量
-#define AUTO_SPEED				(1.0f)									// 自動で進むスピード
+#define AUTO_SPEED				(3.0f)									// 自動で進むスピード
 #define HIGH_SPPED				(35.0f)									// スピードが速くなる
 #define LOW_SPPED				(70.0f)									// スピードが遅くなる
 #define FIRE_COUNT				(60)									// 火花の間隔
@@ -282,9 +282,6 @@ void UpdatePlayer(void)
 			}
 		}
 
-		SetEffect3D(3, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 8.0f), FIRST_POS, 0.0f, 7.0f, -1.0f, COLOR_RED, EFFECTTYPE_NORMAL);
-		SetEffect3D(3, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 8.0f), FIRST_POS, 0.0f, 7.0f, -1.0f, COLOR_ORANGE, EFFECTTYPE_NORMAL);
-
 		if (g_Player.fOil <= HIGH_SPPED)
 		{// 速い
 			g_Player.Speed.x = 1.5f;
@@ -311,6 +308,9 @@ void UpdatePlayer(void)
 		g_Player.move.x += (0.0f - g_Player.move.x) * INERTIA_MOVE;
 		g_Player.move.y += (0.0f - g_Player.move.y) * INERTIA_MOVE;
 		g_Player.move.z += (0.0f - g_Player.move.z) * INERTIA_MOVE;
+
+		SetEffect3D(1, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 10.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 7.0f, -1.0f, COLOR_RED, EFFECTTYPE_NORMAL, true, g_Player.pos);
+		SetEffect3D(1, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 10.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 7.0f, -1.0f, COLOR_ORANGE, EFFECTTYPE_NORMAL, true, g_Player.pos);
 
 		PrintDebugProc("プレイヤーのpos : ( %f %f %f )\n", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
 		PrintDebugProc("プレイヤーのmove : ( %f %f %f )\n", g_Player.move.x, g_Player.move.y, g_Player.move.z);
