@@ -21,7 +21,7 @@ typedef enum
 {
 	PATICLETYPE_NOMAL = 0,
 
-	PATICLETYPE_BLACKHOLE,
+	PATICLETYPE_HOLE,
 
 	PATICLETYPE_MAX
 
@@ -34,33 +34,28 @@ typedef struct
 {
 	// パーティクルの情報
 	D3DXVECTOR3 pos;				// 表示位置
-
+	D3DXVECTOR3 rot;				// 表示位置
 	D3DXVECTOR3 move;				// 移動量の蓄積
-
 	D3DXCOLOR col;					// 色
 
-	float fSpeedPaticle;			// パーティクルの移動速度
-	D3DXVECTOR3 fVecMoveParticle;	// パーティクルの移動方向
+	//float fSpeedPaticle;			// パーティクルの移動速度
+	//D3DXVECTOR3 fVecMoveParticle;	// パーティクルの移動方向
 
+	PATICLETYPE paticleType;		// パーティクルの種類
 	int nParticleValue;				// パーティクルの生成量
-	int nParticleLifeO;				// パーティクルの寿命(判定などに使う全体値)
-	int nParticleLifeV;				// パーティクルの寿命(寿命として減少させる値)
+	int nParticleLife;				// パーティクルの寿命(寿命として減少させる値)
 
 	// エフェクトの情報
+	EFFECTTYPE effecttype;			// エフェクトのテクスチャ
+
+	int nEffectLife;				// エフェクトの寿命
 	float fSpeedEffect;				// エフェクトの移動速度
 
 	float fEffectRadius;			// エフェクトの大きさ
 	float faddEffectRadius;			// エフェクトの大きさの加算量
 
-	int nEffectLife;				// エフェクトの寿命
-
-	EFFECTTYPE effecttype;			// エフェクトの用途
-	PATICLETYPE paticleType;
-
 	// 状態
 	bool bUse;						// 使用状況
-
-	int nParentIdx;					// 親のインデックス
 
 }Paticle3D;
 
@@ -76,7 +71,7 @@ int SetParticle3D				// 3Dパーティクルの設定処理
     D3DXVECTOR3 posP, D3DXCOLOR col, D3DXVECTOR3 vec,   // パーティクル(位置, 移動方向, 移動速度)
     float fSpeedE, int nLifeE,                          // エフェクト(移動速度, 寿命)
     float fRadiusE, float faddRadiusE,                  // エフェクト(大きさ, 大きさの加算量)
-    EFFECTTYPE effecttype,
+    EFFECTTYPE effecttype, PATICLETYPE paticletype,
 	int nParentIdx);                             // エフェクト(用途)
 
 void SetPosionParticle3D		             // 3Dパーティクルの位置設定処理

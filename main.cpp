@@ -328,7 +328,6 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	InitPlanet();
 
-	InitStage();
 
 	// ライトの初期化処理
 	InitLight();
@@ -347,6 +346,8 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	// 爆発の初期化処理
 	InitExplosion();
+	
+	InitStage();
 
 	// フェードの初期化
 	InitFade(MODE_TITLE, COLOR_BLACK);

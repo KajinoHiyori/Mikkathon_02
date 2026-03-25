@@ -264,14 +264,14 @@ void UpdatePlayer(void)
 
 		if (g_Player.bBreak == false)
 		{// ロケットの破壊エフェクト
-			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), FIRST_POS, 4.0f, 20, 2.0f, 0.0f, EFFECTTYPE_ROCKET, 0);
-			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 20, 2.0f, 0.0f, EFFECTTYPE_ROCKET, 0);
-			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 20, 2.0f, 0.0f, EFFECTTYPE_ROCKET, 0);
-			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.8f, 0.9f, 1.0f), FIRST_POS, 4.0f, 20, 2.0f, 0.0f, EFFECTTYPE_ROCKET, 0);
+			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), FIRST_POS, 4.0f, 20, 2.0f, 0.0f, EFFECTTYPE_ROCKET,PATICLETYPE_NOMAL, 0);
+			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 20, 2.0f, 0.0f, EFFECTTYPE_ROCKET,PATICLETYPE_NOMAL, 0);
+			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 20, 2.0f, 0.0f, EFFECTTYPE_ROCKET,PATICLETYPE_NOMAL, 0);
+			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.8f, 0.9f, 1.0f), FIRST_POS, 4.0f, 20, 2.0f, 0.0f, EFFECTTYPE_ROCKET,PATICLETYPE_NOMAL, 0);
 		}
 		else
 		{// 岩の破壊エフェクト
-			SetParticle3D(2, 5, g_Player.pos, D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f), FIRST_POS, 6.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCK, 0);
+			SetParticle3D(2, 5, g_Player.pos, D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f), FIRST_POS, 6.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCK, PATICLETYPE_NOMAL, 0);
 		}
 	}
 

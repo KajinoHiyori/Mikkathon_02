@@ -20,8 +20,8 @@ MODEL_FILENAME = data/Model/planet/planet_change.x		[4]惑星モデル(重量変
 MODEL_FILENAME = data/Model/planet/planet_repulsive.x	[5]惑星モデル(斥力惑星)
 MODEL_FILENAME = data/Model/planet/planet_mid.x			[6]惑星モデル(一般(引力：小)惑星)
 MODEL_FILENAME = data/Model/planet/planet_mid.x			[7]惑星モデル(一般(引力：中)惑星)
-MODEL_FILENAME = data/Model/planet/planet_mid.x			[8]惑星モデル(一般(引力：大)惑星)
-MODEL_FILENAME = data/Model/planet/planet_mid.x			[9]惑星モデル(ゴール惑星)
+MODEL_FILENAME = data/Model/planet/planet_big.x			[8]惑星モデル(一般(引力：大)惑星)
+MODEL_FILENAME = data/Model/planet/planet_goal.x		[9]惑星モデル(ゴール惑星)
 
 #===========================================================
 # 惑星の情報
@@ -50,7 +50,7 @@ SET_PLANETTYPE	# [2]ブラックホール惑星
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
 	RADIUS    = 300.0	# 効果範囲
-	ROTATION  = 0.0 0.0 0.0	# 回転速度
+	ROTATION  = 0.0 0.1 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [3]ホワイトホール惑星
@@ -58,7 +58,7 @@ SET_PLANETTYPE	# [3]ホワイトホール惑星
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
 	RADIUS    = 300.0	# 効果範囲
-	ROTATION  = 0.0 0.0 0.0	# 回転速度
+	ROTATION  = 0.0 0.1 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [4]重量変わる惑星

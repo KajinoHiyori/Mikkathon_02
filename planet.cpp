@@ -9,6 +9,8 @@
 #include "planet.h"
 #include "stage.h"
 
+#include "particle_3d.h"
+
 #include "debugproc.h"
 
 // マクロ定義 ==================================================
@@ -229,9 +231,16 @@ void SetPlanet(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 				break;
 
 			case PLANETTYPE_BLACKHOLE:	// ブラックホール惑星
+
+				SetParticle3D(10, -1, g_aPlanet[nCntPlanet].pos, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 7.0f, 10, 5.0f, -0.1f, EFFECTTYPE_NORMAL, PATICLETYPE_HOLE, -1);
+
 				break;
 
 			case PLANETTYPE_WHITEHOLE:	// ホワイトホール惑星
+
+				SetParticle3D(10, -1, g_aPlanet[nCntPlanet].pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 7.0f, 10, 0.0f, 0.5f, EFFECTTYPE_NORMAL, PATICLETYPE_HOLE, -1);
+
+
 				break;
 
 			case PLANETTYPE_CHANGE:		// 重力変わる惑星
