@@ -38,6 +38,7 @@ typedef struct
 	float fHitRadius;		// 当たり半径
 	float fGravity;			// 重力
 	float fRadius;			// 効果範囲
+	D3DXVECTOR3 addRot;		// 回転速度
 
 	bool bUse;				// 使用状態
 
@@ -50,7 +51,6 @@ typedef struct
 
 	D3DXVECTOR3 pos;		// 位置
 	D3DXVECTOR3 rot;		// 角度
-	D3DXVECTOR3 addRot;		// 加算角度
 
 	D3DXMATRIX mtxWorld;	// ワールドマトリックス
 
@@ -72,7 +72,7 @@ bool CollisionPlanet		// 惑星の当たり判定処理
 (D3DXVECTOR3* pPos, float fRadius);
 
 void SetLoadPlanetInfo		// 惑星のモデルの読み込み処理
-(int nIdxStage, float fHitRadius, float fGravity, float fRadius);
+(int nIdxStage, float fHitRadius, float fGravity, float fRadius, D3DXVECTOR3 addRot);
 
 
 

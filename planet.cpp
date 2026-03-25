@@ -37,6 +37,7 @@ void InitPlanet(void)
 			g_aPlanetInfo[nCntPlanetInfo].fHitRadius = 0.0f;	// 当たり半径を初期化
 			g_aPlanetInfo[nCntPlanetInfo].fGravity = 0.0f;		// 重力を初期化
 			g_aPlanetInfo[nCntPlanetInfo].fRadius = 0.0f;		// 半径を初期化
+			g_aPlanetInfo[nCntPlanetInfo].addRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 加算角度を初期化
 			g_aPlanetInfo[nCntPlanetInfo].bUse = false;			// 使用していない状態に設定
 		}
 
@@ -64,12 +65,12 @@ void UninitPlanet(void)
 //========================================================================
 void UpdatePlanet(void)
 {
-	for (int nCntPlanetInfo = 0; nCntPlanetInfo < MAX_TYPE_PLANETINFO; nCntPlanetInfo++)
+	for (int nCntPlanet = 0; nCntPlanet < MAX_TYPE_PLANETINFO; nCntPlanet++)
 	{
-		if (g_aPlanet[nCntPlanetInfo].bUse == true)
+		if (g_aPlanet[nCntPlanet].bUse == true)
 		{// 使用している場合
 
-			switch (g_aPlanet[nCntPlanetInfo].type)
+			switch (g_aPlanet[nCntPlanet].type)
 			{
 			case PLANETTYPE_ENERGY:		// エネルギー惑星
 				break;
@@ -101,6 +102,9 @@ void UpdatePlanet(void)
 			case PLANETTYPE_GOAL:		// ゴール
 				break;
 			}
+
+			// 角度を加算
+			g_aPlanet[nCntPlanet].rot += g_aPlanetInfo[g_aPlanet[nCntPlanet].type].addRot;
 		}
 	}
 }
@@ -181,7 +185,7 @@ void DrawPlanet(void)
 //========================================================================
 // 惑星のモデルの読み込み処理
 //========================================================================
-void SetLoadPlanetInfo(int nIdxStage, float fHitRadius, float fGravity, float fRadius)
+void SetLoadPlanetInfo(int nIdxStage, float fHitRadius, float fGravity, float fRadius, D3DXVECTOR3 addRot)
 {
 	// 惑星モデル情報の設定
 	for (int nCntModel = 0; nCntModel < MAX_TYPE_PLANETINFO; nCntModel++)
@@ -192,6 +196,7 @@ void SetLoadPlanetInfo(int nIdxStage, float fHitRadius, float fGravity, float fR
 			g_aPlanetInfo[nCntModel].fHitRadius = fHitRadius;		// 
 			g_aPlanetInfo[nCntModel].fGravity = fGravity;			// 
 			g_aPlanetInfo[nCntModel].fRadius = fRadius;				// 
+			g_aPlanetInfo[nCntModel].addRot = addRot;				// 
 			g_aPlanetInfo[nCntModel].bUse = true;					// 
 
 			break;
