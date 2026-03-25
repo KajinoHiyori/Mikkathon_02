@@ -70,7 +70,8 @@ void UninitAsteroid(void);
 void UpdateAsteroid(void);
 void DrawAsteroid(void);
 void SetAsteroid(ASTEROIDTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 move);
-void SetSarellite(D3DXVECTOR3 posParent, D3DXVECTOR3 move, float fRadius, float fMove);
+void SetSarellite(D3DXVECTOR3 posParent, D3DXVECTOR3 move, float fRadius, float fMove);		// fRadius‚Í‰q¯‚Æ˜f¯‚Æ‚Ì‹——£‹y‚ÑŒö“]‚Ì‹OÕ‚ğAfMove‚Í‰ñ“]‘¬“x‚ğŒˆ’è
+																							// ‚½‚¾‚µAŠp“x‚Å‚Ìİ’è‚È‚Ì‚Å‚©‚È‚è¬‚³‚¢’l‚ğ“ü‚ê‚é•K—v‚ª‚ ‚é
 Asteroid* GetAsteroid(int nIdx);
 Asteroid* GetAllAsteroid(void);
 bool CollisionAsteroid(D3DXVECTOR3 pos, bool bBreak);
