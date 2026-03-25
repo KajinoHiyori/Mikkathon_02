@@ -11,7 +11,7 @@
 #include "color.h"
 #include "player.h"
 #include "camera.h"
-
+#include "pause.h"
 #include "stage.h"
 #include "planet.h"
 #include "asteroid.h"
@@ -28,6 +28,8 @@
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
+bool g_bPause = false;	// ポーズ状態を管理
+bool g_bDisp = true;	// ポーズメニューの表示状態
 int g_nCounterGameState = 0;	// ゲームの状態管理カウンター
 GAMESTATE g_gameState = GAMESTATE_NONE;	// ゲームの状態を取得
 
@@ -39,9 +41,11 @@ void InitGame(void)
 	// プレイヤーの初期化処理
 	InitPlayer();
 
-	// 変数の初期化
+	// グローバル変数の初期化
 	g_gameState = GAMESTATE_EXPLANTATION;
 	g_nCounterGameState = 0;
+	g_bPause = false;
+	g_bDisp = true;
 
 	// プレイヤーの設定
 	SetPlayer(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -54,6 +58,9 @@ void InitGame(void)
 
 	// 小惑星の初期化
 	InitAsteroid();
+
+	// ポーズ状態の初期化
+	InitPause();
 }
 
 //=======================================================
@@ -61,7 +68,8 @@ void InitGame(void)
 //=======================================================
 void UninitGame(void)
 {
-
+	// ポーズ状態の終了処理
+	UninitPause();
 }
 
 //=======================================================
@@ -71,23 +79,43 @@ void UpdateGame(void)
 {
 	FADE fade = GetFade();
 
-	// プレイヤーの更新処理
-	UpdatePlayer();
+	// ポーズ機能
+	if ((GetKeyboardTrigger(DIK_P) == true || GetJoypadTrigger(JOYKEY_START) == true) && g_gameState != GAMESTATE_CLEAR && g_gameState != GAMESTATE_OVER)
+	{
+		SetPause(PAUSE_MENU_CONTINUE);
+		g_bPause = g_bPause ? false : true;
+	}
+	// ポーズの表示非表示
+	if (g_bPause == true && GetKeyboardTrigger(DIK_F4) == true)
+	{
+		g_bDisp = g_bDisp ? false : true;
+	}
 
-	// 小惑星の更新処理
-	UpdateAsteroid();
+	if (g_bPause == false)
+	{ // pause状態ではない
+		// プレイヤーの更新処理
+		UpdatePlayer();
 
-	// 燃料の更新処理
-	UpdateOil();
+		// 小惑星の更新処理
+		UpdateAsteroid();
 
-	// エフェクトの更新処理
-	UpdateEffect3D();
+		// 燃料の更新処理
+		UpdateOil();
 
-	// パーティクルの更新処理
-	UpdateParticle3D();
+		// エフェクトの更新処理
+		UpdateEffect3D();
 
-	// 爆発の更新処理
-	UpdateExplosion();
+		// パーティクルの更新処理
+		UpdateParticle3D();
+
+		// 爆発の更新処理
+		UpdateExplosion();
+	}
+	else if (g_bPause == true)
+	{ // pause状態
+		// ポーズの更新処理
+		UpdatePause();
+	}
 
 	if (GetKeyboardTrigger(DIK_SPACE) == true)
 	{
@@ -130,6 +158,20 @@ void DrawGame(void)
 
 	// 爆発の描画処理
 	DrawExplosion();
+
+	if (g_bDisp == true && g_bPause == true)
+	{
+		// ポーズの描画処理
+		DrawPause();
+	}
+}
+
+//======================================================================================
+// ポーズ状態の変更
+//======================================================================================
+void SetEnablePause(bool bPause)
+{
+	g_bPause = bPause;
 }
 
 //=======================================================

@@ -23,5 +23,6 @@ void UninitGame(void);
 void UpdateGame(void);
 void DrawGame(void);
 void SetGameState(GAMESTATE state, int nTime);	// nTimeはフェードするまでの継続時間でGAMESTATE_CLEAR, GAMESTATE_OVERの際にのみ指定が必要
+void SetEnablePause(bool bPause);
 GAMESTATE GetGAmeState(void);
 #endif
