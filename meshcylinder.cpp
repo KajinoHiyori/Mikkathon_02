@@ -204,6 +204,9 @@ void DrawMeshCylinder(void)
 				pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 			}
 
+			// ライトをオフにする
+			pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+
 			// ワールドマトリックスの初期化
 			D3DXMatrixIdentity(&g_aMeshCylinder[nCntMeshCylinder].mtxWorld);
 
@@ -248,6 +251,9 @@ void DrawMeshCylinder(void)
 			pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 			pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
 			pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
+
+			// ライトをオンにする
+			pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 		}
 	}
 }

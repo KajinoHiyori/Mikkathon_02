@@ -154,6 +154,9 @@ void DrawBG(void)
 	// 描画順を調整
 	pDevice->SetRenderState(D3DRS_ZENABLE, FALSE);
 
+	// ライトをオフにする
+	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+
 	// 頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(0, g_pVtxBuffBG, 0, sizeof(VERTEX_2D));
 
@@ -170,4 +173,7 @@ void DrawBG(void)
 
 	// 描画順を戻す
 	pDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
+
+	// ライトをオンにする
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
