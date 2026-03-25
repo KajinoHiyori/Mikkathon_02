@@ -70,6 +70,7 @@ void UninitPlanet(void);  	// ˜f¯‚ÌI—¹ˆ—
 void UpdatePlanet(void);  	// ˜f¯‚ÌXVˆ—
 void DrawPlanet(void);		// ˜f¯‚Ì•`‰æˆ—
 
+// İ’è
 void SetLoadPlanetInfo		// ˜f¯‚Ìƒ‚ƒfƒ‹‚Ì“Ç‚İ‚İˆ—
 (int nIdxStage, float fHitRadius, float fGravity, float fRadius, D3DXVECTOR3 addRot);
 
@@ -80,14 +81,19 @@ void SetPlanetInfo			// ˜f¯‚Ìİ’èî•ñ‚Ìİ’è
 void SetLayoutPlanet(void);	// ˜f¯‚Ì”z’uî•ñ‚©‚çİ’è
 
 
-void SetPlanet				// ˜f¯‚Ìİ’èˆ—
+void SetPlanet							// ˜f¯‚Ìİ’èˆ—
 (PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot);
 
-bool CollisionPlanet		// ˜f¯‚Ì“–‚½‚è”»’èˆ—
+// “–‚½‚è”»’è
+bool CollisionPlanet					// ˜f¯‚Ì“–‚½‚è”»’èˆ—
 (D3DXVECTOR3* pPos, float fRadius);
 
-Planet* GetPlanet(void);	// ˜f¯‚Ìî•ñ‚ğ•Ô‚·ˆ—
+// •Ô‚è’l
+PlanetModelInfo* GetPlanetInfo(void);	// ˜f¯ƒ‚ƒfƒ‹‚Ìî•ñ‚ğ•Ô‚·ˆ—
+float GetPlanetInfoHitRadius			// ˜f¯ƒ‚ƒfƒ‹‚Ì“–‚½‚è”¼Œa‚ğ•Ô‚·ˆ—
+(PLANETTYPE type);
 
-int GetNumPlanet(void);		// ˜f¯‚Ì‘”‚ğ•Ô‚·ˆ—
+Planet* GetPlanet(void);				// ˜f¯‚Ìî•ñ‚ğ•Ô‚·ˆ—
+int GetNumPlanet(void);					// ˜f¯‚Ì‘”‚ğ•Ô‚·ˆ—
 
 #endif
