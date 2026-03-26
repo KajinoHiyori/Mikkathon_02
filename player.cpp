@@ -490,7 +490,7 @@ void SetPlayer(D3DXVECTOR3 pos, D3DXVECTOR3 rot, PLAYERSTATE state)
 			g_Player.rot = D3DXVECTOR3(D3DX_PI * -0.5f, 0.0f, 0.0f);
 			g_Player.bClear = true;
 
-			SetPlanet(PLANETTYPE_GOAL, D3DXVECTOR3(0.0f, -210.0f, 0.0f), FIRST_POS);
+			SetPlanet(PLANETTYPE_GOAL, D3DXVECTOR3(0.0f, -520.0f, 0.0f), FIRST_POS);
 		}
 		else if (GetGAmeState() == GAMESTATE_OVER)
 		{// ゲームオーバー

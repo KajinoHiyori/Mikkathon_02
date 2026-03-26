@@ -204,7 +204,7 @@ void UpdateTitleUI(void)
 				{// ƒƒS‚ª‹K’è‚Ì‚‚³‚Ì‚Æ‚«‚ÉƒL[‚ª‰Ÿ‚³‚ê‚½‚ç
 					PlaySound(SE_ENTER);
 					g_aTitleUI[nCntTitleUI].state = TITLEUISTATE_BLINK;
-					g_aTitleUI[nCntTitleUI].nCounterState = WAIT_COUNT;
+					g_aTitleUI[nCntTitleUI].nCounterState = 30;
 				}
 
 				g_aTitleUI[nCntTitleUI].nCounterState++;
