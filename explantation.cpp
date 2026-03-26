@@ -250,7 +250,17 @@ void UpdateExplantation(void)
 
 	for (int nCntUI = 0; nCntUI < MAX_EXPLANTATION; nCntUI++)
 	{
-		SetExplantationDisp(nCntUI);
+		if (pPlayer->pos.z > g_aExplantation[nCntUI].pos.z)
+		{// UIのある場所を越したら消す
+			if (g_aExplantation[nCntUI].state != EXPLANTATIONSTATE_DISAPPEAR)
+			{// 一度だけ呼ぶ
+				SetExplantationDisappear(nCntUI);
+			}
+		}
+		else
+		{// プレイヤーの前方にあるものは表示しておく
+			SetExplantationDisp(nCntUI);
+		}
 
 		switch (g_aExplantation[nCntUI].state)
 		{

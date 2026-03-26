@@ -59,6 +59,7 @@ typedef struct
 #define POS__0000X			(D3DXVECTOR3(POS__000X0.x + NUM_WIDTH * 2, POS__X0000.y, 0.0f))	// 数字の表示位置[0000X]
 #define POS__DISTANCE		(D3DXVECTOR3(1040.0f, 50.0f, 0.0f))	// 距離の位置
 #define POS__LIGHTYEAR		(D3DXVECTOR3(1240.0f, 165.0f, 0.0f))	// 光年の位置
+#define MAX_PLANET			(256)	// 惑星の最大数
 
 // テクスチャの読み込み
 const char* c_apFilenameDistance[MAX_DISTANCE_TEX] =
@@ -240,7 +241,88 @@ void UninitDistance(void)
 //=======================================================
 void UpdateDistance(void)
 {
+	Planet* pPlanet = GetPlanet();
+	Player* pPlayer = GetPlayer();
 
+	for (int nCntPlanet = 0; nCntPlanet < MAX_PLANET; nCntPlanet++, pPlanet++)
+	{
+		if (pPlanet->bUse == false)
+		{ // 使用していない場合は処理を繰り返す
+			continue;
+		}
+
+		if (pPlanet->type != PLANETTYPE_GOAL)
+		{ // ゴールじゃない場合は処理を繰り返す
+			continue;
+		}
+
+		// ゴールとプレイヤーとの距離を判定
+		// 離れ具合を求める
+		float fWidth = pPlanet->pos.x - pPlayer->pos.x;
+		float fHeight = pPlanet->pos.y - pPlayer->pos.y;
+		float fDipth = pPlanet->pos.z - pPlayer->pos.z;
+		// XZの距離を求める
+		float fLengthXZ = sqrtf(fWidth * fWidth + fDipth * fDipth);
+		// 対象との距離を求める
+		float fDestLength = sqrtf(fLengthXZ * fLengthXZ + fHeight * fHeight);
+
+		// テクスチャの幅を決定
+		g_aDistance[0].fTexX = (float)((int)fDestLength % 100000 / 10000);
+		g_aDistance[1].fTexX = (float)((int)fDestLength % 10000 / 1000);
+		g_aDistance[2].fTexX = (float)((int)fDestLength % 1000 / 100);
+		g_aDistance[3].fTexX = (float)((int)fDestLength % 100 / 10);
+		g_aDistance[4].fTexX = (float)((int)fDestLength % 10 / 1);
+
+		break;
+	}
+
+	VERTEX_2D* pVtx;					// 頂点情報へのポインタ
+	// 頂点バッファをロックし、頂点情報へのポインタを取得
+	g_pVtxBuffDistance->Lock(0, 0, (void**)&pVtx, 0);
+
+	for (int nCntDistance = 0; nCntDistance < MAX_DISP; nCntDistance++, pVtx += 4)
+	{
+		// 頂点座標の設定
+
+		pVtx[0].pos = D3DXVECTOR3(g_aDistance[nCntDistance].pos.x - g_aDistance[nCntDistance].fWidth, g_aDistance[nCntDistance].pos.y - g_aDistance[nCntDistance].fHeight, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(g_aDistance[nCntDistance].pos.x + g_aDistance[nCntDistance].fWidth, g_aDistance[nCntDistance].pos.y - g_aDistance[nCntDistance].fHeight, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(g_aDistance[nCntDistance].pos.x - g_aDistance[nCntDistance].fWidth, g_aDistance[nCntDistance].pos.y + g_aDistance[nCntDistance].fHeight, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(g_aDistance[nCntDistance].pos.x + g_aDistance[nCntDistance].fWidth, g_aDistance[nCntDistance].pos.y + g_aDistance[nCntDistance].fHeight, 0.0f);
+
+		// rhwの設定
+		pVtx[0].rhw = 1.0f;
+		pVtx[1].rhw = 1.0f;
+		pVtx[2].rhw = 1.0f;
+		pVtx[3].rhw = 1.0f;
+
+		// 頂点カラーの設定
+		pVtx[0].col = COLOR_WHITE;
+		pVtx[1].col = COLOR_WHITE;
+		pVtx[2].col = COLOR_WHITE;
+		pVtx[3].col = COLOR_WHITE;
+
+		switch (g_aDistance[nCntDistance].tex)
+		{
+		case DISTANCETEX_NUMBER:	// 数字
+			// テクスチャ座標の設定
+			pVtx[0].tex = D3DXVECTOR2(g_aDistance[nCntDistance].fTexX * 0.1f, 0.0f);
+			pVtx[1].tex = D3DXVECTOR2(g_aDistance[nCntDistance].fTexX * 0.1f + 0.1f, 0.0f);
+			pVtx[2].tex = D3DXVECTOR2(g_aDistance[nCntDistance].fTexX * 0.1f, 1.0f);
+			pVtx[3].tex = D3DXVECTOR2(g_aDistance[nCntDistance].fTexX * 0.1f + 0.1f, 1.0f);
+			break;
+
+		default:
+			// テクスチャ座標の設定
+			pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
+			pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
+			pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
+			pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
+			break;
+		}
+	}
+
+	// 頂点バッファをアンロックする
+	g_pVtxBuffDistance->Unlock();
 }
 
 //=======================================================

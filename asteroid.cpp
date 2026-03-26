@@ -447,6 +447,7 @@ Asteroid* GetAllAsteroid(void)
 bool CollisionAsteroid(D3DXVECTOR3 pos, bool bBreak)
 {
 	Player* pPlayer = GetPlayer();
+	GAMESTATE gameState = GetGAmeState();
 
 	for (int nCntAsteroid = 0; nCntAsteroid < MAX_ASTEROID; nCntAsteroid++)
 	{
@@ -476,7 +477,11 @@ bool CollisionAsteroid(D3DXVECTOR3 pos, bool bBreak)
 			{ // ”j‰óƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚È‚¢
 				pPlayer->bUse = false;
 				PlaySound(SE_BOMB);
-				SetGameState(GAMESTATE_OVER, 60);
+
+				if (gameState == GAMESTATE_NONE)
+				{
+					SetGameState(GAMESTATE_OVER, 60);
+				}
 			}
 			PrintDebugProc("“–‚½‚Á‚Ä‚¢‚é\n");
 			return true;
