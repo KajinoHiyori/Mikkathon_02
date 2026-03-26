@@ -269,7 +269,7 @@ void SetPlanetParticle3D(PLANETTYPE type, D3DXVECTOR3 pos, float fGravity)
 	switch (type)
 	{
 	case PLANETTYPE_ENERGY:		// エネルギー惑星
-		SetParticle3D(2, -1, pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1.0f, 50, 4.0f, 0.0f,
+		SetParticle3D(2, -1, pos, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1.0f, 50, 4.0f, 0.0f,
 			EFFECTTYPE_NORMAL, PATICLETYPE_HOMING, 0, true, pos, fSpeed);
 
 		SetParticle3D(2, -1, pos, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 30, 6.0f, 0.0f,
@@ -278,49 +278,49 @@ void SetPlanetParticle3D(PLANETTYPE type, D3DXVECTOR3 pos, float fGravity)
 		break;
 
 	case PLANETTYPE_ASTEROID:	// 小惑星付き惑星
-		SetParticle3D(2, -1, pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1.0f, 50, 4.0f, 0.0f,
+		SetParticle3D(2, -1, pos, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1.0f, 50, 4.0f, 0.0f,
 			EFFECTTYPE_NORMAL, PATICLETYPE_HOMING, 0, true, pos, fSpeed);
 
 		break;
 
 	case PLANETTYPE_BLACKHOLE:	// ブラックホール惑星
-		SetParticle3D(3, -1, pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3.0f, 50, 6.0f, 0.0f,
+		SetParticle3D(3, -1, pos, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3.0f, 50, 6.0f, 0.0f,
 			EFFECTTYPE_NORMAL, PATICLETYPE_HOMING, 0, true, pos, fSpeed);
 
 		break;
 
 	case PLANETTYPE_WHITEHOLE:	// ホワイトホール惑星
-		SetParticle3D(1, -1, pos, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 2.0f, 100, 4.0f, 0.0f,
+		SetParticle3D(1, -1, pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 2.0f, 100, 4.0f, 0.0f,
 			EFFECTTYPE_NORMAL, PATICLETYPE_NOMAL, 0, false, pos, fSpeed);
 
 		break;
 
 	case PLANETTYPE_CHANGE:		// 重力変わる惑星
-		SetParticle3D(2, TIMEWAIT_CHANGE, pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1.0f, 50, 4.0f, 0.0f,
+		SetParticle3D(2, TIMEWAIT_CHANGE, pos, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1.0f, 50, 4.0f, 0.0f,
 			EFFECTTYPE_NORMAL, PATICLETYPE_HOMING, 0, true, pos, fSpeed);
 
 		break;
 
 	case PLANETTYPE_REPULSIVE:	// 斥力惑星	
-		SetParticle3D(1, -1, pos, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3.0f, 100, 4.0f, 0.0f,
+		SetParticle3D(1, -1, pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3.0f, 100, 4.0f, 0.0f,
 			EFFECTTYPE_NORMAL, PATICLETYPE_NOMAL, 0, false, pos, fSpeed);
 
 		break;
 
 	case PLANETTYPE_SMALL:		// 一般(引力：小)惑星
-		SetParticle3D(2, -1, pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1.0f, 50, 4.0f, 0.0f,
+		SetParticle3D(2, -1, pos, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1.0f, 50, 4.0f, 0.0f,
 			EFFECTTYPE_NORMAL, PATICLETYPE_HOMING, 0, true, pos, fSpeed);
 
 		break;
 
 	case PLANETTYPE_MID:		// 一般(引力：中)惑星
-		SetParticle3D(2, -1, pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 2.0f, 50, 4.0f, 0.0f,
+		SetParticle3D(2, -1, pos, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 2.0f, 50, 4.0f, 0.0f,
 			EFFECTTYPE_NORMAL, PATICLETYPE_HOMING, 0, true, pos, fSpeed);
 
 		break;
 
 	case PLANETTYPE_BIG:		// 一般(引力：大)惑星
-		SetParticle3D(2, -1, pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 2.0f, 50, 6.0f, 0.0f,
+		SetParticle3D(2, -1, pos, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 2.0f, 50, 6.0f, 0.0f,
 			EFFECTTYPE_NORMAL, PATICLETYPE_HOMING, 0, true, pos, fSpeed);
 
 		break;
