@@ -272,6 +272,9 @@ void SetPlanetParticle3D(PLANETTYPE type, D3DXVECTOR3 pos, float fGravity)
 		SetParticle3D(2, -1, pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1.0f, 50, 4.0f, 0.0f,
 			EFFECTTYPE_NORMAL, PATICLETYPE_HOMING, 0, true, pos, fSpeed);
 
+		SetParticle3D(2, -1, pos, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 30, 6.0f, 0.0f,
+			EFFECTTYPE_DIAMOND, PATICLETYPE_HOMING, 0, false, pos, fSpeed);
+
 		break;
 
 	case PLANETTYPE_ASTEROID:	// è¨òfêØïtÇ´òfêØ

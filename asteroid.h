@@ -9,7 +9,7 @@
 #include "main.h"
 
 // ƒ}ƒNƒ’è‹`
-#define MAX_ASTEROID	(1024)	// ¬˜f¯‚ÌÅ‘å”
+#define MAX_ASTEROID	(2048)	// ¬˜f¯‚ÌÅ‘å”
 
 // ¬˜f¯‚Ìí—Ş
 typedef enum

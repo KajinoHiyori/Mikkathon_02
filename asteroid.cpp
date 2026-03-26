@@ -471,13 +471,11 @@ bool CollisionAsteroid(D3DXVECTOR3 pos, bool bBreak)
 			{ // ”j‰óƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚é
 				g_aAsteroid[nCntAsteroid].bUse = false;
 				PlaySound(SE_ROCKBREAK);
-				SetVibration(50000, 50000, 10);
 			}
 			else if (bBreak == false)
 			{ // ”j‰óƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚È‚¢
 				pPlayer->bUse = false;
 				PlaySound(SE_BOMB);
-				SetVibration(50000, 50000, 120);
 				SetGameState(GAMESTATE_OVER, 60);
 			}
 			PrintDebugProc("“–‚½‚Á‚Ä‚¢‚é\n");

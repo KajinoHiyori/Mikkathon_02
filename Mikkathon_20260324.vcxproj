@@ -151,6 +151,7 @@
     <ClCompile Include="bg.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="debugproc.cpp" />
+    <ClCompile Include="distance.cpp" />
     <ClCompile Include="effect_3d.cpp" />
     <ClCompile Include="explantation.cpp" />
     <ClCompile Include="explosion.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="result_ui.cpp" />
+    <ClCompile Include="screen.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="title.cpp" />
@@ -179,6 +181,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="debugproc.h" />
+    <ClInclude Include="distance.h" />
     <ClInclude Include="effect_3d.h" />
     <ClInclude Include="explantation.h" />
     <ClInclude Include="explosion.h" />
@@ -196,6 +199,7 @@
     <ClInclude Include="player.h" />
     <ClInclude Include="result.h" />
     <ClInclude Include="result_ui.h" />
+    <ClInclude Include="screen.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="title.h" />

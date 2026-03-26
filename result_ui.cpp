@@ -174,7 +174,7 @@ void DrawResultUI(void)
 			pDevice->SetTexture(0, g_apTextureResultUI[0]);
 		}
 		else if (GetGAmeState() == GAMESTATE_OVER)
-		{// ゲームクリア
+		{// ゲームオーバー
 			pDevice->SetTexture(0, g_apTextureResultUI[1]);
 		}
 
