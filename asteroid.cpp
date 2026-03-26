@@ -11,17 +11,32 @@
 #include "debugproc.h"
 #include "player.h"
 #include "sound.h"
+#include "game.h"
 
-// マクロ定義
+// マクロ定義=====================================================================================================================================================
 #define MAX_ASTEROIDTEXTURE	(16)	// 小惑星のテクスチャ数
 #define ASTEROID_MODELPATH	("data\\MODEL\\asteroid000.x")	// 小惑星のモデルパス
-#define RAND_HEIGHT			((float)(rand() % (int)(g_aAsteroid[nCntAsteroid].fRadius * 0.5f) - g_aAsteroid[nCntAsteroid].fRadius * 0.25f))
-#define RAND_ANGLE			((float)(rand() % 629 - 314) / 100.0f)
+#define RAND_HEIGHT			((float)(rand() % (int)(g_aAsteroid[nCntAsteroid].fRadius * 0.5f) - g_aAsteroid[nCntAsteroid].fRadius * 0.25f))	// 惑星配置の高度
+#define RAND_ANGLE			((float)(rand() % 629 - 314) / 100.0f)	// 角度のランダム値
 #define ASTEROID_KEY		(120)	// キー数
 #define FLOATING			(0.5f)	// 移動間隔
 #define ROTATE				(0.05f)	// 回転速度
-#define ASTEROID_HEIGHT		(30.0f)	// 小惑星の高さ
-#define ASTEROID_SIZE		(30.0f)	// 小惑星の大きさ
+#define ASTEROID_HEIGHT		(20.0f)	// 小惑星の高さ
+#define ASTEROID_SIZE		(20.0f)	// 小惑星の大きさ
+#define MAX_PLANET			(256)	// 惑星の総数
+#define PLANET_SIZE			(50.0f)	// 惑星の大きさ
+#define INIT_VECTOR3		(D3DXVECTOR3(0.0f, 0.0f, 0.0f))	// D3DXVECTOR3の初期化
+// ランダム配置用マクロ定義
+#define GAME_LINE		(1000)	// ゲーム開始座標[int]
+#define END_LINE		(20000)	// ゴールライン[int]
+#define AREA_DEPTH		(1000)	// 惑星のランダムの奥行き
+#define AREA_SIZE		(1200)	// 小惑星の配置範囲
+#define MAX_DEPTH		(END_LINE / GAME_LINE + 1)	// 小惑星配置範囲
+#define AREA_ASTEROID	(40)	// 区間ごとに配置される小惑星の総数
+#define RAND_X			((float)(rand() % AREA_SIZE - AREA_SIZE/2))	// 小惑星のランダム配置X
+#define RAND_Y			((float)(rand() % AREA_SIZE - AREA_SIZE/2))	// 小惑星のランダム配置Y
+#define RAND_Z			((float)(rand() % AREA_DEPTH) + nCntDepth * AREA_DEPTH + GAME_LINE)	// 小惑星のランダム配置Z
+#define ASTEROID_RAND	(D3DXVECTOR3(RAND_X, RAND_Y, RAND_Z))	// 小惑星のランダム配置座標
 
 // 小惑星のモデル情報
 typedef struct
@@ -68,10 +83,10 @@ void InitAsteroid(void)
 	for (int nCntAsteroid = 0; nCntAsteroid < MAX_ASTEROID; nCntAsteroid++)
 	{
 		g_aAsteroid[nCntAsteroid].type			= ASTEROIDTYPE_NONE;				// 小惑星の種類
-		g_aAsteroid[nCntAsteroid].pos			= D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 位置
-		g_aAsteroid[nCntAsteroid].posParent		= D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 親の位置
-		g_aAsteroid[nCntAsteroid].move			= D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 移動量
-		g_aAsteroid[nCntAsteroid].rot			= D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 回転方向
+		g_aAsteroid[nCntAsteroid].pos			= INIT_VECTOR3;	// 位置
+		g_aAsteroid[nCntAsteroid].posParent		= INIT_VECTOR3;	// 親の位置
+		g_aAsteroid[nCntAsteroid].move			= INIT_VECTOR3;	// 移動量
+		g_aAsteroid[nCntAsteroid].rot			= INIT_VECTOR3;	// 回転方向
 		g_aAsteroid[nCntAsteroid].fRadius		= 0.0f;		// 親惑星との距離
 		g_aAsteroid[nCntAsteroid].fMove			= 0.0f;		// 移動方向
 		g_aAsteroid[nCntAsteroid].fAngle		= 0.0f;		// 回転度数
@@ -87,8 +102,8 @@ void InitAsteroid(void)
 		g_aAsteroid[nCntAsteroid].nNumKey		= ASTEROID_KEY;		// 浮遊間隔を管理
 	}
 
-	SetAsteroid(ASTEROIDTYPE_FLOATING, D3DXVECTOR3(0.0f, 0.0f, 2000.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
+	// 小惑星のランダム配置処理
+	SetRandomAsteroid();
 }
 
 //=======================================================
@@ -119,29 +134,6 @@ void UninitAsteroid(void)
 			g_asteroidModel.apTexture[nCntPlayer] = NULL;
 		}
 	}
-
-	// 小惑星構造体の初期化
-	for (int nCntAsteroid = 0; nCntAsteroid < MAX_ASTEROID; nCntAsteroid++)
-	{
-		g_aAsteroid[nCntAsteroid].type = ASTEROIDTYPE_NONE;				// 小惑星の種類
-		g_aAsteroid[nCntAsteroid].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 位置
-		g_aAsteroid[nCntAsteroid].posParent = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 親の位置
-		g_aAsteroid[nCntAsteroid].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 移動量
-		g_aAsteroid[nCntAsteroid].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 回転方向
-		g_aAsteroid[nCntAsteroid].fRadius = 0.0f;		// 親惑星との距離
-		g_aAsteroid[nCntAsteroid].fMove = 0.0f;		// 移動方向
-		g_aAsteroid[nCntAsteroid].fAngle = 0.0f;		// 回転度数
-		g_aAsteroid[nCntAsteroid].nIdx = -1;		// インデックス
-		g_aAsteroid[nCntAsteroid].bUse = false;	// 使用状態
-		// 演出面
-		g_aAsteroid[nCntAsteroid].floatingX = FLOATINGX_ADD;	// 浮遊状態[X]
-		g_aAsteroid[nCntAsteroid].floatingY = FLOATINGY_ADD;	// 浮遊状態[Y]
-		g_aAsteroid[nCntAsteroid].floatingZ = FLOATINGZ_ADD;	// 浮遊状態[Z]
-		g_aAsteroid[nCntAsteroid].nKeyX = 0;				// 浮遊時間[X]
-		g_aAsteroid[nCntAsteroid].nKeyY = 0;				// 浮遊時間[Y]
-		g_aAsteroid[nCntAsteroid].nKeyZ = 0;				// 浮遊時間[Z]
-		g_aAsteroid[nCntAsteroid].nNumKey = ASTEROID_KEY;		// 浮遊間隔を管理
-	}
 }
 
 //=======================================================
@@ -149,6 +141,7 @@ void UninitAsteroid(void)
 //=======================================================
 void UpdateAsteroid(void)
 {
+	int nNum = 0;
 	for (int nCntAsteroid = 0; nCntAsteroid < MAX_ASTEROID; nCntAsteroid++)
 	{
 		if (g_aAsteroid[nCntAsteroid].bUse == false)
@@ -157,7 +150,7 @@ void UpdateAsteroid(void)
 		}
 
 		float fMove = 0.0f;	// 衛星の回転量を追加
-
+		nNum++;	// 使用数をカウント
 		// 小惑星の種類ごとの処理
 		switch (g_aAsteroid[nCntAsteroid].type)
 		{
@@ -254,9 +247,9 @@ void UpdateAsteroid(void)
 		g_aAsteroid[nCntAsteroid].rot.x += ROTATE;
 		g_aAsteroid[nCntAsteroid].rot.y += ROTATE;
 		g_aAsteroid[nCntAsteroid].rot.z += ROTATE;
-
-		PrintDebugProc("小惑星の位置 (%f, %f, %f)\n", g_aAsteroid[nCntAsteroid].pos.x, g_aAsteroid[nCntAsteroid].pos.y, g_aAsteroid[nCntAsteroid].pos.z);
 	}
+
+	PrintDebugProc("使用数 %d\n", nNum);
 }
 
 //=======================================================
@@ -319,6 +312,31 @@ void DrawAsteroid(void)
 //=======================================================
 void SetAsteroid(ASTEROIDTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 move)
 {
+	Planet* pPlanet = GetPlanet();
+	for (int nCntPlanet = 0; nCntPlanet < MAX_PLANET; nCntPlanet++, pPlanet++)
+	{
+		if (pPlanet->bUse == false)
+		{
+			continue;
+		}
+
+		float fDistance = 0.0f;	// 距離を格納
+		bool bHeight = false;	// 高度内にいるかを判定
+		// 2点間の距離を求める
+		fDistance = sqrtf(((pos.x - pPlanet->pos.x) * (pos.x - pPlanet->pos.x)) + ((pos.z - pPlanet->pos.z) * (pos.z - pPlanet->pos.z))) * 0.5f;
+		// 高度の判定を行う
+		if (pos.y <= pPlanet->pos.y + PLANET_SIZE && pos.y >= pPlanet->pos.y - PLANET_SIZE)
+		{ // 一定高度に収まっている場合フラグを立てる
+			bHeight = true;
+		}
+
+		// すぐ近くに惑星がある場合、小惑星を配置しない
+		if (bHeight == true && fDistance <= ASTEROID_SIZE)
+		{
+			return;
+		}
+	}
+
 	for (int nCntAsteroid = 0; nCntAsteroid < MAX_ASTEROID; nCntAsteroid++)
 	{
 		if (g_aAsteroid[nCntAsteroid].bUse == true)
@@ -326,14 +344,14 @@ void SetAsteroid(ASTEROIDTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 move)
 			continue;
 		}
 		// 各種情報を格納
-		g_aAsteroid[nCntAsteroid].type		= type;								// 小惑星の種類
-		g_aAsteroid[nCntAsteroid].pos		= pos;								// 位置
-		g_aAsteroid[nCntAsteroid].posParent = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 親の位置
-		g_aAsteroid[nCntAsteroid].move		= move;								// 移動量
-		g_aAsteroid[nCntAsteroid].rot		= D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 回転方向
-		g_aAsteroid[nCntAsteroid].fRadius	= 0.0f;		// 親惑星との距離
-		g_aAsteroid[nCntAsteroid].fMove		= 0.0f;		// 移動方向
-		g_aAsteroid[nCntAsteroid].fAngle = 0.0f;		// 回転度数
+		g_aAsteroid[nCntAsteroid].type		= type;			// 小惑星の種類
+		g_aAsteroid[nCntAsteroid].pos		= pos;			// 位置
+		g_aAsteroid[nCntAsteroid].posParent = INIT_VECTOR3;	// 親の位置
+		g_aAsteroid[nCntAsteroid].move		= move;			// 移動量
+		g_aAsteroid[nCntAsteroid].rot		= INIT_VECTOR3;	// 回転方向
+		g_aAsteroid[nCntAsteroid].fRadius	= 0.0f;			// 親惑星との距離
+		g_aAsteroid[nCntAsteroid].fMove		= 0.0f;			// 移動方向
+		g_aAsteroid[nCntAsteroid].fAngle = 0.0f;			// 回転度数
 		g_aAsteroid[nCntAsteroid].nIdx		= nCntAsteroid;	// インデックス
 		g_aAsteroid[nCntAsteroid].bUse		= true;			// 使用状態
 		// 演出面
@@ -360,15 +378,15 @@ void SetSarellite(D3DXVECTOR3 posParent, D3DXVECTOR3 move, float fRadius, float 
 			continue;
 		}
 		// 各種情報を格納
-		g_aAsteroid[nCntAsteroid].type = ASTEROIDTYPE_SARELLITE;		// 小惑星の種類
-		g_aAsteroid[nCntAsteroid].posParent = posParent;				// 親の位置
-		g_aAsteroid[nCntAsteroid].move = move;							// 移動量
-		g_aAsteroid[nCntAsteroid].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 回転方向
-		g_aAsteroid[nCntAsteroid].fRadius = fRadius;	// 親惑星との距離
-		g_aAsteroid[nCntAsteroid].fMove = fMove;		// 移動方向
-		g_aAsteroid[nCntAsteroid].fAngle = RAND_ANGLE;		// 回転度数
-		g_aAsteroid[nCntAsteroid].nIdx = nCntAsteroid;	// インデックス
-		g_aAsteroid[nCntAsteroid].bUse = true;			// 使用状態
+		g_aAsteroid[nCntAsteroid].type = ASTEROIDTYPE_SARELLITE;	// 小惑星の種類
+		g_aAsteroid[nCntAsteroid].posParent = posParent;			// 親の位置
+		g_aAsteroid[nCntAsteroid].move = move;						// 移動量
+		g_aAsteroid[nCntAsteroid].rot = INIT_VECTOR3;				// 回転方向
+		g_aAsteroid[nCntAsteroid].fRadius = fRadius;				// 親惑星との距離
+		g_aAsteroid[nCntAsteroid].fMove = fMove;					// 移動方向
+		g_aAsteroid[nCntAsteroid].fAngle = RAND_ANGLE;				// 回転度数
+		g_aAsteroid[nCntAsteroid].nIdx = nCntAsteroid;				// インデックス
+		g_aAsteroid[nCntAsteroid].bUse = true;						// 使用状態
 		g_aAsteroid[nCntAsteroid].pos = D3DXVECTOR3(posParent.x + sinf(g_aAsteroid[nCntAsteroid].fAngle) * g_aAsteroid[nCntAsteroid].fRadius, posParent.y + RAND_HEIGHT, posParent.z + cosf(g_aAsteroid[nCntAsteroid].fAngle) * g_aAsteroid[nCntAsteroid].fRadius);	// 位置
 
 		// 演出面
@@ -417,7 +435,6 @@ bool CollisionAsteroid(D3DXVECTOR3 pos, bool bBreak)
 		bool bHeight = false;	// 高度内にいるかを判定
 		// 2点間の距離を求める
 		fDistance = sqrtf(((pos.x - g_aAsteroid[nCntAsteroid].pos.x) * (pos.x - g_aAsteroid[nCntAsteroid].pos.x)) + ((pos.z - g_aAsteroid[nCntAsteroid].pos.z) * (pos.z - g_aAsteroid[nCntAsteroid].pos.z))) * 0.5f;
-		PrintDebugProc("2点間の距離 %f\n", fDistance);
 		// 高度の判定を行う
 		if (pos.y <= g_aAsteroid[nCntAsteroid].pos.y + ASTEROID_HEIGHT && pos.y >= g_aAsteroid[nCntAsteroid].pos.y - ASTEROID_HEIGHT)
 		{ // 一定高度に収まっている場合フラグを立てる
@@ -435,10 +452,26 @@ bool CollisionAsteroid(D3DXVECTOR3 pos, bool bBreak)
 			{ // 破壊フラグが立っていない
 				pPlayer->bUse = false;
 				PlaySound(SE_BOMB);
+				SetGameState(GAMESTATE_OVER, 20);
 			}
 			PrintDebugProc("当たっている\n");
 			return true;
 		}
 	}
 	return false;
+}
+
+//=======================================================
+// 小惑星のランダム配置処理
+//=======================================================
+void SetRandomAsteroid(void)
+{
+	for (int nCntDepth = 0; nCntDepth < MAX_DEPTH; nCntDepth++)
+	{
+		for (int nCntArea = 0; nCntArea < AREA_ASTEROID; nCntArea++)
+		{
+			// 小惑星を配置
+			SetAsteroid(ASTEROIDTYPE_FLOATING, ASTEROID_RAND, INIT_VECTOR3);
+		}
+	}
 }
