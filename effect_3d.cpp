@@ -16,7 +16,7 @@
 
 // マクロ定義 ==================================================
 
-#define MAX_SET_EFFECT3D		(7000)							// エフェクトの最大数
+#define MAX_SET_EFFECT3D		(10000)							// エフェクトの最大数
 
 #define EFFECT_INERTIA			(0.017f)						// 慣性
 
@@ -91,7 +91,10 @@ void InitEffect3D(void)
 	// テクスチャの読み込み
 	for (int nCntTexture = 0; nCntTexture < EFFECTTYPE_MAX; nCntTexture++)
 	{
-		D3DXCreateTextureFromFile(pDevice, c_apFilernamaEffect[nCntTexture], &g_pTextureEffect3D[nCntTexture]);
+		if (g_pTextureEffect3D[nCntTexture] == NULL)
+		{// NULLだったら読み込み
+			D3DXCreateTextureFromFile(pDevice, c_apFilernamaEffect[nCntTexture], &g_pTextureEffect3D[nCntTexture]);
+		}
 	}
 
 	// エフェクト情報の初期化
@@ -119,51 +122,54 @@ void InitEffect3D(void)
 
 	//g_nNumEffect3D = 0;
 
-	// 頂点バッファの生成
-	pDevice->CreateVertexBuffer(sizeof(VERTEX_3D) * 4 * MAX_SET_EFFECT3D,
-		D3DUSAGE_WRITEONLY,
-		FVF_VERTEX_3D,
-		D3DPOOL_MANAGED,
-		&g_pVtxBuffEffect3D,
-		NULL);
+	if (g_pVtxBuffEffect3D == NULL)
+	{// NULLだったら生成
+		// 頂点バッファの生成
+		pDevice->CreateVertexBuffer(sizeof(VERTEX_3D) * 4 * MAX_SET_EFFECT3D,
+			D3DUSAGE_WRITEONLY,
+			FVF_VERTEX_3D,
+			D3DPOOL_MANAGED,
+			&g_pVtxBuffEffect3D,
+			NULL);
 
-	VERTEX_3D* pVtx;	// 頂点情報へのポインタを宣言
+		VERTEX_3D* pVtx;	// 頂点情報へのポインタを宣言
 
-	// ▼頂点バッファをロックして頂点情報へのポインタを所得
-	g_pVtxBuffEffect3D->Lock(0, 0, (void**)&pVtx, 0);
+		// ▼頂点バッファをロックして頂点情報へのポインタを所得
+		g_pVtxBuffEffect3D->Lock(0, 0, (void**)&pVtx, 0);
 
-	for (nCntEffect = 0; nCntEffect < MAX_SET_EFFECT3D; nCntEffect++)
-	{// 用意した数、繰り返し設定
+		for (nCntEffect = 0; nCntEffect < MAX_SET_EFFECT3D; nCntEffect++)
+		{// 用意した数、繰り返し設定
 
-		// 頂点座標の設定
-		pVtx[0].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// (X,Y,Z)	
-		pVtx[1].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// (X,Y,Z)	
-		pVtx[2].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// (X,Y,Z)	
-		pVtx[3].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// (X,Y,Z)	
+			// 頂点座標の設定
+			pVtx[0].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// (X,Y,Z)	
+			pVtx[1].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// (X,Y,Z)	
+			pVtx[2].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// (X,Y,Z)	
+			pVtx[3].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// (X,Y,Z)	
 
-		// 法線ベクトル(向き)の設定
-		pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);		// (X,Y,Z)										
-		pVtx[1].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);		// (X,Y,Z)									
-		pVtx[2].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);		// (X,Y,Z)									
-		pVtx[3].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);		// (X,Y,Z)									
+			// 法線ベクトル(向き)の設定
+			pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);		// (X,Y,Z)										
+			pVtx[1].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);		// (X,Y,Z)									
+			pVtx[2].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);		// (X,Y,Z)									
+			pVtx[3].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);		// (X,Y,Z)									
 
-		// 頂点カラーの設定
-		pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 255);	// (R, G, B, A)
-		pVtx[1].col = D3DCOLOR_RGBA(255, 255, 255, 255);	// (R, G, B, A)
-		pVtx[2].col = D3DCOLOR_RGBA(255, 255, 255, 255);	// (R, G, B, A)
-		pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 255);	// (R, G, B, A)
+			// 頂点カラーの設定
+			pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 255);	// (R, G, B, A)
+			pVtx[1].col = D3DCOLOR_RGBA(255, 255, 255, 255);	// (R, G, B, A)
+			pVtx[2].col = D3DCOLOR_RGBA(255, 255, 255, 255);	// (R, G, B, A)
+			pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 255);	// (R, G, B, A)
 
-		// テクスチャ座標の設定
-		pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);				// (U, V)
-		pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);				// (U, V)
-		pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);				// (U, V)
-		pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);				// (U, V)
+			// テクスチャ座標の設定
+			pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);				// (U, V)
+			pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);				// (U, V)
+			pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);				// (U, V)
+			pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);				// (U, V)
 
-		pVtx += 4;	// 頂点バッファを進める
+			pVtx += 4;	// 頂点バッファを進める
+		}
+
+		// ▲頂点バッファをアンロックする
+		g_pVtxBuffEffect3D->Unlock();
 	}
-
-	// ▲頂点バッファをアンロックする
-	g_pVtxBuffEffect3D->Unlock();
 }
 
 //======================================================================== 

@@ -44,6 +44,12 @@ void InitResult(void)
 	// プレイヤーの設定
 	SetPlayer(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(D3DX_PI * 0.4f, D3DX_PI * 0.2f, D3DX_PI * 0.2f), PLAYERSTATE_RESULT);
 
+	// エフェクトの初期化
+	InitEffect3D();
+
+	// パーティクルの初期化
+	InitParticle3D();
+
 	// リザルトUIの初期化
 	InitResultUI();
 
