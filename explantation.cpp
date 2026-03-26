@@ -62,6 +62,7 @@ const char* c_apFilenameExplantation[MAX_EXPLANTATION] =
 	"data\\TEXTURE\\explantation\\explantation002.png",	// EXPLANTATIONTYPE_MAGICPAD
 	"data\\TEXTURE\\explantation\\explantation003.png",	// EXPLANTATIONTYPE_MAGICKEY
 	"data\\TEXTURE\\explantation\\explantation004.png",	// EXPLANTATIONTYPE_TIMELIMIT
+	"data\\TEXTURE\\explantation\\explantation100.png",	// EXPLANTATIONTYPE_GOODLUCK
 };
 
 // ÉOÉçÅ[ÉoÉãïœêî
@@ -147,6 +148,7 @@ void InitExplantation(void)
 	SetExplantation(EXPLANTATIONTYPE_OIL,       D3DXVECTOR3(0.0f,0.0f,100.0f), UI_ROT);
 	SetExplantation(EXPLANTATIONTYPE_PLANET,    D3DXVECTOR3(0.0f,0.0f,100.0f), UI_ROT);
 	SetExplantation(EXPLANTATIONTYPE_SARELLITE, D3DXVECTOR3(0.0f,0.0f,100.0f), UI_ROT);
+	SetExplantation(EXPLANTATIONTYPE_GOODLUCK,	D3DXVECTOR3(0.0f,0.0f,100.0f), UI_ROT);
 }
 
 //======================================================================================

@@ -21,15 +21,15 @@
 #define ASTEROID_KEY		(120)	// キー数
 #define FLOATING			(0.5f)	// 移動間隔
 #define ROTATE				(0.05f)	// 回転速度
-#define ASTEROID_HEIGHT		(20.0f)	// 小惑星の高さ
-#define ASTEROID_SIZE		(20.0f)	// 小惑星の大きさ
+#define ASTEROID_HEIGHT		(30.0f)	// 小惑星の高さ
+#define ASTEROID_SIZE		(30.0f)	// 小惑星の大きさ
 #define MAX_PLANET			(256)	// 惑星の総数
 #define PLANET_SIZE			(50.0f)	// 惑星の大きさ
 #define ASTEROID_ROT		(D3DXVECTOR3(RAND_ANGLE, RAND_ANGLE, RAND_ANGLE))
 #define INIT_VECTOR3		(D3DXVECTOR3(0.0f, 0.0f, 0.0f))	// D3DXVECTOR3の初期化
 // ランダム配置[game]用マクロ定義
 #define GAME_LINE		(1000)	// ゲーム開始座標[int]
-#define END_LINE		(20000)	// ゴールライン[int]
+#define END_LINE		(45000)	// ゴールライン[int]
 #define AREA_DEPTH		(1000)	// 惑星のランダムの奥行き
 #define AREA_SIZE		(2000)	// 小惑星の配置範囲
 #define MAX_DEPTH		(END_LINE / GAME_LINE + 1)	// 小惑星配置範囲
