@@ -23,6 +23,7 @@
 #include "particle_3d.h"
 #include "explosion.h"
 #include "sound.h"
+#include "debugproc.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -164,6 +165,13 @@ void UpdateGame(void)
 	{
 		SetFade(MODE_RESULT, COLOR_BLACK);
 	}
+
+	if (g_nCounterGameState <= 0)
+	{
+		g_nCounterGameState = 0;
+	}
+
+	PrintDebugProc("状態[%d]のゲーム状態カウンター %d\n", g_gameState, g_nCounterGameState);
 }
 
 //=======================================================

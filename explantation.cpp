@@ -57,12 +57,12 @@ typedef struct
 // テクスチャの読み込み
 const char* c_apFilenameExplantation[MAX_EXPLANTATION] =
 {
-	"data\\TEXTURE\\explantation\\explantation000.png",	// EXPLANTATIONTYPE_PLAYPAD
-	"data\\TEXTURE\\explantation\\explantation001.png",	// EXPLANTATIONTYPE_PLAYKEY	
-	"data\\TEXTURE\\explantation\\explantation002.png",	// EXPLANTATIONTYPE_MAGICPAD
-	"data\\TEXTURE\\explantation\\explantation003.png",	// EXPLANTATIONTYPE_MAGICKEY
-	"data\\TEXTURE\\explantation\\explantation004.png",	// EXPLANTATIONTYPE_TIMELIMIT
-	"data\\TEXTURE\\explantation\\explantation100.png",	// EXPLANTATIONTYPE_GOODLUCK
+	"data\\TEXTURE\\explantation\\explantation000.png",	// 操作方法
+	"data\\TEXTURE\\explantation\\explantation001.png",	// 目的地
+	"data\\TEXTURE\\explantation\\explantation002.png",	// オイル
+	"data\\TEXTURE\\explantation\\explantation003.png",	// 惑星
+	"data\\TEXTURE\\explantation\\explantation004.png",	// 衛星
+	"data\\TEXTURE\\explantation\\explantation100.png",	// Good Luck
 };
 
 // グローバル変数
@@ -184,6 +184,13 @@ void UpdateExplantation(void)
 	float fDiffKey, fRateKey = 0.0f;
 	bool bDisp[MAX_EXPLANTATION] = { false, false, false, false, false};
 
+	GAMESTATE gameState = GetGAmeState();
+
+	if (gameState != GAMESTATE_EXPLANTATION)
+	{
+		return;
+	}
+
 	if (pPlayer->bUse == false)
 	{
 		return;
@@ -288,11 +295,10 @@ void UpdateExplantation(void)
 	}
 
 	// モードの切り替え
-	if (g_nSelectTypeExplantation == MAX_EXPLANTATION)
+	if (g_nSelectTypeExplantation == MAX_EXPLANTATION && g_aExplantation[5].bDisp == false)
 	{// 全て確認された場合
-
 		// ゲームモードの設定
-		SetGameState(GAMESTATE_NONE, 30);
+		SetGameState(GAMESTATE_NONE, 0);
 	}
 
 	VERTEX_3D* pVtx;
