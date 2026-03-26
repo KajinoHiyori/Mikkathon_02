@@ -118,6 +118,8 @@ void InitAsteroid(void)
 		break;
 
 	case MODE_GAME:	// ゲーム画面
+		SetAsteroid(ASTEROIDTYPE_FLOATING, D3DXVECTOR3(-300.0f, 0.0f, -2000.0f), INIT_VECTOR3);
+		SetAsteroid(ASTEROIDTYPE_FLOATING, D3DXVECTOR3(500.0f, -20.0f, -2100.0f), INIT_VECTOR3);
 		// 小惑星のランダム配置処理
 		SetRandomAsteroid();
 		break;
