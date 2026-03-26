@@ -310,11 +310,17 @@ void UpdatePause(void)
 			PlaySound(SE_ENTER);
 			break;
 		case PAUSE_MENU_RETRY:		// リトライ
-			SetFade(MODE_GAME, COLOR_BLACK);
+			if (GetFade() == FADE_NONE)
+			{// フェードが何もしてない状態のときだけ
+				SetFade(MODE_GAME, COLOR_BLACK);
+			}
 			PlaySound(SE_ENTER);
 			break;
 		case PAUSE_MENU_QUIT:		// タイトルへ戻る
-			SetFade(MODE_TITLE, COLOR_BLACK);
+			if (GetFade() == FADE_NONE)
+			{// フェードが何もしてない状態のときだけ
+				SetFade(MODE_TITLE, COLOR_BLACK);
+			}
 			PlaySound(SE_ENTER);
 			break;
 		}
