@@ -312,6 +312,8 @@ void UpdateCamera(void)
 			pCamera->fViewAngle = DEFAULT_VIEW_ANGLE;
 			pCamera->fMoveVA = DEFAULT_VIEW_ANGLE;
 
+			PrintDebugProc("posV (%f, %f, %f)\n", pCamera->posV.x, pCamera->posV.y, pCamera->posV.z);
+			PrintDebugProc("posR (%f, %f, %f)\n", pCamera->posR.x, pCamera->posR.y, pCamera->posR.z);
 			break;
 
 		case CAMERATYPE_STOP:
