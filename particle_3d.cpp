@@ -9,7 +9,7 @@
 #include "particle_3d.h"	// 3Dパーティクルヘッダー
 
 #include "input.h"
-#include "player.h"
+//#include "player.h"
 
 // グローバル宣言 ==============================================
 
@@ -25,6 +25,7 @@ void InitParticle3D(void)
 
 		// パーティクル
 		g_aPaticle3D[nCntPaticle].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 位置を初期化
+		g_aPaticle3D[nCntPaticle].HomingPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);// 位置を初期化
 		g_aPaticle3D[nCntPaticle].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 角度を初期化
 		g_aPaticle3D[nCntPaticle].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 移動量を初期化
 		g_aPaticle3D[nCntPaticle].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);	// 色を初期値に設定
@@ -43,8 +44,10 @@ void InitParticle3D(void)
 
 		g_aPaticle3D[nCntPaticle].fEffectRadius = 0.0f;						// エフェクトの大きさを初期化
 		g_aPaticle3D[nCntPaticle].faddEffectRadius = 0.0f;					// エフェクトの大きさの加算量を初期化
+		g_aPaticle3D[nCntPaticle].fHomingSpeed = 0.0f;					
 
 		// 状態
+		g_aPaticle3D[nCntPaticle].bHoming = false;							
 		g_aPaticle3D[nCntPaticle].bUse = false;								// 使用していない状況に設定
 	}
 
@@ -66,6 +69,7 @@ void UpdateParticle3D(void)
 	// 変数宣言 ===========================================
 
 	D3DXVECTOR3 rot = {};	// エフェクトの移動角度
+	D3DXVECTOR3 pos = {};	// エフェクトの発生位置
 
 	// ====================================================
 
@@ -94,12 +98,28 @@ void UpdateParticle3D(void)
 
 					D3DXVec3Normalize(&rot, &rot);						// 正規化
 
+					pos = g_aPaticle3D[nCntPaticle].pos;
+
 					break;
 
 				case PATICLETYPE_HOLE:
 
 					rot.x = sinf((D3DX_PI * 2 / g_aPaticle3D[nCntPaticle].nParticleValue) * nCntAppear + g_aPaticle3D[nCntPaticle].rot.y);
 					rot.z = cosf((D3DX_PI * 2 / g_aPaticle3D[nCntPaticle].nParticleValue) * nCntAppear + g_aPaticle3D[nCntPaticle].rot.y);
+
+					pos = g_aPaticle3D[nCntPaticle].pos;
+
+					break;
+
+				case PATICLETYPE_HOMING:
+
+					rot.x = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
+					rot.y = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
+					rot.z = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
+
+					D3DXVec3Normalize(&rot, &rot);						// 正規化
+
+					pos = g_aPaticle3D[nCntPaticle].pos + rot * 100.0f;
 
 					break;
 				}
@@ -111,15 +131,16 @@ void UpdateParticle3D(void)
 
 				// 3Dエフェクトの設定
 				SetEffect3D(g_aPaticle3D[nCntPaticle].nEffectLife,	// 寿命
-					g_aPaticle3D[nCntPaticle].pos,					// 位置
+					pos,											// 位置
 					D3DXVECTOR3(rot.x, rot.y, rot.z),				// 移動方向
 					g_aPaticle3D[nCntPaticle].fSpeedEffect,			// 移動速度
 					g_aPaticle3D[nCntPaticle].fEffectRadius,		// 大きさ
 					g_aPaticle3D[nCntPaticle].faddEffectRadius,		// 大きさの加算量
 					g_aPaticle3D[nCntPaticle].col,					// エフェクトの色	
 					g_aPaticle3D[nCntPaticle].effecttype,
-					false,
-					D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+					g_aPaticle3D[nCntPaticle].bHoming,
+					g_aPaticle3D[nCntPaticle].HomingPos,
+					g_aPaticle3D[nCntPaticle].fHomingSpeed,
 					false);
 			}
 
@@ -147,7 +168,7 @@ void DrawParticle3D(void)
 //========================================================================
 int SetParticle3D
 (int nValue, int nLifeP, D3DXVECTOR3 posP, D3DXCOLOR col, D3DXVECTOR3 vec,   				// パーティクル(位置, 色, 生成量, 寿命) (移動方向, 移動速度)
-	float fSpeedE, int nLifeE, float fRadiusE, float faddRadiusE, EFFECTTYPE effecttype, PATICLETYPE paticletype, int nParentIdx)	// エフェクト(移動速度, 寿命)(大きさ, 大きさの加算量, 用途)			     							
+	float fSpeedE, int nLifeE, float fRadiusE, float faddRadiusE, EFFECTTYPE effecttype, PATICLETYPE paticletype, int nParentIdx, bool bHoming, D3DXVECTOR3 HomingPos, float fHomingSpeed)	// エフェクト(移動速度, 寿命)(大きさ, 大きさの加算量, 用途)			     							
 {
 	int Radian = 400;		//範囲
 
@@ -177,6 +198,10 @@ int SetParticle3D
 			g_aPaticle3D[nCntParticle].fSpeedEffect = fSpeedE;				// エフェクトの移動速度を設定を設定
 			g_aPaticle3D[nCntParticle].fEffectRadius = fRadiusE;			// エフェクトの大きさを設定
 			g_aPaticle3D[nCntParticle].faddEffectRadius = faddRadiusE;		// エフェクトの大きさの加算量を設定
+
+			g_aPaticle3D[nCntParticle].bHoming = bHoming;
+			g_aPaticle3D[nCntParticle].HomingPos = HomingPos;
+			g_aPaticle3D[nCntParticle].fHomingSpeed = fHomingSpeed;
 
 			g_aPaticle3D[nCntParticle].bUse = true;							// 使用状態をtrueに設定
 

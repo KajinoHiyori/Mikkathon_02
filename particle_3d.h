@@ -22,6 +22,7 @@ typedef enum
 	PATICLETYPE_NOMAL = 0,
 
 	PATICLETYPE_HOLE,
+	PATICLETYPE_HOMING,			// 中心から一定の距離にエフェクトを生成
 
 	PATICLETYPE_MAX
 
@@ -34,6 +35,7 @@ typedef struct
 {
 	// パーティクルの情報
 	D3DXVECTOR3 pos;				// 表示位置
+	D3DXVECTOR3 HomingPos;			// ホーミング対象の位置
 	D3DXVECTOR3 rot;				// 表示位置
 	D3DXVECTOR3 move;				// 移動量の蓄積
 	D3DXCOLOR col;					// 色
@@ -53,8 +55,10 @@ typedef struct
 
 	float fEffectRadius;			// エフェクトの大きさ
 	float faddEffectRadius;			// エフェクトの大きさの加算量
+	float fHomingSpeed;				// ホーミングの速度
 
 	// 状態
+	bool bHoming;					// ホーミングするか
 	bool bUse;						// 使用状況
 
 }Paticle3D;
@@ -72,7 +76,7 @@ int SetParticle3D				// 3Dパーティクルの設定処理
     float fSpeedE, int nLifeE,                          // エフェクト(移動速度, 寿命)
     float fRadiusE, float faddRadiusE,                  // エフェクト(大きさ, 大きさの加算量)
     EFFECTTYPE effecttype, PATICLETYPE paticletype,
-	int nParentIdx);                             // エフェクト(用途)
+	int nParentIdx, bool bHoming, D3DXVECTOR3 HomingPos, float fHomingSpeed);                             // エフェクト(用途)
 
 void SetPosionParticle3D		             // 3Dパーティクルの位置設定処理
 (int nIdx,                                   // インデックス, 

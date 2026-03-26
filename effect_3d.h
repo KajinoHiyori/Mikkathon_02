@@ -35,6 +35,7 @@ void SetEffect3D				// 3Dエフェクトの設定処理
 	EFFECTTYPE type,						// エフェクトのタイプ
 	bool bHoming,							// ホーミングするか
 	D3DXVECTOR3 HomingPos,					// ホーミング対象の位置
+	float fHomingSpeed,						// ホーミング速度
 	bool bPlanet
 	);		
 

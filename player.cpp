@@ -157,8 +157,8 @@ void UpdatePlayer(void)
 
 			if (g_Player.nCounterState % FIRE_COUNT == (rand() % FIRE_COUNT))
 			{// 火花
-				SetParticle3D(rand() % 3 + 1, 1, g_Player.pos, D3DXCOLOR(1.0f, 0.8f, 0.0f, 1.0f), FIRST_POS, 4.0f, 10, 1.2f, 0.0f, EFFECTTYPE_NORMAL, PATICLETYPE_NOMAL, 0);
-				SetParticle3D(rand() % 3 + 1, 1, g_Player.pos, D3DXCOLOR(1.0f, 0.8f, 0.0f, 1.0f), FIRST_POS, 4.0f, 10, 1.2f, 0.0f, EFFECTTYPE_NORMAL, PATICLETYPE_NOMAL, 0);
+				SetParticle3D(rand() % 3 + 1, 1, g_Player.pos, D3DXCOLOR(1.0f, 0.8f, 0.0f, 1.0f), FIRST_POS, 4.0f, 10, 1.2f, 0.0f, EFFECTTYPE_NORMAL, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
+				SetParticle3D(rand() % 3 + 1, 1, g_Player.pos, D3DXCOLOR(1.0f, 0.8f, 0.0f, 1.0f), FIRST_POS, 4.0f, 10, 1.2f, 0.0f, EFFECTTYPE_NORMAL, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
 			}
 
 			if (g_Player.nCounterState % SMOKE_COUNT == 0)
@@ -311,8 +311,8 @@ void UpdatePlayer(void)
 		g_Player.move.y += (0.0f - g_Player.move.y) * INERTIA_MOVE;
 		g_Player.move.z += (0.0f - g_Player.move.z) * INERTIA_MOVE;
 
-		SetEffect3D(1, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 10.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 7.0f, -1.0f, COLOR_RED, EFFECTTYPE_NORMAL, true, g_Player.pos, false);
-		SetEffect3D(1, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 10.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 7.0f, -1.0f, COLOR_ORANGE, EFFECTTYPE_NORMAL, true, g_Player.pos, false);
+		SetEffect3D(1, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 10.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 7.0f, -1.0f, COLOR_RED, EFFECTTYPE_NORMAL, true, g_Player.pos, false, 0.0f);
+		SetEffect3D(1, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 10.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 7.0f, -1.0f, COLOR_ORANGE, EFFECTTYPE_NORMAL, true, g_Player.pos, false, 0.0f);
 
 		PrintDebugProc("プレイヤーのpos : ( %f %f %f )\n", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
 		PrintDebugProc("プレイヤーのmove : ( %f %f %f )\n", g_Player.move.x, g_Player.move.y, g_Player.move.z);
@@ -333,14 +333,14 @@ void UpdatePlayer(void)
 
 			if (g_Player.bBreak == false)
 			{// ロケットの破壊エフェクト
-				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
-				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
-				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
-				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.8f, 0.9f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
+				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
+				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
+				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
+				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.8f, 0.9f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
 			}
 			else
 			{// 岩の破壊エフェクト
-				SetParticle3D(2, 5, g_Player.pos, D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f), FIRST_POS, 6.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCK, PATICLETYPE_NOMAL, 0);
+				SetParticle3D(2, 5, g_Player.pos, D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f), FIRST_POS, 6.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCK, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
 			}
 		}
 
@@ -349,10 +349,10 @@ void UpdatePlayer(void)
 			SetExplosion(g_Player.pos, FIRST_POS, COLOR_WHITE, 20.0f, EXPLOSIONTYPE_0);
 			SetVibration(10000, 12000, 10);
 
-			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
-			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
-			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
-			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.8f, 0.9f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0);
+			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
+			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
+			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
+			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.8f, 0.9f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
 		}
 
 		CollisionMeshCylinder(&g_Player.pos, &g_Player.posOld, &g_Player.move, 0.0f, 0.0f, false);

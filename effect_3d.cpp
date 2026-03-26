@@ -10,8 +10,8 @@
 #include "effect_3d.h"	// エフェクトヘッダー
 
 #include "input.h"
-#include "color.h"
-#include "planet.h"
+//#include "color.h"
+//#include "planet.h"
 //#include "debugproc.h"
 
 // マクロ定義 ==================================================
@@ -34,6 +34,7 @@ typedef struct
 
 	float fRadius;			// 半径
 	float faddRadius;		// 半径の加算値
+	float fHomingSpeed;		// ホーミングの速度
 
 	// マトリックス
 	D3DXMATRIX mtxWorld;	// ワールドマトリックス
@@ -104,9 +105,11 @@ void InitEffect3D(void)
 
 		g_aEffect3D[nCntEffect].fRadius = 0.0f;								// 半径を初期化
 		g_aEffect3D[nCntEffect].faddRadius = 0.0f;							// 半径の加算値を初期化
+		g_aEffect3D[nCntEffect].fHomingSpeed = 0.0f;						
 
 		g_aEffect3D[nCntEffect].nLife = 0;									// 寿命を初期化
 
+		g_aEffect3D[nCntEffect].bHoming = false;							
 		g_aEffect3D[nCntEffect].bUse = false;								// 使用していない状態に設定
 
 		g_aEffect3D[nCntEffect].effecttype = EFFECTTYPE_NORMAL;				// エフェクトタイプを初期化
@@ -222,34 +225,12 @@ void UpdateEffect3D(void)
 
 			if (g_aEffect3D[nCntEffect].bHoming == true)
 			{// ホーミングを使用する場合
-				float fRotMove, fRotDest, fRotDiff;
+				g_aEffect3D[nCntEffect].pos += (g_aEffect3D[nCntEffect].HomingPos - g_aEffect3D[nCntEffect].pos) * g_aEffect3D[nCntEffect].fHomingSpeed;
 
-				fRotMove = atan2f(g_aEffect3D[nCntEffect].vecMove.x, g_aEffect3D[nCntEffect].vecMove.y);		// 現在の移動方向(角度)
-				fRotDest = atan2f(g_aEffect3D[nCntEffect].HomingPos.x - g_aEffect3D[nCntEffect].pos.x, g_aEffect3D[nCntEffect].HomingPos.y - g_aEffect3D[nCntEffect].pos.y);		// 目標の移動方向(角度)		// 現在の移動方向(角度)
-				fRotDiff = fRotDest - fRotMove;		// 目標の移動方向までの差分
-
-				if (fRotDiff > D3DX_PI)
-				{
-					fRotDiff -= D3DX_PI * 2;
+				if (g_aEffect3D[nCntEffect].pos == g_aEffect3D[nCntEffect].HomingPos)
+				{// 着いたら消す
+					g_aEffect3D[nCntEffect].bUse = false;	// 使用してない状態に設定
 				}
-				else if (fRotDiff < -D3DX_PI)
-				{
-					fRotDiff += D3DX_PI * 2;
-				}
-
-				fRotMove += fRotDiff * 0.2f;		// 移動方向(角度)の補正
-
-				if (fRotMove > D3DX_PI)
-				{
-					fRotMove -= D3DX_PI * 2;
-				}
-				else if (fRotMove < -D3DX_PI)
-				{
-					fRotMove += D3DX_PI * 2;
-				}
-
-				g_aEffect3D[nCntEffect].vecMove.x = sinf(fRotMove) * 3.0f;
-				g_aEffect3D[nCntEffect].vecMove.y = cosf(fRotMove) * 3.0f;
 			}
 
 			// 慣性
@@ -257,7 +238,7 @@ void UpdateEffect3D(void)
 
 			if (g_aEffect3D[nCntEffect].bPlanet == true)
 			{// 惑星の重力を受ける
-				CollisionPlanet(&g_aEffect3D[nCntEffect].pos, 1.0f);
+				//CollisionPlanet(&g_aEffect3D[nCntEffect].pos, 1.0f);
 			}
 
 			// 半径の大きさを更新
@@ -411,6 +392,7 @@ void SetEffect3D(int nLife,							// 寿命
 	EFFECTTYPE type,						// エフェクトのタイプ
 	bool bHoming,
 	D3DXVECTOR3 HomingPos,
+	float fHomingSpeed,
 	bool bPlanet
 )
 {
@@ -444,6 +426,7 @@ void SetEffect3D(int nLife,							// 寿命
 
 			g_aEffect3D[nCntEffect].bHoming = bHoming;
 			g_aEffect3D[nCntEffect].HomingPos = HomingPos;
+			g_aEffect3D[nCntEffect].fHomingSpeed = fHomingSpeed;
 			g_aEffect3D[nCntEffect].bPlanet = bPlanet;
 
 			// 頂点座標の設定
@@ -478,39 +461,4 @@ void SetEffect3D(int nLife,							// 寿命
 
 	// ▲頂点バッファをアンロックする
 	g_pVtxBuffEffect3D->Unlock();
-}
-
-//======================================================================== 
-// 惑星の周りにエフェクトを設定する処理(重力)
-//========================================================================
-void SetEffect3DAroundPlanet(void)
-{
-	Planet* pPlanet = GetPlanet();
-	int nNumPlanet = GetNumPlanet();
-
-	for (int nCntPlanet = 0; nCntPlanet < nNumPlanet; nCntPlanet++, pPlanet++)
-	{
-		PlanetModelInfo* pPlanetInfo = GetPlanetInfo();
-
-		if (pPlanetInfo[pPlanet->type].fGravity >= 0)
-		{// 重力
-			for (int nCnt = 0; nCnt < 10; nCnt++)
-			{
-				D3DXVECTOR3 rot, pos;
-
-				rot.x = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
-				rot.y = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
-				rot.z = (float)(rand() % 629 - 314) / 100.0f;		// 角度を設定
-
-				D3DXVec3Normalize(&rot, &rot);						// 正規化
-
-				pos.x = pPlanet->pos.x + sinf(rot.x) * pPlanetInfo[pPlanet->type].fHitRadius;
-				pos.y = pPlanet->pos.y + cosf(rot.y) * pPlanetInfo[pPlanet->type].fHitRadius;
-				pos.z = pPlanet->pos.z + cosf(rot.z) * pPlanetInfo[pPlanet->type].fHitRadius;
-
-				SetEffect3D(10, pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 5.0f, 0.0f, COLOR_WHITE, EFFECTTYPE_NORMAL,
-					false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), true);
-			}
-		}
-	}
 }
