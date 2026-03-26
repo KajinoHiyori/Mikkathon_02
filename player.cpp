@@ -22,7 +22,7 @@
 #define ROT						(D3DXVECTOR3(0.05f, 0.05f, 0.05f))		// 向き移動量
 #define INERTIA_MOVE			(0.4f)									// 移動の慣性
 #define INERTIA_ANGLE			(0.1f)									// 角度の慣性
-#define MINUS_OIL				(0.05f)									// 燃料の減り方
+#define MINUS_OIL				(0.020f)									// 燃料の減り方
 #define BREAK_OIL				(20.0f)									// 壊せる燃料の量
 #define AUTO_SPEED(fSpeed)		(fSpeed)								// 自動で進むスピード
 #define HIGH_SPPED				(35.0f)									// スピードが速くなる
