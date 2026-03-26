@@ -293,16 +293,16 @@ SET_LAYOUT_STAGE
 	END_PLANET
 	
 	SET_PLANET	# 惑星
-		TYPE = 6				# 種類
+		TYPE = 5				# 種類
 		POS = 300.0 100.0 27600.0  # 位置
 		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
-	SET_PLANET	# 惑星
-		TYPE = 5				# 種類
-		POS = -300.0 100.0 28600.0  # 位置
-		ROT = 0.0 0.0 0.0		# 角度
-	END_PLANET
+	#SET_PLANET	# 惑星
+	#	TYPE = 5				# 種類
+	#	POS = -300.0 100.0 28600.0  # 位置
+	#	ROT = 0.0 0.0 0.0		# 角度
+	#END_PLANET
 	
 	#-------------------------
 	# 個性惑星登場
