@@ -238,6 +238,11 @@ void SetPosionParticle3D(int nIdx, const char* pMode, D3DXVECTOR3 pos)
 //======================================================================== 
 void SetPlanetParticle3D(PLANETTYPE type, D3DXVECTOR3 pos, float fGravity)
 {
+	if (GetMode() == MODE_RESULT)
+	{// ÉäÉUÉãÉgâÊñ Ç≈ÇÕÇ¬ÇØÇ»Ç¢
+		return;
+	}
+
 	float fSpeed = 0.0f;
 
 	if (fGravity > 10.0f)
@@ -318,7 +323,7 @@ void SetPlanetParticle3D(PLANETTYPE type, D3DXVECTOR3 pos, float fGravity)
 		break;
 
 	case PLANETTYPE_GOAL:		// ÉSÅ[Éã
-		SetParticle3D(2, -1, pos, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5.0f, 200, 4.0f, 0.0f,
+		SetParticle3D(2, -1, pos, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 12.0f, 350, 4.0f, 0.0f,
 			EFFECTTYPE_DIAMOND, PATICLETYPE_NOMAL, 0, false, pos, fSpeed);
 
 		break;
