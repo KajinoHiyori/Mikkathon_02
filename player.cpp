@@ -339,7 +339,7 @@ void UpdatePlayer(void)
 		D3DXVECTOR2 XYdist = D3DXVECTOR2(g_Player.pos.x, g_Player.pos.y);
 		float fDist = D3DXVec2Length(&XYdist);
 
-		if (fDist > 1050.0f)
+		if (fDist > 1500.0f)
 		{// ˆÚ“®§ŒÀ
 			g_Player.state = PLAYERSTATE_BACKAREA;
 			g_Player.nCounterState = 60;
