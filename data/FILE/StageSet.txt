@@ -153,12 +153,25 @@ SET_LAYOUT_STAGE
 	
 	SET_PLANET	# 惑星
 		TYPE = 6				# 種類
-		POS = 100.0 50.0 6000.0  # 位置
+		POS = -280.0 110.0 5800.0  # 位置
 		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
+	SET_PLANET	# 惑星
+		TYPE = 7				# 種類
+		POS = 415.0 210.0 7000.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
 	
+	#-------------------------
+	# 惑星(引力：大)登場
+	#-------------------------
 	
+	SET_PLANET	# 惑星
+		TYPE = 8				# 種類
+		POS = 0.0 250.0 8000.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
 	
 	#-------------------------
 	# からワープまで
@@ -166,49 +179,49 @@ SET_LAYOUT_STAGE
 	
 	SET_PLANET	# 惑星
 		TYPE = 0				# 種類
-		POS = 0.0 0.0 8000.0  # 位置
+		POS = 0.0 0.0 10000.0  # 位置
 		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 6				# 種類
-		POS = 0.0 0.0 8700.0  # 位置
+		POS = 0.0 0.0 10700.0  # 位置
 		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 6				# 種類
-		POS = 200.0 -50.0 9000.0  # 位置
+		POS = 200.0 -50.0 11000.0  # 位置
 		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 7				# 種類
-		POS = -200.0 50.0 9600.0  # 位置
+		POS = -200.0 50.0 11600.0  # 位置
 		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 8				# 種類
-		POS = 300.0 50.0 10500.0  # 位置
+		POS = 300.0 50.0 12500.0  # 位置
 		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 6				# 種類
-		POS = -300.0 -70.0 11600.0  # 位置
+		POS = -300.0 -70.0 13600.0  # 位置
 		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 6				# 種類
-		POS = 300.0 100.0 12600.0  # 位置
+		POS = 300.0 100.0 14600.0  # 位置
 		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 5				# 種類
-		POS = -300.0 100.0 13600.0  # 位置
+		POS = -300.0 100.0 15600.0  # 位置
 		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
@@ -218,13 +231,13 @@ SET_LAYOUT_STAGE
 	#-------------------------
 	SET_PLANET	# 惑星
 		TYPE = 2				# 種類
-		POS = 0.0 0.0 13600.0  # 位置
+		POS = 0.0 0.0 15600.0  # 位置
 		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 3				# 種類
-		POS = 0.0 0.0 16600.0  # 位置
+		POS = 0.0 0.0 18600.0  # 位置
 		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
@@ -233,25 +246,25 @@ SET_LAYOUT_STAGE
 	#-------------------------
 	SET_PLANET	# 惑星
 		TYPE = 4				# 種類
-		POS = 0.0 0.0 19600.0  # 位置
+		POS = 0.0 0.0 21600.0  # 位置
 		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 0				# 種類
-		POS = 400.0 -50.0 24000.0  # 位置
+		POS = 400.0 -50.0 26000.0  # 位置
 		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 0				# 種類
-		POS = -400.0 70.0 28000.0  # 位置
+		POS = -400.0 70.0 30000.0  # 位置
 		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
 		TYPE = 2				# 種類
-		POS = 1118.0 -302.0 22000.0  # 位置
+		POS = 1118.0 -302.0 24000.0  # 位置
 		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
@@ -264,7 +277,7 @@ SET_LAYOUT_STAGE
 	#-------------------------
 	SET_PLANET	# 惑星
 		TYPE = 9				# 種類(ゴール)
-		POS = 0.0 0.0 45000.0   # 位置
+		POS = 0.0 0.0 27000.0   # 位置
 		ROT = 0.0 0.0 0.0	# 角度
 	END_PLANET
 	
