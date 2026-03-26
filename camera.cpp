@@ -99,7 +99,7 @@ void UpdateCamera(void)
 
 			// 目的の注視点を設定
 			pCamera->posRDest.x = pPlayer->pos.x;
-			pCamera->posRDest.y = pPlayer->pos.y;
+			pCamera->posRDest.y = pPlayer->pos.y + 100.0f;
 			pCamera->posRDest.z = pPlayer->pos.z;
 
 			// 目的の視点を設定
