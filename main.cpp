@@ -31,7 +31,7 @@
 // マクロ定義
 #define CLASS_NAME	"WindowClass"	// ウィンドウクラスの名前
 #define WINDOW_NAME	"ケプラーMk3"	// ウィンドウの名前(キャプションに表示)
-#define FULL_SCREEN	(TRUE)			// フルスクリーン状態の管理[TRUE : 通常 / FALSE : フルスクリーン]
+#define FULL_SCREEN	(FALSE)			// フルスクリーン状態の管理[TRUE : 通常 / FALSE : フルスクリーン]
 
 // プロトタイプ宣言
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam); // ウィンドウプロシージャ
