@@ -143,12 +143,12 @@ void InitExplantation(void)
 	g_pVtxBuffExplantation->Unlock();
 
 	// 説明用のUIを設置
-	SetExplantation(EXPLANTATIONTYPE_MOVE,      D3DXVECTOR3(0.0f,0.0f,100.0f), UI_ROT);
-	SetExplantation(EXPLANTATIONTYPE_DEST,      D3DXVECTOR3(0.0f,0.0f,100.0f), UI_ROT);
-	SetExplantation(EXPLANTATIONTYPE_OIL,       D3DXVECTOR3(0.0f,0.0f,100.0f), UI_ROT);
-	SetExplantation(EXPLANTATIONTYPE_PLANET,    D3DXVECTOR3(0.0f,0.0f,100.0f), UI_ROT);
-	SetExplantation(EXPLANTATIONTYPE_SARELLITE, D3DXVECTOR3(0.0f,0.0f,100.0f), UI_ROT);
-	SetExplantation(EXPLANTATIONTYPE_GOODLUCK,	D3DXVECTOR3(0.0f,0.0f,100.0f), UI_ROT);
+	SetExplantation(EXPLANTATIONTYPE_MOVE,      D3DXVECTOR3(0.0f,0.0f,-3600.0f), UI_ROT);
+	SetExplantation(EXPLANTATIONTYPE_DEST,      D3DXVECTOR3(0.0f,0.0f,-1200.0f), UI_ROT);
+	SetExplantation(EXPLANTATIONTYPE_OIL,       D3DXVECTOR3(0.0f,0.0f,-3000.0f), UI_ROT);
+	SetExplantation(EXPLANTATIONTYPE_PLANET,    D3DXVECTOR3(0.0f,0.0f,-2400.0f), UI_ROT);
+	SetExplantation(EXPLANTATIONTYPE_SARELLITE, D3DXVECTOR3(0.0f,0.0f,-1800.0f), UI_ROT);
+	SetExplantation(EXPLANTATIONTYPE_GOODLUCK,	D3DXVECTOR3(0.0f,0.0f,-600.0f), UI_ROT);
 }
 
 //======================================================================================
@@ -217,7 +217,7 @@ void UpdateExplantation(void)
 			SetExplantationDisappear(nCntUI);
 		}
 	}
-#else
+//#else
 	// 表示されているUIの状態の設定処理
 	if (g_nSelectTypeExplantation < MAX_EXPLANTATION)
 	{// まだ表示していないのがある場合
@@ -250,6 +250,8 @@ void UpdateExplantation(void)
 
 	for (int nCntUI = 0; nCntUI < MAX_EXPLANTATION; nCntUI++)
 	{
+		SetExplantationDisp(nCntUI);
+
 		switch (g_aExplantation[nCntUI].state)
 		{
 		case EXPLANTATIONSTATE_NONDISPLAY:	// 非表示

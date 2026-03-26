@@ -131,7 +131,7 @@ void UpdatePlayer(void)
 	PrintDebugProc("playerの使用状態はtrue\n");
 	Camera* pCamera = GetCamera();
 
-	float fSpeed = (GetGAmeState() == GAMESTATE_EXPLANTATION) ? 0.0f : 2.0f;
+	float fSpeed = (GetGAmeState() == GAMESTATE_EXPLANTATION) ? 1.0f : 3.0f;
 
 	switch (g_Player.state)
 	{
@@ -310,6 +310,11 @@ void UpdatePlayer(void)
 		g_Player.move.x += (0.0f - g_Player.move.x) * INERTIA_MOVE;
 		g_Player.move.y += (0.0f - g_Player.move.y) * INERTIA_MOVE;
 		g_Player.move.z += (0.0f - g_Player.move.z) * INERTIA_MOVE;
+
+		if (g_Player.pos.z > -400.0f)
+		{// ゲーム状態をゲーム中にする
+			SetGameState(GAMESTATE_NONE, 0);
+		}
 
 		SetEffect3D(1, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 10.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 7.0f, -1.0f, COLOR_RED, EFFECTTYPE_NORMAL, true, g_Player.pos, false, 0.0f);
 		SetEffect3D(1, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 10.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 7.0f, -1.0f, COLOR_ORANGE, EFFECTTYPE_NORMAL, true, g_Player.pos, false, 0.0f);
