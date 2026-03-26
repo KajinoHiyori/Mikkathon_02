@@ -143,6 +143,9 @@ void UpdateGame(void)
 		UpdatePause();
 	}
 
+	// カウンターの減少
+	g_nCounterGameState--;
+
 	if (GetKeyboardTrigger(DIK_SPACE) == true)
 	{
 		SetGameState(GAMESTATE_CLEAR, 0);
