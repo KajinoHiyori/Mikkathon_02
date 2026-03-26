@@ -101,6 +101,13 @@ void InitPlanet(void)
 	{
 		// 惑星の配置
 		SetLayoutPlanet(D3DXVECTOR3(0.0f,0.0f,0.0f));
+
+		if (GetGAmeState() == GAMESTATE_EXPLANTATION)
+		{// ゲームの状態がチュートリアルの場合
+
+			SetPlanet(PLANETTYPE_SMALL ,D3DXVECTOR3(-300.0f, -250.0f, -2440.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));	// 引力：小
+			SetPlanet(PLANETTYPE_ENERGY,D3DXVECTOR3(+300.0f, -250.0f, -2440.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));	// 回復
+		}
 	}
 }
 
@@ -468,9 +475,20 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 				}
 				else
 				{
-					pPos->x += sinf(fAngleXZ) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity;
-					pPos->z += cosf(fAngleXZ) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity;
-					pPos->y += cosf(fDestAngle) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity;
+					if (GetGAmeState() == GAMESTATE_EXPLANTATION)
+					{// ゲームの状態がチュートリアルの場合
+
+						pPos->x += sinf(fAngleXZ) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity * 0.5f;
+						pPos->z += cosf(fAngleXZ) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity * 0.5f;
+						pPos->y += cosf(fDestAngle) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity * 0.5f;
+					}
+					else
+					{// ゲームの状態が通常の場合
+
+						pPos->x += sinf(fAngleXZ) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity;
+						pPos->z += cosf(fAngleXZ) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity;
+						pPos->y += cosf(fDestAngle) * g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity;
+					}
 				}
 
 				// 変更後の離れ具合を求める
@@ -509,16 +527,20 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 					if (pPlayer->bUse == false)
 					{// ぶつかって消えた場合
 						
-						// ぶつかった対象
-						if (pPlayer->planetType == PLANETTYPE_GOAL)
-						{// ゴールの惑星に着陸した
+						if (GetGAmeState() != GAMESTATE_EXPLANTATION)
+						{// ゲームの状態がチュートリアルでない場合
 
-							SetGameState(GAMESTATE_CLEAR, 0);
-						}
-						else
-						{// それ以外の惑星
+							// ぶつかった対象
+							if (pPlayer->planetType == PLANETTYPE_GOAL)
+							{// ゴールの惑星に着陸した
 
-							SetGameState(GAMESTATE_OVER, 0);
+								SetGameState(GAMESTATE_CLEAR, 0);
+							}
+							else
+							{// それ以外の惑星
+
+								SetGameState(GAMESTATE_OVER, 0);
+							}
 						}
 					}
 
