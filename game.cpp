@@ -24,6 +24,7 @@
 #include "explosion.h"
 #include "sound.h"
 #include "debugproc.h"
+#include "distance.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -60,6 +61,12 @@ void InitGame(void)
 	// 惑星の初期化
 	InitPlanet();
 
+	// エフェクトの初期化処理
+	InitEffect3D();
+
+	// パーティクルの初期化処理
+	InitParticle3D();
+
 	// 小惑星の初期化
 	InitAsteroid();
 
@@ -68,6 +75,9 @@ void InitGame(void)
 
 	// 説明UIの初期化
 	InitExplantation();
+
+	// 距離の初期化
+	InitDistance();
 
 	// 音楽の再生
 	PlaySound(BGM_GAME);
@@ -83,6 +93,9 @@ void UninitGame(void)
 
 	// 説明UIの終了処理
 	UninitExplantation();
+
+	// 距離の終了処理
+	UninitDistance();
 
 	// 音楽の停止
 	StopSound();
@@ -137,6 +150,9 @@ void UpdateGame(void)
 
 		// 説明UIの更新処理
 		UpdateExplantation();
+
+		// 距離の更新処理
+		UpdateDistance();
 	}
 	else if (g_bPause == true)
 	{ // pause状態
@@ -205,6 +221,9 @@ void DrawGame(void)
 
 	// 説明UIの描画処理
 	DrawExplantation();
+
+	// 距離の描画処理
+	DrawDistance();
 
 	if (g_bDisp == true && g_bPause == true)
 	{
