@@ -14,6 +14,7 @@
 #include "meshcylinder.h"
 #include "color.h"
 #include "game.h"
+#include "fade.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -311,7 +312,7 @@ void UpdatePlayer(void)
 		g_Player.move.y += (0.0f - g_Player.move.y) * INERTIA_MOVE;
 		g_Player.move.z += (0.0f - g_Player.move.z) * INERTIA_MOVE;
 
-		if (g_Player.pos.z > -400.0f)
+		if (g_Player.pos.z > -600.0f)
 		{// ゲーム状態をゲーム中にする
 			SetGameState(GAMESTATE_NONE, 0);
 		}
@@ -333,6 +334,11 @@ void UpdatePlayer(void)
 
 		if (CollisionAsteroid(g_Player.pos, g_Player.bBreak) == true)
 		{// 小惑星との当たり判定による演出
+			if (GetGAmeState() == GAMESTATE_EXPLANTATION && GetFade() == FADE_NONE)
+			{// チュートリアル中に当たったらもう一度ゲームシーンを読み込む
+				SetFade(MODE_GAME, COLOR_WHITE);
+			}
+
 			SetExplosion(g_Player.pos, FIRST_POS, COLOR_WHITE, 20.0f, EXPLOSIONTYPE_0);
 			SetVibration(10000, 12000, 10);
 
@@ -351,6 +357,11 @@ void UpdatePlayer(void)
 
 		if (CollisionPlanet(&g_Player.pos, 1.0f) == true)
 		{// 惑星との当たり判定による演出
+			if (GetGAmeState() == GAMESTATE_EXPLANTATION && GetFade() == FADE_NONE)
+			{// チュートリアル中に当たったらもう一度ゲームシーンを読み込む
+				SetFade(MODE_GAME, COLOR_WHITE);
+			}
+
 			if (g_Player.planetType != PLANETTYPE_GOAL)
 			{// ゴールにたどりついたとき以外
 				SetExplosion(g_Player.pos, FIRST_POS, COLOR_WHITE, 20.0f, EXPLOSIONTYPE_0);
