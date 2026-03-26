@@ -105,8 +105,8 @@ void InitPlanet(void)
 		if (GetGAmeState() == GAMESTATE_EXPLANTATION)
 		{// ゲームの状態がチュートリアルの場合
 
-			SetPlanet(PLANETTYPE_SMALL ,D3DXVECTOR3(-300.0f, -250.0f, -2440.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));	// 引力：小
-			SetPlanet(PLANETTYPE_ENERGY,D3DXVECTOR3(+300.0f, -250.0f, -2440.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));	// 回復
+			SetPlanet(PLANETTYPE_SMALL ,D3DXVECTOR3(-350.0f, -250.0f, -2440.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));	// 引力：小
+			SetPlanet(PLANETTYPE_ENERGY,D3DXVECTOR3(+350.0f, -250.0f, -2440.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));	// 回復
 		}
 	}
 }
