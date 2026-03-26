@@ -288,7 +288,7 @@ void SetPlanetParticle3D(PLANETTYPE type, D3DXVECTOR3 pos, float fGravity)
 		break;
 
 	case PLANETTYPE_CHANGE:		// èdóÕïœÇÌÇÈòfêØ
-		SetParticle3D(2, 6, pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1.0f, 50, 4.0f, 0.0f,
+		SetParticle3D(2, TIMEWAIT_CHANGE, pos, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1.0f, 50, 4.0f, 0.0f,
 			EFFECTTYPE_NORMAL, PATICLETYPE_HOMING, 0, true, pos, fSpeed);
 
 		break;

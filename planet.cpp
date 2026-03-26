@@ -150,6 +150,8 @@ void UpdatePlanet(void)
 					g_aPlanet[nCntPlanet].nIdx = 0;	// ’l‚ğ‰Šú‰»
 				}
 
+				SetPlanetParticle3D(g_aPlanet[nCntPlanet].type, g_aPlanet[nCntPlanet].pos, g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity);
+
 				break;
 
 			case PLANETTYPE_REPULSIVE:	// Ë—Í˜f¯	
@@ -404,6 +406,8 @@ void SetPlanet(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 			case PLANETTYPE_GOAL:		// ƒS[ƒ‹
 				break;
 			}
+
+			SetPlanetParticle3D(g_aPlanet[nCntPlanet].type, g_aPlanet[nCntPlanet].pos, g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity);
 
 			break;	// for•¶‚ğ”²‚¯‚é
 		}
