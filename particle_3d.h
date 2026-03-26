@@ -9,6 +9,7 @@
 #define _PATICLE_3D_H_
 
 #include "effect_3d.h"		// 3Dエフェクトヘッダー
+#include "planet.h"	
 
 // マクロ定義 ==================================================
 
@@ -81,6 +82,8 @@ int SetParticle3D				// 3Dパーティクルの設定処理
 void SetPosionParticle3D		             // 3Dパーティクルの位置設定処理
 (int nIdx,                                   // インデックス, 
     const char* pMode, D3DXVECTOR3 pos);     // posの使用形式(put:代入, add:加算), 位置 
+
+void SetPlanetParticle3D(PLANETTYPE type, D3DXVECTOR3 pos, float fGravity);
 
 Paticle3D *GetParticlePos(void);
 #endif
