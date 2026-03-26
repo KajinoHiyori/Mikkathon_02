@@ -52,7 +52,7 @@ void InitGame(void)
 	g_bDisp = true;
 
 	// プレイヤーの設定
-	SetPlayer(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), PLAYERSTATE_APPEAR);
+	SetPlayer(D3DXVECTOR3(0.0f, 0.0f, -4000.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), PLAYERSTATE_APPEAR);
 
 	// カメラの設定
 	SetCameraPos(0, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CAMERATYPE_PLAYER);

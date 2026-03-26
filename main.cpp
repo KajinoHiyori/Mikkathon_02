@@ -321,7 +321,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	// メッシュシリンダーの初期化
 	InitMeshCylinder();
-	SetMeshCylinder(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(D3DX_PI * 0.5f, 0.0f, 0.0f), D3DXVECTOR2(8.0f, 2.0f),
+	SetMeshCylinder(D3DXVECTOR3(0.0f, 0.0f, -4000.0f), D3DXVECTOR3(D3DX_PI * 0.5f, 0.0f, 0.0f), D3DXVECTOR2(8.0f, 2.0f),
 		D3DXVECTOR2(6000.0f, 70000.0f), COLOR_WHITE, true, false, MESHCYLINDERTYPE_SPACE, MESHCYLINDERSTATE_NONE);
 
 	// プレイヤーの初期化処理
