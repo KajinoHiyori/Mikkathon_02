@@ -173,6 +173,7 @@ void UpdateGame(void)
 	// カウンターの減少
 	g_nCounterGameState--;
 
+#ifdef _DEBUG
 	if (GetKeyboardTrigger(DIK_SPACE) == true)
 	{
 		SetGameState(GAMESTATE_CLEAR, 0);
@@ -181,6 +182,7 @@ void UpdateGame(void)
 	{
 		SetGameState(GAMESTATE_OVER, 0);
 	}
+#endif
 
 	FADE fade = GetFade();
 	if (g_nCounterGameState <= 0 && g_gameState == GAMESTATE_CLEAR && fade == FADE_NONE)
