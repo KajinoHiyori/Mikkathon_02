@@ -119,10 +119,7 @@ void InitAsteroid(void)
 
 	case MODE_GAME:	// ゲーム画面
 		// 小惑星のランダム配置処理
-		SetAsteroid(ASTEROIDTYPE_FLOATING, RESULTRAND_POS, INIT_VECTOR3);
-		SetAsteroid(ASTEROIDTYPE_FLOATING, RESULTRAND_POS, INIT_VECTOR3);
-		SetAsteroid(ASTEROIDTYPE_FLOATING, RESULTRAND_POS, INIT_VECTOR3);
-		//SetRandomAsteroid();
+		SetRandomAsteroid();
 		break;
 
 	case MODE_RESULT:	// リザルト画面
