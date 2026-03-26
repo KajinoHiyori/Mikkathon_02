@@ -9,6 +9,8 @@
 #include "planet.h"
 #include "stage.h"
 
+#include "game.h"
+
 #include "particle_3d.h"
 #include "player.h"
 #include "asteroid.h"
@@ -19,6 +21,11 @@
 
 #define MAX_NUM_PLANET			(256)
 #define MAX_TYPE_PLANETINFO		(32)
+
+#define TIMEWAIT_CHANGE			(60 * 0.1f)	// 重力が切り替わる惑星の重力が切り替わるまでの時間
+
+#define MAX_CHANGE_GRAVITY		(5.0f)
+#define MIN_CHANGE_GRAVITY		(2.5f)
 
 // グローバル宣言 ==============================================
 
@@ -93,7 +100,7 @@ void InitPlanet(void)
 	if (GetMode() == MODE_GAME)
 	{
 		// 惑星の配置
-		SetLayoutPlanet();
+		SetLayoutPlanet(D3DXVECTOR3(0.0f,0.0f,0.0f));
 	}
 }
 
@@ -130,6 +137,19 @@ void UpdatePlanet(void)
 				break;
 
 			case PLANETTYPE_CHANGE:		// 重力変わる惑星
+
+				g_aPlanet[nCntPlanet].nIdx++;	// カウンタとして値をインクリメント
+
+				// 重力の切り替え
+				if (g_aPlanet[nCntPlanet].nIdx == TIMEWAIT_CHANGE)
+				{// 待機時間になった
+
+					// 重力の設定
+					g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fGravity = (float)(rand() % (int)(MAX_CHANGE_GRAVITY * 10) / 10.0f) + MIN_CHANGE_GRAVITY;
+
+					g_aPlanet[nCntPlanet].nIdx = 0;	// 値を初期化
+				}
+
 				break;
 
 			case PLANETTYPE_REPULSIVE:	// 斥力惑星	
@@ -275,15 +295,42 @@ void SetPlanetInfo(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 //========================================================================
 // 惑星の配置情報の設定
 ///========================================================================
-void SetLayoutPlanet(void)
+void SetLayoutPlanet(D3DXVECTOR3 startPos)
 {
+	
+
 	// 配置情報を設定
 	for (int nCntPlanet = 0; nCntPlanet < MAX_NUM_PLANET; nCntPlanet++)
 	{
+#if 1
 		if (g_aPlanetLayoutInfo[nCntPlanet].bUse == true)
 		{
-			SetPlanet(g_aPlanetLayoutInfo[nCntPlanet].type, g_aPlanetLayoutInfo[nCntPlanet].pos, g_aPlanetLayoutInfo[nCntPlanet].rot);
+			// 惑星の設定
+			SetPlanet(g_aPlanetLayoutInfo[nCntPlanet].type, startPos + g_aPlanetLayoutInfo[nCntPlanet].pos, g_aPlanetLayoutInfo[nCntPlanet].rot);
 		}
+#else
+		if (nCntPlanet < 100)
+		{
+			D3DXVECTOR3 setPos;
+
+			setPos.x = (float)(rand() % (int)((10000.0f * 2) * 10) - (int)(5000.0f * 10)) / 10;
+			setPos.y = (float)(rand() % (int)((10000.0f * 2) * 10) - (int)(5000.0f * 10)) / 10;
+			
+			setPos.z = (float)(rand() % (int)(50000.0f * 2) * 10) / 10;
+
+			int nSetType = rand() % PLANETTYPE_GOAL;
+
+			// 惑星の設定
+			SetPlanet((PLANETTYPE)nSetType, setPos + startPos, D3DXVECTOR3(0.0f,0.0f,0.0f));
+
+		}
+		else
+		{
+			break;
+		}
+
+#endif
+
 	}
 }
 
@@ -320,7 +367,7 @@ void SetPlanet(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 
 			case PLANETTYPE_BLACKHOLE:	// ブラックホール惑星
 
-				SetParticle3D(10, -1, g_aPlanet[nCntPlanet].pos, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 7.0f, 10, 5.0f, -0.1f, EFFECTTYPE_NORMAL, PATICLETYPE_HOLE, -1);
+				SetParticle3D(10, -1, g_aPlanet[nCntPlanet].pos, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 7.0f, 100, 5.0f, -0.1f, EFFECTTYPE_NORMAL, PATICLETYPE_HOLE, -1, false, D3DXVECTOR3(0.0f,0.0f,0.0f), 0.0f);
 
 				if (g_nNumWhiteHoalPlanet > 0)
 				{
@@ -331,7 +378,7 @@ void SetPlanet(PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 
 			case PLANETTYPE_WHITEHOLE:	// ホワイトホール惑星
 
-				SetParticle3D(10, -1, g_aPlanet[nCntPlanet].pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 7.0f, 10, 0.0f, 0.5f, EFFECTTYPE_NORMAL, PATICLETYPE_HOLE, -1);
+				SetParticle3D(10, -1, g_aPlanet[nCntPlanet].pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 7.0f, 100, 0.0f, 0.5f, EFFECTTYPE_NORMAL, PATICLETYPE_HOLE, -1, false, D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f);
 
 				g_aIdxWhiteHoalPlanet[g_nNumWhiteHoalPlanet] = nCntPlanet;
 
@@ -400,7 +447,7 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 			if (g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fRadius >= fDestLength)
 			{// 惑星の効果範囲に入った
 
-				PrintDebugProc("\nIN_PLANETRADIUS!!!!!\n\n");
+				PrintDebugProc("\nIN_PLANETRADIUS!!!!!\n");
 
 				// 距離の割合
 				fNomDistance = fDestLength / g_aPlanetModelInfo[g_aPlanet[nCntPlanet].type].fRadius;
@@ -454,24 +501,42 @@ bool CollisionPlanet(D3DXVECTOR3 *pPos, float fRadius)
 						pPlayer->bUse = false;								// プレイヤーの使用していない状態に設定
 					}
 
+					// 惑星にぶつかった時の判定
+					if (pPlayer->bUse == false)
+					{// ぶつかって消えた場合
+						
+						// ぶつかった対象
+						if (pPlayer->planetType == PLANETTYPE_GOAL)
+						{// ゴールの惑星に着陸した
+
+							SetGameState(GAMESTATE_CLEAR, 0);
+						}
+						else
+						{// それ以外の惑星
+
+							SetGameState(GAMESTATE_OVER, 0);
+						}
+					}
+
 					return true;	// 当たった事を返す
 				}
 				else
 				{// 衝突していない
 
 					if (g_aPlanet[nCntPlanet].type != PLANETTYPE_BLACKHOLE
-						&& g_aPlanet[nCntPlanet].type != PLANETTYPE_WHITEHOLE)
+					 && g_aPlanet[nCntPlanet].type != PLANETTYPE_WHITEHOLE)
 					{// ブラックホール, ホワイトホールではない
 
+						// エネルギーの回復
 						if (fNomDistance > 0.5f)
 						{// 効果範囲の半分より外にいる
 
-							pPlayer->fOil += 0.05f * (1.0f - fNomDistance);
+							pPlayer->fOil += (g_aPlanet[nCntPlanet].type == PLANETTYPE_ENERGY) ? 0.10f : 0.05f * (1.0f - fNomDistance);
 						}
 						else
 						{// 効果範囲の半分より内にいる
 
-							pPlayer->fOil += 0.05f * 1.25f;
+							pPlayer->fOil += (g_aPlanet[nCntPlanet].type == PLANETTYPE_ENERGY) ? 0.25f : 0.05f * 1.25f;
 						}
 					}
 				}

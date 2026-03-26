@@ -131,7 +131,7 @@ void UpdatePlayer(void)
 	PrintDebugProc("playerÇÃégópèÛë‘ÇÕtrue\n");
 	Camera* pCamera = GetCamera();
 
-	float fSpeed = (GetGAmeState() == GAMESTATE_EXPLANTATION) ? 1.0f : 3.0f;
+	float fSpeed = (GetGAmeState() == GAMESTATE_EXPLANTATION) ? 0.0f : 2.0f;
 
 	switch (g_Player.state)
 	{

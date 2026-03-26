@@ -52,7 +52,7 @@ typedef struct
 typedef struct
 {
 	PLANETTYPE type;		// 惑星の種類
-	int nIdx;				// 惑星のインデックス
+	int nIdx;				// 惑星のインデックス(ブラックホールのみ)
 
 	D3DXVECTOR3 pos;		// 位置
 	D3DXVECTOR3 rot;		// 角度
@@ -65,20 +65,21 @@ typedef struct
 
 // プロトタイプ宣言 ============================================
 
-void InitPlanet(void);    	// 惑星の初期化処理
-void UninitPlanet(void);  	// 惑星の終了処理
-void UpdatePlanet(void);  	// 惑星の更新処理
-void DrawPlanet(void);		// 惑星の描画処理
+void InitPlanet(void);    				// 惑星の初期化処理
+void UninitPlanet(void);  				// 惑星の終了処理
+void UpdatePlanet(void);  				// 惑星の更新処理
+void DrawPlanet(void);					// 惑星の描画処理
 
 // 設定
-void SetLoadPlanetInfo		// 惑星のモデルの読み込み処理
+void SetLoadPlanetInfo					// 惑星のモデルの読み込み処理
 (int nIdxStage, float fHitRadius, float fGravity, float fRadius, D3DXVECTOR3 addRot);
 
 
-void SetPlanetInfo			// 惑星の設定情報の設定
+void SetPlanetInfo						// 惑星の設定情報の設定
 (PLANETTYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot);
 
-void SetLayoutPlanet(void);	// 惑星の配置情報から設定
+void SetLayoutPlanet					// 惑星の配置情報から設定
+(D3DXVECTOR3 startPos);
 
 
 void SetPlanet							// 惑星の設定処理

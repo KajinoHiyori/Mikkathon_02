@@ -31,17 +31,17 @@ NUM_PLANETTYPE = 10	# 設定する惑星の種類
 
 SET_PLANETTYPE	# [0]エネルギー惑星
 	MODELIDX  = 0		# モデルインデックス
-	HITRADIUS = 50.0	# 当たり半径
+	HITRADIUS = 100.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
-	RADIUS    = 450.0	# 効果範囲
+	RADIUS    = 400.0	# 効果範囲
 	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [1]小惑星付き惑星
 	MODELIDX  = 1		# モデルインデックス
-	HITRADIUS = 50.0	# 当たり半径
+	HITRADIUS = 100.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
-	RADIUS    = 450.0	# 効果範囲
+	RADIUS    = 500.0	# 効果範囲
 	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
@@ -49,13 +49,13 @@ SET_PLANETTYPE	# [2]ブラックホール惑星
 	MODELIDX  = 2		# モデルインデックス
 	HITRADIUS = 50.0	# 当たり半径
 	GRAVITY   = 20.0		# 重力
-	RADIUS    = 700.0	# 効果範囲
+	RADIUS    = 500.0	# 効果範囲
 	ROTATION  = 0.0 0.1 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [3]ホワイトホール惑星
 	MODELIDX  = 3		# モデルインデックス
-	HITRADIUS = 50.0	# 当たり半径
+	HITRADIUS = 100.0	# 当たり半径
 	GRAVITY   = -3.0		# 重力
 	RADIUS    = 500.0	# 効果範囲
 	ROTATION  = 0.0 0.1 0.0	# 回転速度
@@ -63,49 +63,49 @@ END_PLANETTYPE
 
 SET_PLANETTYPE	# [4]重量変わる惑星
 	MODELIDX  = 4		# モデルインデックス
-	HITRADIUS = 50.0	# 当たり半径
+	HITRADIUS = 100.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
-	RADIUS    = 450.0	# 効果範囲
+	RADIUS    = 500.0	# 効果範囲
 	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [5]斥力惑星
 	MODELIDX  = 5		# モデルインデックス
-	HITRADIUS = 50.0	# 当たり半径
-	GRAVITY   = -2.0	# 重力
-	RADIUS    = -300.0	# 効果範囲
+	HITRADIUS = 100.0	# 当たり半径
+	GRAVITY   = -4.0	# 重力
+	RADIUS    = 500.0	# 効果範囲
 	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [6]一般(引力：小)惑星
 	MODELIDX  = 6		# モデルインデックス
-	HITRADIUS = 50.0	# 当たり半径
+	HITRADIUS = 100.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
-	RADIUS    = 450.0	# 効果範囲
+	RADIUS    = 500.0	# 効果範囲
 	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [7]一般(引力：中)惑星
 	MODELIDX  = 7		# モデルインデックス
-	HITRADIUS = 50.0	# 当たり半径
-	GRAVITY   = 2.0		# 重力
-	RADIUS    = 450.0	# 効果範囲
+	HITRADIUS = 100.0	# 当たり半径
+	GRAVITY   = 4.0		# 重力
+	RADIUS    = 500.0	# 効果範囲
 	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [8]一般(引力：大)惑星
 	MODELIDX  = 8		# モデルインデックス
-	HITRADIUS = 50.0	# 当たり半径
-	GRAVITY   = 2.0		# 重力
-	RADIUS    = 450.0	# 効果範囲
+	HITRADIUS = 100.0	# 当たり半径
+	GRAVITY   = 6.0		# 重力
+	RADIUS    = 500.0	# 効果範囲
 	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
 SET_PLANETTYPE	# [9]ゴール惑星
 	MODELIDX  = 9		# モデルインデックス
-	HITRADIUS = 50.0	# 当たり半径
+	HITRADIUS = 500.0	# 当たり半径
 	GRAVITY   = 2.0		# 重力
-	RADIUS    = 450.0	# 効果範囲
+	RADIUS    = 700.0	# 効果範囲
 	ROTATION  = 0.0 0.01 0.0	# 回転速度
 END_PLANETTYPE
 
@@ -114,69 +114,199 @@ END_PLANETTYPE
 #===========================================================
 SET_LAYOUT_STAGE
 
+	#-------------------------
+	# スタート
+	#-------------------------
+	
+	#-------------------------
+	# 惑星登場
+	#-------------------------
 	SET_PLANET	# 惑星
-		TYPE = 0			# 種類
-		POS = 500.0 0.0 1000.0   # 位置
-		ROT = 0.0 0.0 0.0	# 角度
+		TYPE = 6				# 種類
+		POS = 0.0 0.0 1000.0  	# 位置
+		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
-		TYPE = 1				# 種類
-		POS = -500.0 0.0 2000.0   # 位置
-		ROT = 0.0 0.0 0.0	# 角度
+		TYPE = 6				# 種類
+		POS = -300.0 0.0 2500.0  	# 位置
+		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
-		TYPE = 3			# 種類
-		POS = 500.0 0.0 3000.0   # 位置
-		ROT = 0.0 0.0 0.0	# 角度
+		TYPE = 6				# 種類
+		POS = 300.0 0.0 2500.0  	# 位置
+		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
-		TYPE = 3			# 種類
-		POS = 500.0 0.0 4000.0   # 位置
-		ROT = 0.0 0.0 0.0	# 角度
+		TYPE = 6				# 種類
+		POS = 0.0 0.0 3700.0  	# 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
+	
+	#-------------------------
+	# 横一列
+	#-------------------------
+	SET_PLANET	# 惑星
+		TYPE = 6				# 種類
+		POS = 0.0 0.0 5000.0  	# 位置
+		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
-		TYPE = 2			# 種類
-		POS = -500.0 0.0 5000.0   # 位置
-		ROT = 0.0 0.0 0.0	# 角度
+		TYPE = 6				# 種類
+		POS = 250.0 0.0 5000.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
-		TYPE = 4			# 種類
-		POS = 500.0 0.0 6000.0   # 位置
-		ROT = 0.0 0.0 0.0	# 角度
+		TYPE = 6				# 種類
+		POS = -250.0 0.0 5000.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
-		TYPE = 5			# 種類
-		POS = -500.0 0.0 7000.0   # 位置
-		ROT = 0.0 0.0 0.0	# 角度
+		TYPE = 6				# 種類
+		POS = 250.0 0.0 5000.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
-		TYPE = 6			# 種類
-		POS = 500.0 0.0 8000.0   # 位置
-		ROT = 0.0 0.0 0.0	# 角度
+		TYPE = 6				# 種類
+		POS = -250.0 0.0 5000.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
-		TYPE = 7			# 種類
-		POS = -500.0 0.0 9000.0   # 位置
-		ROT = 0.0 0.0 0.0	# 角度
+		TYPE = 6				# 種類
+		POS = 500.0 0.0 5000.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
-		TYPE = 8			# 種類
-		POS = 500.0 0.0 10000.0   # 位置
-		ROT = 0.0 0.0 0.0	# 角度
+		TYPE = 6				# 種類
+		POS = -500.0 0.0 5000.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
 	END_PLANET
 	
 	SET_PLANET	# 惑星
-		TYPE = 9			# 種類
-		POS = -500.0 0.0 11000.0   # 位置
+		TYPE = 6				# 種類
+		POS = 750.0 0.0 5000.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
+	
+	SET_PLANET	# 惑星
+		TYPE = 6				# 種類
+		POS = -750.0 0.0 5000.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
+	
+	#-------------------------
+	# 横一列後からワープまで
+	#-------------------------
+	
+	SET_PLANET	# 惑星
+		TYPE = 0				# 種類
+		POS = 0.0 0.0 7000.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
+	
+	SET_PLANET	# 惑星
+		TYPE = 6				# 種類
+		POS = 0.0 0.0 7700.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
+	
+	SET_PLANET	# 惑星
+		TYPE = 6				# 種類
+		POS = 200.0 -50.0 8000.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
+	
+	SET_PLANET	# 惑星
+		TYPE = 7				# 種類
+		POS = -200.0 50.0 8600.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
+	
+	SET_PLANET	# 惑星
+		TYPE = 8				# 種類
+		POS = 300.0 50.0 9500.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
+	
+	SET_PLANET	# 惑星
+		TYPE = 6				# 種類
+		POS = -300.0 -70.0 10600.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
+	
+	SET_PLANET	# 惑星
+		TYPE = 6				# 種類
+		POS = 300.0 100.0 11600.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
+	
+	SET_PLANET	# 惑星
+		TYPE = 5				# 種類
+		POS = -300.0 100.0 12600.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
+	
+	
+	#-------------------------
+	# ワープ
+	#-------------------------
+	SET_PLANET	# 惑星
+		TYPE = 2				# 種類
+		POS = 0.0 0.0 13600.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
+	
+	SET_PLANET	# 惑星
+		TYPE = 3				# 種類
+		POS = 0.0 0.0 16600.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
+	
+	#-------------------------
+	# 個性惑星登場
+	#-------------------------
+	SET_PLANET	# 惑星
+		TYPE = 4				# 種類
+		POS = 0.0 0.0 19600.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
+	
+	SET_PLANET	# 惑星
+		TYPE = 0				# 種類
+		POS = 400.0 -50.0 24000.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
+	
+	SET_PLANET	# 惑星
+		TYPE = 0				# 種類
+		POS = -400.0 70.0 28000.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
+	
+	SET_PLANET	# 惑星
+		TYPE = 2				# 種類
+		POS = 1118.0 -302.0 22000.0  # 位置
+		ROT = 0.0 0.0 0.0		# 角度
+	END_PLANET
+	
+	#-------------------------
+	# 応用
+	#-------------------------
+	
+	#-------------------------
+	# ゴール
+	#-------------------------
+	SET_PLANET	# 惑星
+		TYPE = 9				# 種類(ゴール)
+		POS = 0.0 0.0 45000.0   # 位置
 		ROT = 0.0 0.0 0.0	# 角度
 	END_PLANET
 	

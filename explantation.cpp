@@ -9,10 +9,11 @@
 #include "fade.h"
 #include "explantation.h"
 #include "title.h"
+#include "game.h"
 #include "input.h"
 #include "player.h"
 #include "debugproc.h"
-
+#include "input.h"
 // 説明演出の管理
 typedef enum
 {
@@ -68,6 +69,8 @@ LPDIRECT3DTEXTURE9 g_apTextureExplantation[MAX_EXPLANTATION] = {};	// テクスチャ
 LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffExplantation = NULL; // 頂点バッファへのポインタ
 Explantation g_aExplantation[MAX_EXPLANTATION];	// 構造体
 
+int g_nSelectTypeExplantation = EXPLANTATIONTYPE_MOVE;	// 表示されているUIの種類
+
 //======================================================================================
 // Explantationの初期化処理
 //======================================================================================
@@ -98,6 +101,8 @@ void InitExplantation(void)
 
 		SetExplantationNonDisp(nCntUI);
 	}
+
+	g_nSelectTypeExplantation = EXPLANTATIONTYPE_MOVE;
 
 	// 頂点バッファの生成
 	pDevice->CreateVertexBuffer(sizeof(VERTEX_3D) * 4 * MAX_EXPLANTATION, D3DUSAGE_WRITEONLY, FVF_VERTEX_3D, D3DPOOL_MANAGED, &g_pVtxBuffExplantation, NULL);
@@ -137,11 +142,11 @@ void InitExplantation(void)
 	g_pVtxBuffExplantation->Unlock();
 
 	// 説明用のUIを設置
-	SetExplantation(EXPLANTATIONTYPE_MOVE, POS_MOVE, UI_ROT);
-	SetExplantation(EXPLANTATIONTYPE_DEST, POS_DEST, UI_ROT);
-	SetExplantation(EXPLANTATIONTYPE_OIL, POS_OIL, UI_ROT);
-	SetExplantation(EXPLANTATIONTYPE_PLANET, POS_PLANET, UI_ROT);
-	SetExplantation(EXPLANTATIONTYPE_SARELLITE, POS_SARELLITE, UI_ROT);
+	SetExplantation(EXPLANTATIONTYPE_MOVE,      D3DXVECTOR3(0.0f,0.0f,100.0f), UI_ROT);
+	SetExplantation(EXPLANTATIONTYPE_DEST,      D3DXVECTOR3(0.0f,0.0f,100.0f), UI_ROT);
+	SetExplantation(EXPLANTATIONTYPE_OIL,       D3DXVECTOR3(0.0f,0.0f,100.0f), UI_ROT);
+	SetExplantation(EXPLANTATIONTYPE_PLANET,    D3DXVECTOR3(0.0f,0.0f,100.0f), UI_ROT);
+	SetExplantation(EXPLANTATIONTYPE_SARELLITE, D3DXVECTOR3(0.0f,0.0f,100.0f), UI_ROT);
 }
 
 //======================================================================================
@@ -181,6 +186,7 @@ void UpdateExplantation(void)
 	{
 		return;
 	}
+#if 0
 	for (int nCntUI = 0; nCntUI < MAX_EXPLANTATION; nCntUI++)
 	{
 		// プレイヤーが設置位置に近づいた場合展開する
@@ -202,6 +208,36 @@ void UpdateExplantation(void)
 			SetExplantationDisappear(nCntUI);
 		}
 	}
+#else
+	// 表示されているUIの状態の設定処理
+	if (g_nSelectTypeExplantation < MAX_EXPLANTATION)
+	{// まだ表示していないのがある場合
+
+		// 状態による設定処理
+		switch (g_aExplantation[g_nSelectTypeExplantation].state)
+		{
+		case EXPLANTATIONSTATE_NONDISPLAY:	// 非表示
+
+			// 出現状態の設定
+			SetExplantationAppear(g_nSelectTypeExplantation);
+
+			break;
+
+		case EXPLANTATIONSTATE_DISPLAY:		// 表示
+
+			if (GetKeyboardTrigger(DIK_RETURN))
+			{// ENTERが押された
+
+				// 収縮状態の設定
+				SetExplantationDisappear(g_nSelectTypeExplantation);
+			}
+
+			break;
+		}
+	}
+	
+
+#endif
 
 	for (int nCntUI = 0; nCntUI < MAX_EXPLANTATION; nCntUI++)
 	{
@@ -242,9 +278,19 @@ void UpdateExplantation(void)
 			if (g_aExplantation[nCntUI].nKey > g_aExplantation[nCntUI].nNumKey)
 			{
 				SetExplantationNonDisp(nCntUI);
+
+				g_nSelectTypeExplantation++;	// UIを次の種類に設定する
 			}
 			break;
 		}
+	}
+
+	// モードの切り替え
+	if (g_nSelectTypeExplantation == MAX_EXPLANTATION)
+	{// 全て確認された場合
+
+		// ゲームモードの設定
+		SetGameState(GAMESTATE_NONE, 30);
 	}
 
 	VERTEX_3D* pVtx;

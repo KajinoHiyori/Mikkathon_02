@@ -46,4 +46,7 @@ StageModelInfo *GetStageModelInfo	// ステージモデルの情報を返す処理
 bool GetLoadStage					// ステージの読み込みが終わっているか返す処理
 (void);	
 
+void SetPosionStageObj				// オブジェクトの移動処理
+(const char* pLabelName, D3DXVECTOR3* pPos, float fSpeed);
+
 #endif
