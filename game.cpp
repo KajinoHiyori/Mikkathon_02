@@ -16,6 +16,7 @@
 #include "planet.h"
 #include "asteroid.h"
 #include "oil.h"
+#include "screen.h"
 #include "meshcylinder.h"
 #include "bg.h"
 #include "explantation.h"
@@ -70,6 +71,9 @@ void InitGame(void)
 	// 小惑星の初期化
 	InitAsteroid();
 
+	// 画面の初期化
+	InitScreen();
+
 	// ポーズ状態の初期化
 	InitPause();
 
@@ -88,6 +92,9 @@ void InitGame(void)
 //=======================================================
 void UninitGame(void)
 {
+	// 画面の終了処理
+	UninitScreen();
+
 	// ポーズ状態の終了処理
 	UninitPause();
 
@@ -147,6 +154,9 @@ void UpdateGame(void)
 
 		// 背景の更新処理
 		UpdateBG();
+
+		// 画面の更新処理
+		UpdateScreen();
 
 		// 説明UIの更新処理
 		UpdateExplantation();
@@ -222,9 +232,10 @@ void DrawGame(void)
 	// 説明UIの描画処理
 	DrawExplantation();
 
-	// 距離の描画処理
-	DrawDistance();
-
+	// 画面の描画処理
+	DrawScreen();	// 距離の描画処理
+	DrawDistance();	// 燃料の描画処理
+	DrawOil();
 	if (g_bDisp == true && g_bPause == true)
 	{
 		// ポーズの描画処理

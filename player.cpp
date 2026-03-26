@@ -131,7 +131,7 @@ void UpdatePlayer(void)
 	PrintDebugProc("playerの使用状態はtrue\n");
 	Camera* pCamera = GetCamera();
 
-	float fSpeed = (GetGAmeState() == GAMESTATE_EXPLANTATION) ? 0.0f : 2.0f;
+	float fSpeed = (GetGAmeState() == GAMESTATE_EXPLANTATION) ? 0.8f : 3.0f;
 
 	switch (g_Player.state)
 	{
@@ -311,6 +311,11 @@ void UpdatePlayer(void)
 		g_Player.move.y += (0.0f - g_Player.move.y) * INERTIA_MOVE;
 		g_Player.move.z += (0.0f - g_Player.move.z) * INERTIA_MOVE;
 
+		if (g_Player.pos.z > -400.0f)
+		{// ゲーム状態をゲーム中にする
+			SetGameState(GAMESTATE_NONE, 0);
+		}
+
 		SetEffect3D(1, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 10.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 7.0f, -1.0f, COLOR_RED, EFFECTTYPE_NORMAL, true, g_Player.pos, false, 0.0f);
 		SetEffect3D(1, D3DXVECTOR3(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z - 10.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 7.0f, -1.0f, COLOR_ORANGE, EFFECTTYPE_NORMAL, true, g_Player.pos, false, 0.0f);
 
@@ -346,13 +351,16 @@ void UpdatePlayer(void)
 
 		if (CollisionPlanet(&g_Player.pos, 1.0f) == true)
 		{// 惑星との当たり判定による演出
-			SetExplosion(g_Player.pos, FIRST_POS, COLOR_WHITE, 20.0f, EXPLOSIONTYPE_0);
-			SetVibration(10000, 12000, 10);
+			if (g_Player.planetType != PLANETTYPE_GOAL)
+			{// ゴールにたどりついたとき以外
+				SetExplosion(g_Player.pos, FIRST_POS, COLOR_WHITE, 20.0f, EXPLOSIONTYPE_0);
+				SetVibration(10000, 12000, 10);
 
-			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
-			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
-			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
-			SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.8f, 0.9f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
+				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
+				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
+				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
+				SetParticle3D(1, 5, g_Player.pos, D3DXCOLOR(0.5f, 0.8f, 0.9f, 1.0f), FIRST_POS, 4.0f, 10, 2.0f, 0.0f, EFFECTTYPE_ROCKET, PATICLETYPE_NOMAL, 0, false, FIRST_POS, 0.0f);
+			}
 		}
 
 		CollisionMeshCylinder(&g_Player.pos, &g_Player.posOld, &g_Player.move, 0.0f, 0.0f, false);

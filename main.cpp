@@ -509,9 +509,6 @@ void Draw(void)
 
 		case MODE_GAME:		// ƒQ[ƒ€‰æ–Ê
 			DrawGame();
-
-			// ”R—¿‚Ì•`‰æˆ—
-			DrawOil();
 			break;
 
 		case MODE_RESULT:	// ƒŠƒUƒ‹ƒg‰æ–Ê

@@ -10,6 +10,7 @@
 #include "input.h"
 #include "debugproc.h"
 #include "color.h"
+#include "screen.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -207,6 +208,8 @@ void UpdateOil(void)
 				pVtx[1].col = COLOR_RED;
 				pVtx[2].col = COLOR_RED;
 				pVtx[3].col = COLOR_RED;
+
+				SetScreen(SCREEN_FADE_OUT, COLOR_RED);
 			}
 			else if (g_aOil[nCntOil].fLength <= MAX_HEIGHT * 0.5f)
 			{// 注意
@@ -214,6 +217,8 @@ void UpdateOil(void)
 				pVtx[1].col = COLOR_YELLOW;
 				pVtx[2].col = COLOR_YELLOW;
 				pVtx[3].col = COLOR_YELLOW;
+
+				SetScreen(SCREEN_FADE_NONE, COLOR_WHITE);
 			}
 			else
 			{// 良好
@@ -221,6 +226,8 @@ void UpdateOil(void)
 				pVtx[1].col = COLOR_GREEN;
 				pVtx[2].col = COLOR_GREEN;
 				pVtx[3].col = COLOR_GREEN;
+
+				SetScreen(SCREEN_FADE_NONE, COLOR_WHITE);
 			}
 		}
 
